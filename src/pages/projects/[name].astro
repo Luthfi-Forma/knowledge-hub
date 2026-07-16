@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import { getProjectSlugs, getPostsByProject, getProjectSummary } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const slugs = await getProjectSlugs();
+  return Promise.all(
+    slugs.map(async (slug) => {
+      const posts = await getPostsByProject(slug);
+      const summary = await getProjectSummary(slug);
+      return {
+        params: { name: slug },
+        props: { posts, summary },
+      };
+    }),
+  );
+}
+
+const { name } = Astro.params;
+const { posts, summary } = Astro.props;
+const { repo, demo } = summary;
+const title = name.replace(/-/g, ' ').replace(/\b\w/g, (char: string) => char.toUpperCase());
+---
+
+<BaseLayout title={`${title} — Afreza Hernanda`}>
+  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+    <h1 class="font-display mb-3.5 text-2xl font-bold leading-tight text-ink sm:text-3xl">{title}</h1>
+
+    {
+      (repo || demo) && (
+        <div class="mb-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-line py-3 text-sm">
+          {repo && (
+            <a href={repo} target="_blank" rel="noopener" class="text-accent hover:underline">
+              Repository ↗
+            </a>
+          )}
+          {demo && (
+            <a href={demo} target="_blank" rel="noopener" class="text-accent hover:underline">
+              Live demo ↗
+            </a>
+          )}
+        </div>
+      )
+    }
+
+    <SectionHeading title="Posts" />
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+      {posts.map((post) => (
+        <PostCard post={post} href={`/posts/${post.id}`} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
