@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
-import { getProjectSlugs, getPostsByProject, getProjectSummary } from '../../lib/posts';
+import { getProjectSlugs, getPostsByProject, getProjectSummary, getProjectTitle } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const slugs = await getProjectSlugs();
@@ -21,7 +21,7 @@ export async function getStaticPaths() {
 const { name } = Astro.params;
 const { posts, summary } = Astro.props;
 const { repo, demo } = summary;
-const title = name.replace(/-/g, ' ').replace(/\b\w/g, (char: string) => char.toUpperCase());
+const title = getProjectTitle(name);
 ---
 
 <BaseLayout title={`${title} — Afreza Hernanda`}>

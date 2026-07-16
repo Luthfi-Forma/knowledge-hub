@@ -1,14 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EmptyState from '../../components/EmptyState.astro';
-import { getProjectSlugs, getPostsByProject } from '../../lib/posts';
+import { getProjectSlugs, getPostsByProject, getProjectTitle } from '../../lib/posts';
 
 const slugs = await getProjectSlugs();
 const projects = await Promise.all(
   slugs.map(async (slug) => {
     const posts = await getPostsByProject(slug);
-    const title = slug.replace(/-/g, ' ').replace(/\b\w/g, (char: string) => char.toUpperCase());
-    return { slug, title, count: posts.length };
+    return { slug, title: getProjectTitle(slug), count: posts.length };
   }),
 );
 ---

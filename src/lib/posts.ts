@@ -84,3 +84,11 @@ export async function getProjectSummary(project: string): Promise<{ repo?: strin
   const demo = posts.find((post) => post.data.demo)?.data.demo;
   return { repo, demo };
 }
+
+const PROJECT_TITLE_OVERRIDES: Record<string, string> = {
+  'cdmp-jabodetabek': 'CDMP-Jabodetabek',
+};
+
+export function getProjectTitle(slug: string): string {
+  return PROJECT_TITLE_OVERRIDES[slug] ?? slug.replace(/-/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+}
