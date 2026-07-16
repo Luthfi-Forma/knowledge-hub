@@ -1,7 +1,8 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getPublishedPosts } from '../../lib/posts';
+import RelatedPosts from '../../components/RelatedPosts.astro';
+import { getPublishedPosts, getRelatedPosts } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -14,6 +15,7 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { title, summary, date, type, tags, project, repo, demo } = post.data;
 const { Content } = await render(post);
+const relatedPosts = await getRelatedPosts(post);
 const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 ---
@@ -60,6 +62,8 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
         </div>
       )
     }
+
+    <RelatedPosts posts={relatedPosts} />
   </article>
 </BaseLayout>
 
