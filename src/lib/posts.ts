@@ -17,3 +17,29 @@ export async function getLatestPosts(limit = 5): Promise<CollectionEntry<'posts'
   const posts = await getPublishedPosts();
   return posts.slice(0, limit);
 }
+
+export async function getRelatedPosts(
+  post: CollectionEntry<'posts'>,
+  limit = 3,
+): Promise<CollectionEntry<'posts'>[]> {
+  const posts = await getPublishedPosts();
+  const tags = new Set(post.data.tags);
+
+  return posts
+    .filter((candidate) => candidate.id !== post.id)
+    .map((candidate) => {
+      let score = 0;
+      if (post.data.project && candidate.data.project === post.data.project) {
+        score += 2;
+      }
+      score += candidate.data.tags.filter((tag) => tags.has(tag)).length;
+      return { candidate, score };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.candidate.data.date.valueOf() - a.candidate.data.date.valueOf();
+    })
+    .slice(0, limit)
+    .map(({ candidate }) => candidate);
+}
