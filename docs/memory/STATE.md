@@ -8,19 +8,26 @@
 
 ## Current status
 
-T-01 sampai T-05 selesai. Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di
+T-01 sampai T-06 selesai. Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di
 root repo. Content collection `posts` (`src/content.config.ts`, Content Layer
 API) punya schema zod lengkap sesuai content model di ARCHITECTURE.md.
 
-Case study nyata pertama sudah publish:
-`src/content/posts/jabodetabek-connect.mdx` — diriset dari
-`Projects\Jabodetabek-Connect` (README, PROJECT_BRIEF, ARCHITECTURE, ADR-001,
-git log project tsb, bukan karangan). Proyek itu sendiri: v1 feature-complete
-(peta octilinear 128 stasiun/13 line, animasi kereta, toggle line, tema
-light/dark) tapi belum di-deploy (Vercel login pending) dan belum punya repo
-GitHub publik — jadi frontmatter `repo`/`demo`/`cover` sengaja dikosongkan,
-bukan ditebak. Featured Projects di Home & `/explore/project` sekarang
-menampilkan post ini, bukan lagi empty state.
+Dua case study nyata sudah publish, keduanya diriset dari repo proyek
+aslinya (README/brief/architecture/ADR/git log), bukan karangan:
+
+- `jabodetabek-connect.mdx` — peta transit octilinear ala Mini Metro, v1
+  feature-complete tapi belum di-deploy dan belum punya repo GitHub publik
+  → `repo`/`demo`/`cover` sengaja kosong.
+- `jakarta-transit-heritage-explorer.mdx` — GIS walking companion 3-node
+  (Jakarta Kota/Blok M/Ragunan) + digital passport. Repo GitHub-nya ADA
+  (`github.com/Luthfi-Forma/Jakarta_Transit_Heritage_Explorer`, dari `git
+  remote`) tapi diverifikasi via browser + `api.github.com` masih **privat**
+  (404 publik) dan GitHub Pages-nya belum live (404) meski sudah di-wiring —
+  jadi `repo`/`demo` tetap dikosongkan sampai benar-benar publik, bukan
+  ditebak dari nama repo.
+
+Featured Projects di Home & `/explore/project` sekarang menampilkan
+keduanya, bukan lagi empty state.
 
 Situs sekarang punya layout dasar nyata: `BaseLayout` + `Header`/`Footer`,
 Home (`/` — Hero, Featured Projects, Latest Posts, Contact), Explore
@@ -42,7 +49,7 @@ list polos untuk post). Sengaja berbeda dari palet/font portfolio lama
 (forest-green/cream, Space Grotesk+Inter Tight) supaya M3 mulai dari clean
 slate.
 
-Diverifikasi: build 9 route statis, kontras WCAG AA jauh di atas ambang,
+Diverifikasi: build 11 route statis, kontras WCAG AA jauh di atas ambang,
 tap target ≥44px, heading order tanpa skip level, focus ring solid terlihat
 (sempat ada bug `outline-style: none` karena lupa utility `outline` polos —
 sudah diperbaiki), tidak ada horizontal scroll di 375/768/1024/1440px, 404
@@ -70,11 +77,16 @@ mengembalikan HTTP 404 yang benar.
   map terpisah); verifikasi build + render (heading order, empty state
   hilang di Featured/`/explore/project`); kecilkan `aria-disabled` yang
   selalu `"false"` di PostCard jadi hanya muncul saat memang tanpa href.
+- 2026-07-16: T-06 — case study Jakarta Transit Heritage Explorer, diriset
+  dari `Documentation/` proyek aslinya (brief, PRD, ARCHITECTURE, ADR-006/
+  007/008) + `git log`; cek langsung via browser bahwa repo GitHub-nya masih
+  privat dan GitHub Pages belum live sebelum memutuskan tetap mengosongkan
+  `repo`/`demo` — jangan percaya begitu saja URL yang disebut di memory file
+  proyek lain tanpa verifikasi ulang.
 
 ## Next steps
 
-1. T-06–T-07: tulis 2 case study nyata lagi (Jakarta Transit Heritage
-   Explorer, CDMP-Jabodetabek).
+1. T-07: tulis case study nyata terakhir (CDMP-Jabodetabek).
 2. T-08: hubungkan repo GitHub + deploy Vercel.
 
 ## Blockers
