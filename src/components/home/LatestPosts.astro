@@ -20,7 +20,7 @@ const { posts } = Astro.props;
       ) : (
         <div class="flex flex-col gap-6">
           {posts.map((post) => (
-            <PostListItem post={post} />
+            <PostListItem post={post} href={`/posts/${post.id}`} />
           ))}
         </div>
       )

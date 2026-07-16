@@ -1,0 +1,110 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPublishedPosts } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { title, summary, date, type, tags, project, repo, demo } = post.data;
+const { Content } = await render(post);
+const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+---
+
+<BaseLayout title={`${title} — Afreza Hernanda`} description={summary}>
+  <article class="mx-auto max-w-(--container-content) px-5 py-10">
+    <p class="mb-2.5 text-xs font-medium text-ink-muted">{formattedDate} · {typeLabel}</p>
+    <h1 class="font-display mb-3.5 text-2xl font-bold leading-tight text-ink sm:text-3xl">{title}</h1>
+    <p class="mb-6 text-base leading-relaxed text-ink-muted">{summary}</p>
+
+    {
+      (project || repo || demo) && (
+        <div class="mb-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-line py-3 text-sm">
+          {project && <span class="text-ink-muted">Project: {project}</span>}
+          {repo && (
+            <a href={repo} target="_blank" rel="noopener" class="text-accent hover:underline">
+              Repository ↗
+            </a>
+          )}
+          {demo && (
+            <a href={demo} target="_blank" rel="noopener" class="text-accent hover:underline">
+              Live demo ↗
+            </a>
+          )}
+        </div>
+      )
+    }
+
+    <div class="prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink">
+      <Content />
+    </div>
+
+    {
+      tags.length > 0 && (
+        <div class="mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
+          {tags.map((tag) => (
+            <span class="rounded-md border border-line px-2.5 py-1 text-xs text-ink-muted">{tag}</span>
+          ))}
+        </div>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .prose-content :global(p) {
+    margin-bottom: 1.25em;
+  }
+  .prose-content :global(h2) {
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .prose-content :global(h3) {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+  }
+  .prose-content :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+  .prose-content :global(ul),
+  .prose-content :global(ol) {
+    margin-bottom: 1.25em;
+    padding-left: 1.5em;
+  }
+  .prose-content :global(ul) {
+    list-style: disc;
+  }
+  .prose-content :global(ol) {
+    list-style: decimal;
+  }
+  .prose-content :global(li) {
+    margin-bottom: 0.375em;
+  }
+  .prose-content :global(code) {
+    border-radius: 0.25em;
+    background-color: var(--color-line);
+    padding: 0.15em 0.4em;
+    font-size: 0.875em;
+  }
+  .prose-content :global(blockquote) {
+    border-left: 2px solid var(--color-line);
+    padding-left: 1em;
+    color: var(--color-ink-muted);
+    font-style: italic;
+  }
+</style>
+

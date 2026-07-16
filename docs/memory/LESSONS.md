@@ -6,6 +6,20 @@
      classify. Mark entries worth generalizing to the OS with [harvest-candidate];
      after harvesting they get marked [harvested YYYY-MM-DD]. -->
 
+## 2026-07-16 — Astro trims newline whitespace around inline elements [harvest-candidate]
+
+Tags: #astro
+
+Text wrapped across multiple source lines around an inline `<a>`/`<span>`
+loses the line break's whitespace entirely (not collapsed to one space like
+HTML/JSX normally do) — `see <a>Explore</a>\n  for X` renders as
+`Explore</a>for X` with no space. Astro's compiler trims leading whitespace
+on a new line inside markup. Fix: keep a literal space before the next word
+on the *same* line as the closing tag, or use `{' '}`. Only bites
+inline/prose text that wraps a link mid-sentence — block-level elements are
+unaffected. Caught by reading actual rendered `outerHTML`, not by eyeballing
+`get_page_text` output (its whitespace normalization masked the bug).
+
 ## 2026-07-16 — Tailwind v4 `focus-visible:outline-*` needs the bare `outline` class [harvest-candidate]
 
 Tags: #tailwind #accessibility
