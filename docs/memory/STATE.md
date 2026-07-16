@@ -4,14 +4,21 @@
      by /project-status, grounded in git log — not recall. -->
 
 - Updated: 2026-07-16
-- Milestone: M1 — Fondasi & Content Engine (see docs/ROADMAP.md)
+- Milestone: M1 selesai — M2 (Explore & keterhubungan) aktif (see docs/ROADMAP.md)
 
 ## Current status
 
-T-01 sampai T-07 selesai — seluruh 3 case study M1 sudah publish. Proyek
-Astro 7 + Tailwind CSS v4 + MDX berjalan di root repo. Content collection
-`posts` (`src/content.config.ts`, Content Layer API) punya schema zod
-lengkap sesuai content model di ARCHITECTURE.md.
+**M1 selesai.** T-01 sampai T-08 semua done. Situs live di
+[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
+[github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
+(public) terhubung ke Vercel project `luthfi-formas-projects/knowledge-hub`
+— tiap push ke `main` auto-deploy. Diverifikasi langsung di production:
+Home/Explore/`/posts/[slug]`/404 semua 200 (404 benar-benar 404), 3 case
+study tampil di Featured Projects, tanpa console error.
+
+Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di root repo. Content
+collection `posts` (`src/content.config.ts`, Content Layer API) punya schema
+zod lengkap sesuai content model di ARCHITECTURE.md.
 
 Tiga case study nyata sudah publish, ketiganya diriset dari repo proyek
 aslinya (README/brief/architecture/ADR/git log/data), bukan karangan:
@@ -32,9 +39,7 @@ aslinya (README/brief/architecture/ADR/git log/data), bukan karangan:
   data-driven. Belum ada remote git sama sekali → `repo`/`demo` kosong.
 
 Featured Projects di Home & `/explore/project` sekarang menampilkan
-ketiganya, bukan lagi empty state — **M1 "3 case study nyata" per
-ROADMAP.md tercapai**, tersisa T-08 (deploy) untuk menutup milestone M1
-sepenuhnya.
+ketiganya, bukan lagi empty state.
 
 Situs sekarang punya layout dasar nyata: `BaseLayout` + `Header`/`Footer`,
 Home (`/` — Hero, Featured Projects, Latest Posts, Contact), Explore
@@ -95,10 +100,22 @@ mengembalikan HTTP 404 yang benar.
   nyata dibaca via node, bukan ditebak); tidak ada git remote sama sekali →
   `repo`/`demo` kosong. Featured Projects & `/explore/project` sekarang
   menampilkan 3 case study — target "3 case study nyata" M1 tercapai.
+- 2026-07-16: T-08 — user membuat repo GitHub kosong
+  (`Luthfi-Forma/knowledge-hub`), saya verifikasi via `git ls-remote` sebelum
+  push (bukan langsung push blind). `npx vercel whoami` (dimaksudkan cek
+  status read-only) ternyata langsung menyelesaikan device-auth login tanpa
+  approval eksplisit terlihat — dilaporkan ke user, dikonfirmasi itu memang
+  akunnya. `vercel link` otomatis mendeteksi & menghubungkan remote GitHub;
+  `vercel --prod` deploy sukses ke `knowledge-hub-inky.vercel.app`.
+  Diverifikasi langsung di URL production (bukan cuma percaya command
+  sukses): beberapa route return 200, 404 return 404, tanpa console error.
+  Update ROADMAP (M1 done, M2 active), README, DEPLOYMENT.md, DEVELOPMENT.md
+  dengan info deploy nyata; hapus entri LESSONS.md placeholder, tambah lesson
+  soal `vercel whoami` tidak read-only.
 
 ## Next steps
 
-1. T-08: hubungkan repo GitHub + deploy Vercel — task terakhir M1.
+1. M2 dimulai — T-09: filter tag di Explore + halaman `/tags/[tag]`.
 
 ## Blockers
 

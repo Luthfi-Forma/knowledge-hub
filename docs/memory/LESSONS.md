@@ -6,6 +6,22 @@
      classify. Mark entries worth generalizing to the OS with [harvest-candidate];
      after harvesting they get marked [harvested YYYY-MM-DD]. -->
 
+## 2026-07-16 — `vercel whoami` can silently complete a device-auth login
+
+Tags: #vercel #deploy
+
+Ran `npx vercel whoami` intending a read-only auth check before deploying.
+Instead of erroring or reporting logged-out, the CLI printed "No existing
+credentials found. Starting login flow..." and then completed a full device
+authorization (`Congratulations! You are now signed in.`) with no visible
+interactive approval step — landed authenticated as the user's real Vercel
+account. Likely an already-trusted browser session on this machine
+auto-approved the device code. Practical effect: `vercel whoami` is **not**
+safely read-only in an environment with a live authenticated browser —
+treat it as a potential auth action and tell the user it happened, don't
+assume "just checking status" has no side effects. `vercel link` afterward
+also auto-detected and connected the GitHub remote without being asked to.
+
 ## 2026-07-16 — Astro trims newline whitespace around inline elements [harvest-candidate]
 
 Tags: #astro
@@ -47,10 +63,3 @@ Tags: #astro
   `src/content.config.ts` (project-root-of-`src`, not `src/content/config.ts`
   like the old Content Collections API), with a `loader: glob({...})` and a
   `schema: ({ image }) => z.object({...})` callback.
-
-## 2026-07-16 — Project scaffolded
-
-Tags: #meta
-
-Project created from Claude Engineering OS templates. (Replace this with real
-lessons — delete once the first real entry lands.)

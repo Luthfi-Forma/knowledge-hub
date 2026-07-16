@@ -8,19 +8,28 @@
 ## Quickstart
 
 ```
-<!-- shortest path to running: 2-5 commands -->
+npm install
+npm run dev
 ```
 
 Full setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 
 ## Status
 
-<!-- One line: current milestone + what works today. Update at milestones. -->
+Live at [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app).
+M1 (Fondasi & Content Engine) done: Home, Explore, post detail, About
+placeholder, 404, and 3 real project case studies. M2 (Explore &
+keterhubungan) in progress — see [docs/TASK.md](docs/TASK.md).
 
 ## Structure
 
 ```
-<!-- top-level folders only, one comment each -->
+src/content/posts/  # MDX posts, frontmatter validated by src/content.config.ts
+src/pages/           # routes: /, /explore(/[type]), /posts/[slug], /about, /404
+src/components/       # Header, Footer, PostCard, PostListItem, EmptyState, etc.
+src/layouts/           # BaseLayout (shared shell)
+src/lib/                 # posts.ts — content collection query helpers
+docs/                     # project docs (see table below)
 ```
 
 ## Documentation
@@ -30,8 +39,8 @@ Full setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 | [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) | Why this exists |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How it is built |
 | [docs/TASK.md](docs/TASK.md) | What is being worked on |
-
-<!-- Extend with the docs this project actually has. -->
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Setup, run, troubleshoot |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | How to ship and roll back |
 
 ---
 Scaffolded 2026-07-16 from Claude Engineering OS.

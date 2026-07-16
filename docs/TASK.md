@@ -10,11 +10,10 @@
 
 ## Now
 
-- [ ] T-08: hubungkan repo GitHub + deploy Vercel, verifikasi URL publik (M1)
-
-## Backlog
-
 - [ ] T-09: filter tag di Explore + halaman `/tags/[tag]` (M2)
+
+## Next
+
 - [ ] T-10: related posts by shared tags/project (M2)
 - [ ] T-11: project hub pages `/projects/[name]` (M2)
 - [ ] T-12: Pagefind search (M2)
@@ -29,4 +28,5 @@
 - [x] T-05: tulis case study #1 — Jabodetabek-Connect (English) (M1) — 2026-07-16
 - [x] T-06: tulis case study #2 — Jakarta Transit Heritage Explorer (English) (M1) — 2026-07-16
 - [x] T-07: tulis case study #3 — CDMP-Jabodetabek (English) (M1) — 2026-07-16
+- [x] T-08: hubungkan repo GitHub + deploy Vercel, verifikasi URL publik (M1) — 2026-07-16
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

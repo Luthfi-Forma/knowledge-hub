@@ -8,15 +8,18 @@
 
 | # | Milestone | Outcome (verifiable) | Status |
 |---|---|---|---|
-| M1 | Fondasi & Content Engine | Situs Astro live di Vercel: schema frontmatter tervalidasi, Home + Explore + halaman post, 3 case study nyata ter-publish | active |
-| M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | planned |
+| M1 | Fondasi & Content Engine | Situs Astro live di Vercel: schema frontmatter tervalidasi, Home + Explore + halaman post, 3 case study nyata ter-publish | done |
+| M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | active |
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics, custom domain; repo portfolio lama diarsipkan | planned |
 
 ## Current focus
 
-M1 aktif. "Done" = situs bisa diakses publik di URL Vercel, build gagal bila
-frontmatter tidak valid, dan 3 case study proyek nyata (Jabodetabek-Connect,
-JTHE, CDMP-Jabodetabek) tampil di Home dan Explore.
+M1 selesai 2026-07-16: situs live di
+[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app),
+repo [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
+terhubung ke Vercel untuk auto-deploy tiap push ke `main`. Build gagal bila
+frontmatter tidak valid, 3 case study proyek nyata (Jabodetabek-Connect,
+JTHE, CDMP-Jabodetabek) tampil di Home dan Explore. M2 aktif berikutnya.
 
 ## Phase detail
 
