@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getAllTags } from '../../lib/posts';
+
+const tags = (await getAllTags()).sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+---
+
+<BaseLayout title="Tags — Afreza Hernanda" description="Browse all posts by tag.">
+  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+    <h1 class="font-display mb-5 text-xl font-bold text-ink">Tags</h1>
+    {
+      tags.length === 0 ? (
+        <EmptyState message="No tags yet." ctaHref="/explore" ctaLabel="Browse all posts" />
+      ) : (
+        <ul class="flex flex-wrap gap-2">
+          {tags.map(({ tag, count }) => (
+            <li>
+              <a
+                href={`/tags/${tag}`}
+                class="inline-flex min-h-11 items-center rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:border-ink hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              >
+                {tag} ({count})
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</BaseLayout>
