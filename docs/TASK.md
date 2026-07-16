@@ -10,7 +10,6 @@
 
 ## Now
 
-- [ ] T-01: init proyek Astro + Tailwind + MDX, struktur folder content collection `posts` (M1)
 - [ ] T-02: definisikan schema frontmatter zod + 1 post contoh yang lolos validasi; buktikan build gagal pada frontmatter invalid (M1)
 - [ ] T-03: buat layout dasar + halaman Home (Hero, Featured, Latest, Contact) dan Explore sederhana (M1)
 
@@ -32,4 +31,5 @@
 
 ## Done
 
+- [x] T-01: init proyek Astro + Tailwind + MDX, struktur folder content collection `posts` (M1) — 2026-07-16
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->
