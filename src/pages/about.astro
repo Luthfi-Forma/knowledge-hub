@@ -1,16 +1,197 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+
+const expertise = [
+  {
+    title: 'Spatial Analysis & GIS',
+    description:
+      'Turning raw geodata into decisions — building-footprint detection, kernel density, gravity and nearest-neighbour analysis, thematic mapping, and cartographic production.',
+    chips: ['ArcGIS', 'QGIS', 'Google Earth Engine', 'Python', 'IBM SPSS'],
+  },
+  {
+    title: 'Regional & Spatial Planning',
+    description:
+      'Technical drafting and revision of statutory plans — RTRW and RDTR — from data compilation through spatial direction and zoning.',
+    chips: ['RTRW', 'RDTR', 'Land-Use Allocation'],
+  },
+  {
+    title: 'Environmental Planning',
+    description:
+      'Environmental Protection & Management Plans (RPPLH): ecosystem-vulnerability inventory, biodiversity assessment, and reading development pressure on the land.',
+    chips: ['RPPLH', 'Ecosystem Services', 'Biodiversity'],
+  },
+  {
+    title: 'Social & Poverty Studies',
+    description:
+      'Community characteristic mapping and extreme-poverty targeting (P3KE), demographic profiling, and social-impact review of programs and infrastructure.',
+    chips: ['P3KE Targeting', 'Demographics', 'Field Survey'],
+  },
+];
+
+const documents = [
+  { title: 'Purwakarta Regency in Figures 2023', org: 'BPS-Statistics' },
+  { title: 'Regional Drinking-Water Strategy (Jakstrada SPAM)', org: 'Bappeda Lampung Timur' },
+  { title: 'Jabung & Coastal Area Development', org: 'Bappeda Lampung Timur' },
+  { title: 'RPPLH — South Papua Province', org: 'Ministry of Environment & Forestry' },
+];
+
+const experience = [
+  { role: 'Assistant to Expert', org: 'HAS Consulting · Jakarta', dates: 'Sep 2024 — Present' },
+  { role: 'Support Staff — Drafter', org: 'Dinas Cipta Karya & Penataan Ruang · Bekasi Regency', dates: 'Sep — Dec 2024' },
+  { role: 'GIS Operator & Drafter', org: 'CV. Hasta Tunggal Pratama · Bandar Lampung', dates: 'Apr — Aug 2024' },
+  { role: 'GIS Team', org: 'Dinas PU & Tata Ruang · Kota Metro, Lampung', dates: 'Jan — Mar 2024' },
+  { role: 'Analyst Intern', org: 'Ministry of Environment & Forestry (KLHK) · Remote', dates: 'Sep — Dec 2023' },
+  { role: 'Urban & Regional Planning Intern', org: 'PT. Planosentris Nusantara · Samarinda', dates: 'Sep — Dec 2023' },
+  { role: 'GIS Team — Freelance', org: 'Ministry of Public Works (PUPR) · Jakarta', dates: 'Feb — Jun 2023' },
+  { role: 'Drafter — Freelance', org: 'BPS-Statistics · Purwakarta', dates: 'Dec 2022 — Jan 2023' },
+  { role: 'Surveyor & Analyst Assistant', org: 'PT. Hutama Karya · South Lampung', dates: 'Mar — Apr 2022' },
+];
+
+const organizations = [
+  { role: 'Head of Technology & Professional Division', org: 'HMP Mandalanata, ITERA', dates: 'May 2023 — Jan 2024' },
+  { role: 'Founding Member', org: 'Poliscape Planning Community', dates: 'Aug 2024 — Present' },
+];
 ---
 
-<BaseLayout title="About — Afreza Hernanda" description="About Afreza Luthfi Hernanda.">
-  <section class="mx-auto max-w-(--container-content) px-5 py-16 text-center">
-    <p class="mb-2.5 text-xs font-medium text-ink-muted">Urban &amp; Regional Planner</p>
-    <h1 class="font-display mb-3.5 text-2xl font-bold text-ink sm:text-3xl">Afreza Luthfi Hernanda</h1>
-    <p class="mx-auto max-w-[42ch] text-sm leading-relaxed text-ink-muted">
-      A full CV-style About page — background, experience, and skills — is coming in a later
-      milestone. In the meantime, see <a href="/explore" class="text-accent hover:underline">Explore</a> for
-      published work, or reach out via the <a href="/#contact" class="text-accent hover:underline">contact</a> section
-      on the homepage.
+<BaseLayout title="About — Afreza Hernanda" description="About Afreza Luthfi Hernanda, Urban & Regional Planner — background, expertise, and experience.">
+  <section class="mx-auto max-w-(--container-content) px-5 py-16">
+    <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+      <img
+        src="/portrait.png"
+        alt="Portrait of Afreza Luthfi Hernanda"
+        width="160"
+        height="160"
+        class="h-32 w-32 shrink-0 rounded-2xl object-cover sm:h-40 sm:w-40"
+      />
+      <div>
+        <p class="mb-2 text-xs font-medium text-ink-muted">Urban &amp; Regional Planner</p>
+        <h1 class="font-display mb-3 text-2xl font-bold text-ink sm:text-3xl">Afreza Luthfi Hernanda</h1>
+        <p class="max-w-[48ch] text-sm leading-relaxed text-ink-muted">
+          I read regions through their data — mapping how industry, environment, and communities
+          compete for the same ground, so plans are built on evidence rather than assumption.
+        </p>
+      </div>
+    </div>
+
+    <div class="mt-8 max-w-[62ch] space-y-4 text-sm leading-relaxed text-ink">
+      <p>
+        I'm a Bachelor of Urban &amp; Regional Planning from Institut Teknologi Sumatera, with
+        hands-on experience across spatial, environmental, and social planning. My work spans
+        Regional Spatial Plans (RTRW), Environmental Protection &amp; Management Plans (RPPLH),
+        coastal-area development, and provincial studies on extreme poverty.
+      </p>
+      <p>
+        Driven by research and problem-solving, I'm comfortable working independently or steering
+        a team toward a result that holds up in the field and on paper.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+    <SectionHeading title="Background" />
+    <dl class="grid gap-6 sm:grid-cols-3">
+      <div>
+        <dt class="text-xs font-medium text-ink-muted">Education</dt>
+        <dd class="mt-1.5 text-sm text-ink">
+          <strong class="font-semibold">Institut Teknologi Sumatera</strong><br />
+          B.Eng., Urban &amp; Regional Planning · 2020–2024
+          <span class="mt-1 block text-xs text-ink-muted">SMAN 1 Tambun Selatan · Science · 2017–2020</span>
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-ink-muted">Languages</dt>
+        <dd class="mt-1.5 text-sm text-ink">
+          Indonesian — Native<br />
+          English — B2, Independent User
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs font-medium text-ink-muted">Location</dt>
+        <dd class="mt-1.5 text-sm text-ink">
+          Cikarang Selatan, Bekasi<br />
+          West Java, Indonesia
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+    <SectionHeading title="Expertise" />
+    <div class="grid gap-6 sm:grid-cols-2">
+      {
+        expertise.map((area) => (
+          <div class="rounded-lg border border-line p-5">
+            <h3 class="text-[0.9375rem] font-semibold text-ink">{area.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{area.description}</p>
+            <ul class="mt-3 flex flex-wrap gap-1.5">
+              {area.chips.map((chip) => (
+                <li class="inline-flex items-center rounded-full border border-line px-2.5 py-1 text-xs text-ink-muted">
+                  {chip}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+    <SectionHeading title="Official Documents" />
+    <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-ink-muted">
+      Technical documents and studies I contributed to that were published by government agencies
+      and ministries.
+    </p>
+    <ul class="space-y-3">
+      {
+        documents.map((doc) => (
+          <li class="rounded-lg border border-line px-4 py-3">
+            <p class="text-sm font-semibold text-ink">{doc.title}</p>
+            <p class="mt-0.5 text-xs text-ink-muted">{doc.org}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+    <SectionHeading title="Experience" />
+    <ol class="space-y-3">
+      {
+        experience.map((xp) => (
+          <li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line pb-3">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-ink">{xp.role}</p>
+              <p class="text-xs text-ink-muted">{xp.org}</p>
+            </div>
+            <p class="shrink-0 text-xs text-ink-muted">{xp.dates}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <p class="mt-8 mb-3 text-xs font-medium text-ink-muted">Organizations</p>
+    <ol class="space-y-3">
+      {
+        organizations.map((xp) => (
+          <li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line pb-3">
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-ink">{xp.role}</p>
+              <p class="text-xs text-ink-muted">{xp.org}</p>
+            </div>
+            <p class="shrink-0 text-xs text-ink-muted">{xp.dates}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="mx-auto max-w-(--container-content) px-5 pb-16 text-center">
+    <p class="text-sm text-ink-muted">
+      Want to collaborate? Reach out via the
+      <a href="/#contact" class="text-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">contact</a>
+      section on the homepage.
     </p>
   </section>
 </BaseLayout>
