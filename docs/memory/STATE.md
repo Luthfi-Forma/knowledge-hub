@@ -3,12 +3,12 @@
 <!-- SNAPSHOT file: overwrite it, do not append. Updated at every session close
      by /project-status, grounded in git log — not recall. -->
 
-- Updated: 2026-07-16
-- Milestone: M1 selesai — M2 (Explore & keterhubungan) aktif (see docs/ROADMAP.md)
+- Updated: 2026-07-17
+- Milestone: M1 dan M2 selesai — M3 (Identitas & polish) belum di-breakdown ke TASK.md (see docs/ROADMAP.md)
 
 ## Current status
 
-**M1 selesai.** T-01 sampai T-08 semua done. Situs live di
+**M1 dan M2 selesai.** T-01 sampai T-13 semua done. Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel project `luthfi-formas-projects/knowledge-hub`
@@ -61,11 +61,53 @@ list polos untuk post). Sengaja berbeda dari palet/font portfolio lama
 (forest-green/cream, Space Grotesk+Inter Tight) supaya M3 mulai dari clean
 slate.
 
-Diverifikasi: build 12 route statis, kontras WCAG AA jauh di atas ambang,
-tap target ≥44px, heading order tanpa skip level, focus ring solid terlihat
-(sempat ada bug `outline-style: none` karena lupa utility `outline` polos —
-sudah diperbaiki), tidak ada horizontal scroll di 375/768/1024/1440px, 404
+Diverifikasi (M1): kontras WCAG AA jauh di atas ambang, tap target ≥44px,
+heading order tanpa skip level, focus ring solid terlihat (sempat ada bug
+`outline-style: none` karena lupa utility `outline` polos — sudah
+diperbaiki), tidak ada horizontal scroll di 375/768/1024/1440px, 404
 mengembalikan HTTP 404 yang benar.
+
+**M2 selesai (T-09–T-13)**, dikerjakan via Workflow tool (multi-agent
+paralel, atas permintaan eksplisit user) — 6 agent di git worktree
+terisolasi:
+
+- T-09: `getAllTags`/`getPostsByTag` di lib/posts.ts; `/tags` (browse semua
+  tag + count) dan `/tags/[tag]`; tag di halaman post jadi link.
+- T-10: `getRelatedPosts` (skor: +2 project sama, +1 per tag sama, min
+  skor>0, tanpa padding) + komponen `RelatedPosts` (render null bila kosong,
+  bukan empty-state box) di halaman post.
+- T-11: `getProjectSlugs`/`getPostsByProject`/`getProjectSummary` +
+  `/projects` dan `/projects/[name]` (repo/demo ditarik dari post mana pun
+  dalam grup yang punya field itu).
+- T-12: Pagefind (`pagefind --site dist` sebagai postbuild step di
+  package.json) + search UI di `/explore` — diverifikasi nyata (bukan
+  cuma "build sukses"): `astro preview` + search query "octilinear"
+  mengembalikan hasil yang benar dengan sub-result highlights.
+- T-13: About diisi konten nyata (bio/pendidikan/expertise/dokumen/
+  pengalaman kerja, diriset dari `Website_Portfolio/index.html` +
+  portrait.png asli) + 4 case study baru (`type: research`) diriset dari
+  proyek nyata pemilik (thesis Cikarang, pemetaan kemiskinan Bontang, RPPLH
+  Papua, Jabung Lampung) lengkap dengan cover image asli.
+
+**Insiden BSOD saat workflow berjalan** — 3 dari 6 agent sempat commit
+sebelum crash (T-09, T-10, T-13b), 3 lainnya (T-11, T-12, T-13a) punya kerja
+belum ter-commit tapi utuh di worktree masing-masing (diverifikasi build
+sukses dulu sebelum di-commit manual, bukan langsung dipercaya). Semua 6
+branch di-merge manual ke `main` satu per satu — 2 konflik (di
+`src/lib/posts.ts`, karena 2-3 agent menambah fungsi baru di baris akhir
+file yang sama) diselesaikan dengan menggabungkan kedua sisi, bukan memilih
+salah satu. Build gabungan + verifikasi browser dijalankan ulang dari nol
+setelah semua merge, BUKAN dipercaya dari verifikasi per-agent yang
+terpisah.
+
+Perbaikan pasca-merge yang ditemukan saat verifikasi gabungan (bukan oleh
+agent manapun secara individual): halaman detail post tidak pernah
+me-render `cover` image sama sekali (di-flag oleh agent T-13b sendiri
+sebagai di luar scope-nya, diperbaiki saat integrasi); bug spasi hilang
+setelah link inline muncul lagi di halaman About (kelas bug yang sama
+dengan LESSONS.md 2026-07-16); judul project di `/projects` men-title-case
+mentah slug ("Cdmp Jabodetabek") — ditambah override map kecil
+(`getProjectTitle`).
 
 ## Last session
 
@@ -113,9 +155,21 @@ mengembalikan HTTP 404 yang benar.
   dengan info deploy nyata; hapus entri LESSONS.md placeholder, tambah lesson
   soal `vercel whoami` tidak read-only.
 
+- 2026-07-17: T-09–T-13 (M2) — dikerjakan via Workflow multi-agent paralel
+  (6 agent, git worktree terisolasi) atas permintaan eksplisit user. BSOD
+  menghentikan proses di tengah jalan; 3 agent sudah sempat commit, 3
+  lainnya diselamatkan dari worktree yang masih utuh (diverifikasi build
+  dulu, baru di-commit manual). Semua 6 branch di-merge ke main satu per
+  satu, 2 konflik di lib/posts.ts diselesaikan manual (gabung, bukan
+  pilih). Build+browser diverifikasi ulang dari nol pasca-merge; ditemukan
+  & diperbaiki 3 gap integrasi (cover image tak pernah dirender, bug spasi
+  About kambuh lagi, judul project mentah). Worktree & branch sementara
+  dibersihkan setelah semua ter-merge dan push.
+
 ## Next steps
 
-1. M2 dimulai — T-09: filter tag di Explore + halaman `/tags/[tag]`.
+1. Breakdown task M3 (Identitas & polish) ke docs/TASK.md sebelum mulai
+   coding — belum ada task M3 yang didefinisikan.
 
 ## Blockers
 

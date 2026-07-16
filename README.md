@@ -17,16 +17,19 @@ Full setup: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
 ## Status
 
 Live at [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app).
-M1 (Fondasi & Content Engine) done: Home, Explore, post detail, About
-placeholder, 404, and 3 real project case studies. M2 (Explore &
-keterhubungan) in progress — see [docs/TASK.md](docs/TASK.md).
+M1 and M2 done: Home, Explore (with tag filter and client-side search),
+post detail with related posts, project hub pages, tag pages, a real About
+page, and 7 real posts (3 software project case studies + 4 GIS/planning
+research write-ups). M3 (Identitas & polish) not yet scoped — see
+[docs/TASK.md](docs/TASK.md).
 
 ## Structure
 
 ```
 src/content/posts/  # MDX posts, frontmatter validated by src/content.config.ts
-src/pages/           # routes: /, /explore(/[type]), /posts/[slug], /about, /404
-src/components/       # Header, Footer, PostCard, PostListItem, EmptyState, etc.
+src/pages/           # routes: /, /explore(/[type]), /posts/[slug], /tags(/[tag]),
+                     #   /projects(/[name]), /about, /404
+src/components/       # Header, Footer, PostCard, PostListItem, EmptyState, RelatedPosts, etc.
 src/layouts/           # BaseLayout (shared shell)
 src/lib/                 # posts.ts — content collection query helpers
 docs/                     # project docs (see table below)

@@ -10,14 +10,9 @@
 
 ## Now
 
-- [ ] T-09: filter tag di Explore + halaman `/tags/[tag]` (M2)
+M2 selesai. Menunggu prioritas M3 berikutnya — lihat docs/ROADMAP.md.
 
 ## Next
-
-- [ ] T-10: related posts by shared tags/project (M2)
-- [ ] T-11: project hub pages `/projects/[name]` (M2)
-- [ ] T-12: Pagefind search (M2)
-- [ ] T-13: migrasi konten + foto dari Website_Portfolio lama (M2)
 
 ## Done
 
@@ -29,4 +24,9 @@
 - [x] T-06: tulis case study #2 — Jakarta Transit Heritage Explorer (English) (M1) — 2026-07-16
 - [x] T-07: tulis case study #3 — CDMP-Jabodetabek (English) (M1) — 2026-07-16
 - [x] T-08: hubungkan repo GitHub + deploy Vercel, verifikasi URL publik (M1) — 2026-07-16
+- [x] T-09: filter tag di Explore + halaman `/tags/[tag]` (M2) — 2026-07-17
+- [x] T-10: related posts by shared tags/project (M2) — 2026-07-17
+- [x] T-11: project hub pages `/projects/[name]` (M2) — 2026-07-17
+- [x] T-12: Pagefind search (M2) — 2026-07-17
+- [x] T-13: migrasi konten + foto dari Website_Portfolio lama (M2) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

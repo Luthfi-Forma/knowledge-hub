@@ -6,6 +6,48 @@
      classify. Mark entries worth generalizing to the OS with [harvest-candidate];
      after harvesting they get marked [harvested YYYY-MM-DD]. -->
 
+## 2026-07-17 — Recovering a Workflow (multi-agent) run after a host crash [harvest-candidate]
+
+Tags: #workflow #git #multi-agent
+
+A background Workflow run (6 parallel agents, each in an isolated
+`isolation: 'worktree'`) was killed mid-run by a host BSOD. The resume
+notification said "no completion record found... may have been stopped" —
+not reassuring on its own. What actually happened, and how to recover:
+
+1. `git worktree list` still showed all 6 worktrees on disk, each pointing
+   at a branch. Some had already advanced past the base commit (agent
+   finished + committed before the crash); others were still at the base
+   commit but had real uncommitted changes sitting in the working tree
+   (agent was mid-task when killed) — `git status --short` per worktree
+   tells you which is which immediately.
+2. `<transcriptDir>/journal.jsonl` (path returned by the original Workflow
+   call) has a `"result"` line for every agent that fully finished and
+   returned — cross-reference against the worktree list to know exactly
+   which 3-of-6 completed vs. which 3-of-6 were interrupted. Don't guess
+   from the ambiguous "stopped" notification alone.
+3. For the interrupted ones: `cd` into the worktree, check `node_modules`
+   already exists (it does — npm install had completed), then just run the
+   build yourself. If it passes, the agent's work was actually done in
+   substance, just not committed — commit it yourself rather than
+   re-running the whole agent (cheaper, and the in-progress work was often
+   already complete or nearly so).
+4. Locked worktrees (`git worktree list` shows `locked`, left over from the
+   killed process) block `git worktree remove` with a single `--force`;
+   need `remove --force --force` (or unlock first) once you've confirmed
+   their content is safely merged elsewhere.
+5. Merging N worktree branches back into `main` one at a time: conflicts
+   cluster on shared files multiple agents extended (e.g. everyone
+   appending new functions to the end of the same `lib/posts.ts`) — these
+   are almost always "keep both sides" merges, not real semantic conflicts,
+   because each agent was scoped to touch a different, non-overlapping
+   region of the file logically even though the diff lands at the same
+   line. Rebuild + browser-verify fresh after ALL merges land, not after
+   each individual merge — integration bugs only show up once everything
+   is actually combined (here: a post-detail cover-image gap only one
+   agent had flagged, plus a whitespace-trim slip that showed up in newly
+   written prose independent of any single agent's diff).
+
 ## 2026-07-16 — `vercel whoami` can silently complete a device-auth login
 
 Tags: #vercel #deploy

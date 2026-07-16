@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-16
+- Updated: 2026-07-17
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -9,17 +9,18 @@
 | # | Milestone | Outcome (verifiable) | Status |
 |---|---|---|---|
 | M1 | Fondasi & Content Engine | Situs Astro live di Vercel: schema frontmatter tervalidasi, Home + Explore + halaman post, 3 case study nyata ter-publish | done |
-| M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | active |
+| M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | done |
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics, custom domain; repo portfolio lama diarsipkan | planned |
 
 ## Current focus
 
-M1 selesai 2026-07-16: situs live di
-[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app),
-repo [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-terhubung ke Vercel untuk auto-deploy tiap push ke `main`. Build gagal bila
-frontmatter tidak valid, 3 case study proyek nyata (Jabodetabek-Connect,
-JTHE, CDMP-Jabodetabek) tampil di Home dan Explore. M2 aktif berikutnya.
+M1 selesai 2026-07-16, M2 selesai 2026-07-17 (dikerjakan multi-agent paralel
+— lihat docs/memory/STATE.md untuk detail proses). Situs live di
+[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app):
+filter tag (`/tags`), related posts, project hub (`/projects`), search
+client-side (Pagefind) di Explore, About terisi konten nyata + 4 case study
+tambahan dari portfolio lama. Belum ada task M3 yang di-breakdown ke
+TASK.md — lakukan itu sebelum mulai coding lagi (aturan CLAUDE.md).
 
 ## Phase detail
 
