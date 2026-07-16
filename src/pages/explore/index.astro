@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TypeFilter from '../../components/explore/TypeFilter.astro';
+import PostList from '../../components/explore/PostList.astro';
+import { getPublishedPosts } from '../../lib/posts';
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="Explore — Afreza Hernanda">
+  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+    <h1 class="font-display mb-5 text-xl font-bold text-ink">Explore</h1>
+    <TypeFilter active="all" />
+    <PostList posts={posts} emptyMessage="Nothing published yet." />
+  </section>
+</BaseLayout>

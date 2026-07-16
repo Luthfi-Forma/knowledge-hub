@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+/*
+ * Provisional design tokens (M1 "layout dasar"). Final visual identity is
+ * owned by M3 — see docs/ROADMAP.md and docs/memory/STATE.md. Neutral zinc
+ * palette + Plus Jakarta Sans/Manrope, deliberately distinct from the old
+ * portfolio site being replaced.
+ */
+@theme {
+  --color-ink: #18181b;
+  --color-ink-muted: #52525b;
+  --color-paper: #ffffff;
+  --color-line: #e4e4e7;
+  --color-accent: #2563eb;
+
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+
+  --container-content: 50rem;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}

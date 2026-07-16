@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string;
+  href?: string;
+  linkLabel?: string;
+}
+
+const { title, href, linkLabel = 'See more' } = Astro.props;
+---
+
+<div class="mb-3.5 flex items-baseline justify-between">
+  <h2 class="font-display text-base font-bold text-ink">{title}</h2>
+  {
+    href && (
+      <a href={href} class="text-xs text-ink hover:text-accent">
+        {linkLabel} →
+      </a>
+    )
+  }
+</div>

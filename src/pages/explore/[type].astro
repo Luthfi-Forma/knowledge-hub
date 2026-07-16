@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TypeFilter from '../../components/explore/TypeFilter.astro';
+import PostList from '../../components/explore/PostList.astro';
+import { getPublishedPosts, POST_TYPES } from '../../lib/posts';
+
+export function getStaticPaths() {
+  return POST_TYPES.map((type) => ({ params: { type } }));
+}
+
+const { type } = Astro.params as { type: (typeof POST_TYPES)[number] };
+const posts = (await getPublishedPosts()).filter((post) => post.data.type === type);
+const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+---
+
+<BaseLayout title={`${typeLabel} — Explore — Afreza Hernanda`}>
+  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+    <h1 class="font-display mb-5 text-xl font-bold text-ink">Explore</h1>
+    <TypeFilter active={type} />
+    <PostList posts={posts} emptyMessage={`No ${type} posts yet.`} />
+  </section>
+</BaseLayout>

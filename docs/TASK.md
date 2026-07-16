@@ -10,11 +10,10 @@
 
 ## Now
 
-- [ ] T-03: buat layout dasar + halaman Home (Hero, Featured, Latest, Contact) dan Explore sederhana (M1)
+- [ ] T-04: halaman detail post `[slug]` + halaman About placeholder + 404 (M1)
 
 ## Next
 
-- [ ] T-04: halaman detail post `[slug]` + halaman About placeholder + 404 (M1)
 - [ ] T-05: tulis case study #1 — Jabodetabek-Connect (English) (M1)
 - [ ] T-06: tulis case study #2 — Jakarta Transit Heritage Explorer (English) (M1)
 - [ ] T-07: tulis case study #3 — CDMP-Jabodetabek (English) (M1)
@@ -32,4 +31,5 @@
 
 - [x] T-01: init proyek Astro + Tailwind + MDX, struktur folder content collection `posts` (M1) — 2026-07-16
 - [x] T-02: definisikan schema frontmatter zod + 1 post contoh yang lolos validasi; buktikan build gagal pada frontmatter invalid (M1) — 2026-07-16
+- [x] T-03: buat layout dasar + halaman Home (Hero, Featured, Latest, Contact) dan Explore sederhana (M1) — 2026-07-16
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

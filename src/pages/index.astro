@@ -1,17 +1,18 @@
 ---
-import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import FeaturedProjects from '../components/home/FeaturedProjects.astro';
+import LatestPosts from '../components/home/LatestPosts.astro';
+import Contact from '../components/Contact.astro';
+import { getFeaturedProjects, getLatestPosts } from '../lib/posts';
+
+const featuredProjects = await getFeaturedProjects();
+const latestPosts = await getLatestPosts();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>knowledge-hub</title>
-	</head>
-	<body>
-		<h1 class="text-3xl font-bold">knowledge-hub</h1>
-	</body>
-</html>
+<BaseLayout title="Afreza Hernanda — knowledge-hub">
+  <Hero />
+  <FeaturedProjects posts={featuredProjects} />
+  <LatestPosts posts={latestPosts} />
+  <Contact />
+</BaseLayout>

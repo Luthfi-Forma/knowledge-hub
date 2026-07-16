@@ -6,6 +6,20 @@
      classify. Mark entries worth generalizing to the OS with [harvest-candidate];
      after harvesting they get marked [harvested YYYY-MM-DD]. -->
 
+## 2026-07-16 — Tailwind v4 `focus-visible:outline-*` needs the bare `outline` class [harvest-candidate]
+
+Tags: #tailwind #accessibility
+
+Setting `focus-visible:outline-2 focus-visible:outline-offset-2
+focus-visible:outline-{color}` alone renders an *invisible* focus ring —
+`outline-style` stays `none` because none of those utilities set it. Need
+the bare `focus-visible:outline` class too (sets `outline-style: solid`).
+Caught by testing with a real keyboard `Tab` press in the browser and reading
+`getComputedStyle(document.activeElement).outlineStyle` — calling
+`el.focus()` via JS does **not** trigger `:focus-visible` in Chromium, so
+that check silently passes even when the ring is broken; must drive focus
+with an actual key press to verify.
+
 ## 2026-07-16 — Astro scaffolding gotchas
 
 Tags: #astro

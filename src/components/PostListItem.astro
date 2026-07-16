@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  href?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, href, headingLevel = 'h3' } = Astro.props;
+const { title, summary, date, type } = post.data;
+const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+const Heading = headingLevel;
+---
+
+<article>
+  <Heading class="text-[0.9375rem] font-semibold text-ink">
+    {
+      href ? (
+        <a href={href} class="hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+          {title}
+        </a>
+      ) : (
+        title
+      )
+    }
+  </Heading>
+  <p class="mt-1 text-sm leading-normal text-ink-muted">{summary}</p>
+  <p class="mt-1 text-xs text-ink-muted">— {formattedDate} · {typeLabel}</p>
+</article>
