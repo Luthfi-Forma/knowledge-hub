@@ -8,12 +8,13 @@
 
 ## Current status
 
-T-01 sampai T-06 selesai. Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di
-root repo. Content collection `posts` (`src/content.config.ts`, Content Layer
-API) punya schema zod lengkap sesuai content model di ARCHITECTURE.md.
+T-01 sampai T-07 selesai — seluruh 3 case study M1 sudah publish. Proyek
+Astro 7 + Tailwind CSS v4 + MDX berjalan di root repo. Content collection
+`posts` (`src/content.config.ts`, Content Layer API) punya schema zod
+lengkap sesuai content model di ARCHITECTURE.md.
 
-Dua case study nyata sudah publish, keduanya diriset dari repo proyek
-aslinya (README/brief/architecture/ADR/git log), bukan karangan:
+Tiga case study nyata sudah publish, ketiganya diriset dari repo proyek
+aslinya (README/brief/architecture/ADR/git log/data), bukan karangan:
 
 - `jabodetabek-connect.mdx` — peta transit octilinear ala Mini Metro, v1
   feature-complete tapi belum di-deploy dan belum punya repo GitHub publik
@@ -25,9 +26,15 @@ aslinya (README/brief/architecture/ADR/git log), bukan karangan:
   (404 publik) dan GitHub Pages-nya belum live (404) meski sudah di-wiring —
   jadi `repo`/`demo` tetap dikosongkan sampai benar-benar publik, bukan
   ditebak dari nama repo.
+- `cdmp-jabodetabek.mdx` — peta gelap Jabodetabek + timeline slider (14
+  proyek pembangunan 1989–2027, dibaca langsung dari `projects.geojson`),
+  animasi crossfade rAF karena MapLibre tidak men-transisikan paint
+  data-driven. Belum ada remote git sama sekali → `repo`/`demo` kosong.
 
 Featured Projects di Home & `/explore/project` sekarang menampilkan
-keduanya, bukan lagi empty state.
+ketiganya, bukan lagi empty state — **M1 "3 case study nyata" per
+ROADMAP.md tercapai**, tersisa T-08 (deploy) untuk menutup milestone M1
+sepenuhnya.
 
 Situs sekarang punya layout dasar nyata: `BaseLayout` + `Header`/`Footer`,
 Home (`/` — Hero, Featured Projects, Latest Posts, Contact), Explore
@@ -49,7 +56,7 @@ list polos untuk post). Sengaja berbeda dari palet/font portfolio lama
 (forest-green/cream, Space Grotesk+Inter Tight) supaya M3 mulai dari clean
 slate.
 
-Diverifikasi: build 11 route statis, kontras WCAG AA jauh di atas ambang,
+Diverifikasi: build 12 route statis, kontras WCAG AA jauh di atas ambang,
 tap target ≥44px, heading order tanpa skip level, focus ring solid terlihat
 (sempat ada bug `outline-style: none` karena lupa utility `outline` polos —
 sudah diperbaiki), tidak ada horizontal scroll di 375/768/1024/1440px, 404
@@ -83,11 +90,15 @@ mengembalikan HTTP 404 yang benar.
   privat dan GitHub Pages belum live sebelum memutuskan tetap mengosongkan
   `repo`/`demo` — jangan percaya begitu saja URL yang disebut di memory file
   proyek lain tanpa verifikasi ulang.
+- 2026-07-16: T-07 — case study CDMP-Jabodetabek, diriset dari PROJECT_BRIEF
+  + STATE.md proyek aslinya + `projects.geojson` langsung (daftar 14 proyek
+  nyata dibaca via node, bukan ditebak); tidak ada git remote sama sekali →
+  `repo`/`demo` kosong. Featured Projects & `/explore/project` sekarang
+  menampilkan 3 case study — target "3 case study nyata" M1 tercapai.
 
 ## Next steps
 
-1. T-07: tulis case study nyata terakhir (CDMP-Jabodetabek).
-2. T-08: hubungkan repo GitHub + deploy Vercel.
+1. T-08: hubungkan repo GitHub + deploy Vercel — task terakhir M1.
 
 ## Blockers
 

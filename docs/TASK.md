@@ -10,7 +10,6 @@
 
 ## Now
 
-- [ ] T-07: tulis case study #3 — CDMP-Jabodetabek (English) (M1)
 - [ ] T-08: hubungkan repo GitHub + deploy Vercel, verifikasi URL publik (M1)
 
 ## Backlog
@@ -29,4 +28,5 @@
 - [x] T-04: halaman detail post `[slug]` + halaman About placeholder + 404 (M1) — 2026-07-16
 - [x] T-05: tulis case study #1 — Jabodetabek-Connect (English) (M1) — 2026-07-16
 - [x] T-06: tulis case study #2 — Jakarta Transit Heritage Explorer (English) (M1) — 2026-07-16
+- [x] T-07: tulis case study #3 — CDMP-Jabodetabek (English) (M1) — 2026-07-16
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->
