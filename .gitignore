@@ -1,0 +1,15 @@
+# Dependencies & build
+node_modules/
+.next/
+out/
+dist/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Misc
+*.log
+.DS_Store
+.claude/settings.local.json
