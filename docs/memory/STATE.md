@@ -8,9 +8,19 @@
 
 ## Current status
 
-T-01 sampai T-04 selesai. Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di
+T-01 sampai T-05 selesai. Proyek Astro 7 + Tailwind CSS v4 + MDX berjalan di
 root repo. Content collection `posts` (`src/content.config.ts`, Content Layer
 API) punya schema zod lengkap sesuai content model di ARCHITECTURE.md.
+
+Case study nyata pertama sudah publish:
+`src/content/posts/jabodetabek-connect.mdx` — diriset dari
+`Projects\Jabodetabek-Connect` (README, PROJECT_BRIEF, ARCHITECTURE, ADR-001,
+git log project tsb, bukan karangan). Proyek itu sendiri: v1 feature-complete
+(peta octilinear 128 stasiun/13 line, animasi kereta, toggle line, tema
+light/dark) tapi belum di-deploy (Vercel login pending) dan belum punya repo
+GitHub publik — jadi frontmatter `repo`/`demo`/`cover` sengaja dikosongkan,
+bukan ditebak. Featured Projects di Home & `/explore/project` sekarang
+menampilkan post ini, bukan lagi empty state.
 
 Situs sekarang punya layout dasar nyata: `BaseLayout` + `Header`/`Footer`,
 Home (`/` — Hero, Featured Projects, Latest Posts, Contact), Explore
@@ -55,11 +65,16 @@ mengembalikan HTTP 404 yang benar.
   wiring href PostCard/PostListItem ke `/posts/[slug]` yang tadinya sengaja
   ditunda di T-03. Ketemu & perbaiki bug spasi hilang setelah link inline
   (Astro trim whitespace baris baru) di About.
+- 2026-07-16: T-05 — case study Jabodetabek-Connect, diriset dari repo
+  proyek aslinya (bukan proyek pengganti Website_Portfolio — proyek transit
+  map terpisah); verifikasi build + render (heading order, empty state
+  hilang di Featured/`/explore/project`); kecilkan `aria-disabled` yang
+  selalu `"false"` di PostCard jadi hanya muncul saat memang tanpa href.
 
 ## Next steps
 
-1. T-05–T-07: tulis 3 case study nyata — akan mengisi Featured Projects yang
-   sekarang masih empty state.
+1. T-06–T-07: tulis 2 case study nyata lagi (Jakarta Transit Heritage
+   Explorer, CDMP-Jabodetabek).
 2. T-08: hubungkan repo GitHub + deploy Vercel.
 
 ## Blockers

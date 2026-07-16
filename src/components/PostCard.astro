@@ -14,7 +14,7 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 ---
 
 <article class="group">
-  <a href={href ?? undefined} aria-disabled={!href} class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+  <a href={href ?? undefined} aria-disabled={href ? undefined : 'true'} class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
     {
       cover ? (
         <Image
