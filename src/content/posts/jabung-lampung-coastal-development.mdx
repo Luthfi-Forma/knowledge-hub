@@ -1,0 +1,55 @@
+---
+title: "Jabung & Coastal Area Development Plan: a gravity model for East Lampung's coastline"
+summary: "A macro–micro gravity analysis behind East Lampung's Jabung and coastal-area development plan, weighing policy direction, demographics, and each sub-district's potential for agropolitan and minapolitan zoning."
+date: 2024-10-05
+type: research
+tags: [gis, arcgis, coastal-planning, urban-planning]
+cover: ./jabung-lampung-coastal-cover.jpg
+draft: false
+---
+
+East Lampung Regency's Jabung sub-region and its coastal strip sit at the
+intersection of two development models the regency wanted to pursue at
+once: agropolitan zoning inland, built around agricultural production
+centers, and minapolitan zoning along the coast, built around fisheries.
+Deciding which specific areas should anchor each model — rather than
+applying both labels uniformly across the whole coastline — needed a way to
+compare sub-districts against each other on more than just which side of an
+administrative line they sit on.
+
+## Macro–micro gravity analysis
+
+The analytical core was a gravity analysis run at two scales. At the macro
+level, the analysis modeled the pull each population and economic center in
+East Lampung exerts on the surrounding region — the same logic gravity
+models use in retail and transportation planning, applied here to weigh
+which existing centers were strong enough to anchor a development zone
+around them. At the micro level, the same logic was applied within the
+Jabung and coastal study area itself, comparing individual sub-districts
+against each other on population, economic activity, and accessibility to
+identify which ones had the underlying pull to function as a secondary
+center rather than remain peripheral to a larger one. IBM SPSS handled the
+statistical weighting and scoring behind both scales; ArcGIS carried the
+spatial side — building the base layers, running the zonal comparisons, and
+producing the final thematic maps.
+
+## Weighing policy against potential
+
+A gravity score alone doesn't decide zoning — it has to sit against
+existing policy direction and demographic reality. The analysis compared
+each sub-district's gravity ranking with East Lampung's existing spatial
+policy commitments and its demographic profile, so a sub-district with a
+strong gravity score but a demographic base misaligned with agropolitan or
+minapolitan activity wouldn't get flagged as a priority center just because
+the numbers looked good in isolation. That cross-check was what turned a
+purely quantitative ranking into a set of thematic recommendations the
+regency's spatial plan could actually adopt.
+
+## Output
+
+The deliverable fed directly into East Lampung's Jabung and Coastal Area
+Development Plan, produced for Bappeda Lampung Timur (the regency's regional
+development planning agency) alongside a related regional drinking-water
+strategy document for the same area — giving the coastal strip a thematic
+base grounded in where development pressure and potential actually sit,
+rather than a zoning map drawn from administrative boundaries alone.
