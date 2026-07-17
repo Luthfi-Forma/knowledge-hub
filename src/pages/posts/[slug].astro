@@ -5,6 +5,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import { getPublishedPosts, getRelatedPosts } from '../../lib/posts';
+import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
+
+// ADR-002: each scrollytelling post is a bespoke wired-up React island (data
+// + viz + shell). Astro's `client:*` hydration needs a statically-analyzable
+// import reference in the template — not a variable assigned at runtime from
+// a lookup map — so a new scrollytelling post gets its own explicit branch
+// here rather than a generic slug → component registry.
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -24,6 +31,7 @@ const wordCount = post.body?.trim().split(/\s+/).filter(Boolean).length ?? 0;
 const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 const sections = headings.filter((heading) => heading.depth === 2);
 const isArticle = type === 'article';
+const isCikarangScrollytelling = post.data.presentation === 'scrollytelling' && post.id === 'cikarang-industrial-settlement-pattern';
 ---
 
 <BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
@@ -78,6 +86,8 @@ const isArticle = type === 'article';
     <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
       <Content />
     </div>
+
+    {isCikarangScrollytelling && <CikarangIndustrialSettlementScrollytelling client:visible />}
 
     {
       tags.length > 0 && (

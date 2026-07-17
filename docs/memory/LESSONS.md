@@ -1,5 +1,41 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-18 — Astro islands: `layout` is a reserved MDX frontmatter key; `client:*` hydration needs a statically-imported component reference [harvest-candidate]
+
+Tags: #astro #react #mdx
+
+Two gotchas hit back-to-back while wiring the first React island
+(scrollytelling, T-25, ADR-002):
+
+1. Named the opt-in frontmatter field `layout: "scrollytelling"`. Build
+   failed with `Rolldown failed to resolve import "scrollytelling"` — Astro's
+   MDX integration treats a frontmatter key literally named `layout` as a
+   magic import path to a layout component (same convention as Markdown's
+   `layout:` frontmatter), so a plain string value there gets fed to the
+   module resolver instead of the content schema. Renamed the field to
+   `presentation` — any other non-reserved name works; the bug is specific
+   to the exact key name `layout` in `.mdx` files, not a schema issue.
+2. First wiring attempt looked up the island component from a `Record<string,
+   Component>` map by `post.id` and rendered the resulting *variable* with
+   `client:visible`. Build failed with `NoMatchingImport: Could not render
+   ScrollytellingIsland` — Astro's compiler statically analyzes the template
+   to know which import corresponds to a `client:*` directive; it can't
+   trace a dynamically-assigned variable back to its import. Fix: reference
+   the imported component identifier directly in the JSX (`<CikarangThing
+   client:visible />` behind a boolean condition), not through a runtime
+   lookup. Consequence: each new scrollytelling post needs its own explicit
+   conditional branch in the post-detail page — which is fine, since ADR-002
+   already rules out a generic auto-chart system per post anyway.
+
+Related, not a bug: a `viz: Record<string, ComponentType>` prop (component
+*functions*, not data) can't be passed from `.astro` frontmatter into a
+hydrated island either — `client:*` props are serialized to JSON for the
+client bundle. Resolved by making each scrollytelling post's data module
+export one fully-wired default component (data + viz + the shared shell
+composed internally, in React-land where passing component references as
+props is normal) instead of exporting raw data for the `.astro` file to
+assemble.
+
 ## 2026-07-17 — `import.meta.url`-relative file reads break once Vite relocates the module at build [harvest-candidate]
 
 Tags: #astro #vite #build

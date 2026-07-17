@@ -176,8 +176,90 @@ Default remains zero-JS SSG.
   events) and prev/next buttons on top. No-JS fallback: the row is still a
   native horizontally-scrollable/swipeable list — CSS alone gets you there,
   the script only adds mouse-drag and the buttons.
-- **Tier 2 — React island (T-25, not yet built):** reserved for
-  scrollytelling, per ADR-002 — not wired up yet.
+- **Tier 2 — React island (T-25):** scrollytelling posts. See below.
+
+## Scrollytelling (T-25, M4)
+
+Opt-in per-post via `presentation: "scrollytelling"` on the `posts` schema —
+scoped by a zod `.refine()` to `type: "research"` only (a data-narrative
+format doesn't make sense on a project/article/photo entry). Named
+`presentation`, not `layout`: Astro's MDX integration treats a frontmatter
+key literally named `layout` as a magic import path to a layout component,
+so a plain string value there breaks the build trying to resolve it as a
+module specifier (see LESSONS.md, 2026-07-18).
+
+There is **no generic auto-chart system** — this mirrors the Lovable
+reference app (`cikarangcountryside`) this pattern was ported from, which
+also hand-built one bespoke set of visualizations for its one paper. Each
+scrollytelling post gets:
+
+- **A shared shell** — `src/islands/Scrollytelling.tsx`: sticky viz column
+  swapped via `IntersectionObserver` as section text scrolls past (ported
+  from the reference's `useActiveSection` hook), a slide-in "Sources" panel,
+  keyboard `PageUp`/`PageDown` snap-nav, and a mobile fixed-bottom viz dock
+  that only renders while the reader is actually inside the section (tracked
+  by its own `IntersectionObserver` on the container) so it doesn't
+  permanently cover the tags/related-posts below it. Respects
+  `prefers-reduced-motion` via `motion/react`'s `useReducedMotion`. Re-skinned
+  to the site's cream-paper tokens (not the reference's dark data-journalism
+  palette) — the user's explicit call: match the site's existing identity
+  rather than diverge into an "immersive mode."
+- **A bespoke data+viz module per post** —
+  `src/lib/scrollytelling/<slug>.tsx`: the section copy, citations, and
+  hand-coded viz panels (recharts + a couple of hand-coded SVG/CSS panels),
+  reusing `--color-chart-1`/`--color-chart-2` (global.css) as the two-series
+  palette — `--color-chart-2` is a new slate-blue, deliberately **not**
+  terracotta/orange, which T-14 already flagged as a generic-AI cliché paired
+  with cream paper + serif. This module's default export is the *entire*
+  wired-up island (shell + its own data), not raw data for the `.astro` page
+  to assemble — see the two Astro/React boundary gotchas below.
+
+**Astro/React boundary, two gotchas that shaped this structure** (full
+detail in LESSONS.md, 2026-07-18):
+
+1. `client:*` hydration requires a *statically-imported* component reference
+   used directly in the template's JSX — not a variable assigned at runtime
+   from a lookup map. So `posts/[slug].astro` has one explicit
+   `{condition && <CikarangIndustrialSettlementScrollytelling client:visible />}`
+   branch per scrollytelling post, rather than a generic slug → component
+   registry.
+2. A prop crossing the Astro → island hydration boundary must be
+   JSON-serializable — a `viz: Record<string, ComponentType>` map of
+   component *functions* can't be passed in from `.astro` frontmatter. This
+   is why the data module wires `Scrollytelling` + its own section/viz data
+   together internally and exports one ready-to-mount component, instead of
+   exporting raw `sections`/`viz` for the `.astro` page to pass as props.
+
+**Layout**: the island renders inside the post's existing
+`.max-w-(--container-content)` article container (not a full-bleed
+breakout like the reference) — the hero and body sections carry no
+horizontal padding/max-width of their own, inheriting the parent's, so
+padding doesn't double up. This was a deliberate call to match the site's
+narrow, restrained editorial measure rather than the reference's much wider
+`max-w-7xl` — consistent with the "re-skin to the site's identity" decision
+above.
+
+**Bundle scoping**: verified via a production build that the React +
+`motion` + `recharts` bundle (~700KB uncombined) is referenced **only** by
+the one post's generated HTML page — no other page (including other
+research posts) pulls in any of it, preserving the zero-JS-by-default
+invariant for the rest of the site.
+
+**Known verification gap**: the automated browser tool used to verify this
+feature could not observe the live scroll-triggered viz swap —
+`IntersectionObserver` callbacks never fired in that specific tool
+environment (confirmed via a from-scratch test observer that never received
+even the spec-guaranteed initial callback), independent of this feature's
+code. Verified instead via `client:load` (bypasses the `client:visible`
+trigger, which also depends on `IntersectionObserver`) to confirm mounting,
+the Sources panel, all 7 section viz panels (recharts + custom SVG/CSS,
+including `AnimatedNumber` count-ups), and the mobile fixed dock all render
+correctly with real data and no console errors. The scroll-linked swap logic
+itself is an intentionally close port of the reference app's own
+`useActiveSection` hook (same `rootMargin`/threshold values), which is
+IntersectionObserver — one of the most stable, long-supported browser APIs —
+so it should behave normally in real browsers; a real-browser sanity check
+after deploy is still worth doing once.
 
 ## Deployment shape
 

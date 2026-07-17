@@ -10,13 +10,12 @@
 
 ## Now
 
-Tidak ada — T-25 diblokir menunggu keputusan desain (lihat Backlog).
+Tidak ada.
 
 ## Backlog
 
 - [ ] T-20: custom domain — user eksplisit menunda ini ("belum butuh", 2026-07-17); putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel saat diminta (M3)
 - [ ] T-21: arsipkan repo `Website_Portfolio` lama — task terakhir M3, setelah custom domain live & konten/foto termigrasi penuh dari T-13/T-19 (M3)
-- [ ] T-25: Research scrollytelling — ADR-002 selesai (React island), source Cikarang diterima; menunggu keputusan arah visual (re-skin cream-paper vs. divergensi sengaja) & pola route sebelum implementasi (M4)
 
 ## Done
 
@@ -42,4 +41,5 @@ Tidak ada — T-25 diblokir menunggu keputusan desain (lihat Backlog).
 - [x] T-22: lebur `type: journal` ke `article` — hapus enum & POST_TYPES, migrasi 1 post (`building-knowledge-hub.mdx`) (M4) — 2026-07-17
 - [x] T-23: polish baca Article ala Medium — drop cap, pull-quote, lebar ukur (measure) lebih sempit, khusus `type: article` (M4) — 2026-07-17
 - [x] T-24: carousel drag kiri/kanan di Featured Projects (Home) — vanilla script + scroll-snap per ADR-002 (M4) — 2026-07-18
+- [x] T-25: Research scrollytelling (pilot) — React island (ADR-002 tier 2), re-skin cream-paper, opt-in via `presentation: "scrollytelling"` frontmatter (scoped to `type: research`). Pilot: `cikarang-industrial-settlement-pattern`, dengan citation ke versi published-nya (Rahman & Hernanda 2025, Jurnal Tunas Geografi) (M4) — 2026-07-18
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

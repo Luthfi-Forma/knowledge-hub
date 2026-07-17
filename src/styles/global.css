@@ -19,6 +19,15 @@
 
   --container-content: 50rem;
   --container-prose: 42rem;
+
+  /*
+   * Two-series data-viz palette (T-25, scrollytelling charts). --color-chart-1
+   * reuses the site accent; --color-chart-2 is a new slate-blue — NOT
+   * terracotta/orange, which T-14 already flagged as a generic-AI cliché
+   * paired with cream paper + serif.
+   */
+  --color-chart-1: var(--color-accent);
+  --color-chart-2: #3a5568;
 }
 
 /*

@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   // Used to build absolute URLs (og:image, canonical, sitemap, RSS). Update
@@ -22,5 +24,8 @@ export default defineConfig({
       // OG images are PNG endpoints, not pages; 404 shouldn't be indexed.
       filter: (page) => !page.includes('/og/') && !page.endsWith('/404'),
     }),
+    // React island (ADR-002 tier 2) — used only by scrollytelling posts
+    // (layout: "scrollytelling"); every other page stays zero-JS SSG.
+    react(),
   ]
 });

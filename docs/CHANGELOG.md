@@ -49,6 +49,16 @@ the project starts tagging releases.
 - ADR-002: adopt Astro Islands for bounded client-side interactivity —
   React islands for rich experiences (scrollytelling), vanilla `<script>`
   for simple DOM interactions (carousel); default stays zero-JS SSG.
+- Research scrollytelling (ADR-002 tier 2, first React island): opt-in per
+  post via `presentation: "scrollytelling"` frontmatter (scoped to `type:
+  research`), a reusable shell (`src/islands/Scrollytelling.tsx` — sticky
+  viz column swapped via `IntersectionObserver`, Sources panel, keyboard
+  snap-nav, mobile fixed viz dock, `prefers-reduced-motion`-aware), re-skinned
+  to the site's cream-paper identity. Pilot post:
+  `cikarang-industrial-settlement-pattern`, re-telling the province-scale
+  land-use and building-growth findings of its published paper (Rahman &
+  Hernanda, 2025, Jurnal Tunas Geografi) across 7 sourced, chart-backed
+  sections (T-25).
 
 ### Changed
 
@@ -60,7 +70,7 @@ the project starts tagging releases.
   centered pull-quote, and a narrower measure (`--container-prose`, 42rem);
   project/research posts keep the full content width (T-23).
 - Featured Projects on Home is now a drag/swipe carousel (`scroll-snap` +
-  vanilla-JS click-drag and prev/next buttons), per ADR-002 tier 2 — works
+  vanilla-JS click-drag and prev/next buttons), per ADR-002 tier 1 — works
   as a plain scrollable row with zero JS (T-24).
 
 ### Removed
