@@ -34,15 +34,24 @@ const sections = headings.filter((heading) => heading.depth === 2);
     <p class="font-display mb-6 max-w-[52ch] text-lg leading-relaxed text-ink-muted italic">{summary}</p>
 
     {
-      cover && (
-        <Image
-          src={cover}
-          alt=""
-          class="mb-8 aspect-video w-full rounded-sm object-cover"
-          widths={[600, 1200]}
-          sizes="(min-width: 800px) 800px, 100vw"
-        />
-      )
+      cover &&
+        (type === 'photo' ? (
+          <Image
+            src={cover}
+            alt={title}
+            class="mb-8 max-h-[75vh] w-full rounded-sm object-contain"
+            widths={[600, 1200]}
+            sizes="(min-width: 800px) 800px, 100vw"
+          />
+        ) : (
+          <Image
+            src={cover}
+            alt=""
+            class="mb-8 aspect-video w-full rounded-sm object-cover"
+            widths={[600, 1200]}
+            sizes="(min-width: 800px) 800px, 100vw"
+          />
+        ))
     }
 
     {

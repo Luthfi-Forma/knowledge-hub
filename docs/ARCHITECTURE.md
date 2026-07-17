@@ -44,7 +44,7 @@ invalid):
 title: string
 summary: string
 date: date
-type: "project" | "article" | "research" | "journal"
+type: "project" | "article" | "research" | "journal" | "photo"
 tags: string[]            // lowercase, vocabulary terkontrol (topic + technology dilebur)
 project?: string          // slug proyek — menghubungkan post lintas-jenis
 repo?: string (url)
@@ -54,6 +54,8 @@ draft: boolean (default false)
 ```
 
 Tidak boleh: field `year` (turunan `date`) atau `status` selain `draft`.
+`type: "photo"` mewajibkan `cover` (build gagal lewat `.refine()` di zod
+kalau tidak ada — foto ITU kontennya, bukan dekorasi opsional).
 
 ### Pages
 
@@ -67,6 +69,7 @@ Tidak boleh: field `year` (turunan `date`) atau `status` selain `draft`.
 | `/about`, `/404` | About/CV, not found |
 | `/og/[slug].png`, `/og/default.png` | OG image per post + fallback site-wide (M3, T-16) |
 | `/sitemap-index.xml`, `/rss.xml`, `/robots.txt` | Discoverability — sitemap, RSS feed of all posts, robots directive pointing at the sitemap (M3, T-17) |
+| `/photography` | Gallery grid of `type: "photo"` posts (M3, T-19) |
 
 ## Data flow
 
@@ -141,6 +144,27 @@ static `public/robots.txt`) specifically so its `Sitemap:` line reads
 `Astro.site` instead of a hardcoded URL — it can't drift out of sync with
 `astro.config.mjs` when the domain changes (T-20).
 
+## Photography (T-19, M3)
+
+Resolved the open question below: `type: "photo"` is a fifth value on the
+existing `posts` collection, not a `photography` tag bolted onto the
+existing types — a photo entry is structurally different (image + a short
+caption, no long-form MDX body), so it earns its own type the same way
+`project`/`article`/`research`/`journal` already do. `getPhotos()`
+(`src/lib/posts.ts`) filters to that type; `/photography` renders them as a
+2/3/4-column `<PhotoTile>` grid (square crop, real `alt` text — the photo
+*is* the content, unlike other types' decorative `alt=""` covers).
+`getLatestPosts()` (Home) excludes photos — a bare caption reads poorly in
+the text-forward ledger-row list; the dedicated grid is where photos
+belong. The post detail page skips the forced `aspect-video` crop for
+`type: "photo"` covers (`object-contain`, natural aspect, capped height)
+since cropping to 16:9 would mutilate portrait/square photos.
+
+Compression: no custom pipeline needed — every photo goes through
+`astro:assets`' `<Image>` component exactly like existing post covers,
+which already runs on Sharp (bundled with Astro) to resize and re-encode
+to WebP at build time.
+
 ## Deployment shape
 
 - Git push ke `main` → Vercel build & deploy otomatis; preview deploy per branch.
@@ -158,6 +182,5 @@ See [decisions/](decisions/) for all ADRs.
 
 ## Open questions
 
-- Custom domain apa — putuskan saat M3.
-- Perlukah `type: "photo"` terpisah untuk photography atau cukup tag `photography`
-  — putuskan saat M3 (section photography dibuat).
+- Custom domain apa — user menunda ini secara eksplisit (2026-07-17,
+  "belum butuh"); putuskan saat diminta.

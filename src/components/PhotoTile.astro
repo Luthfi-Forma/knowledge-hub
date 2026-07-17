@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  href: string;
+}
+
+const { post, href } = Astro.props;
+const { title, cover } = post.data;
+---
+
+{
+  cover && (
+    <a
+      href={href}
+      class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    >
+      <Image
+        src={cover}
+        alt={title}
+        class="aspect-square w-full rounded-sm object-cover"
+        widths={[300, 600]}
+        sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 47vw"
+      />
+      <p class="mt-2 text-sm text-ink group-hover:text-accent">{title}</p>
+    </a>
+  )
+}

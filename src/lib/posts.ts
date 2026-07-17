@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const POST_TYPES = ['project', 'article', 'research', 'journal'] as const;
+export const POST_TYPES = ['project', 'article', 'research', 'journal', 'photo'] as const;
 export type PostType = (typeof POST_TYPES)[number];
 
 export async function getPublishedPosts(): Promise<CollectionEntry<'posts'>[]> {
@@ -15,7 +15,14 @@ export async function getFeaturedProjects(limit = 4): Promise<CollectionEntry<'p
 
 export async function getLatestPosts(limit = 5): Promise<CollectionEntry<'posts'>[]> {
   const posts = await getPublishedPosts();
-  return posts.slice(0, limit);
+  // Photos read as bare captions in a text ledger row — they belong in the
+  // dedicated /photography grid, not mixed into the writing-focused feed.
+  return posts.filter((post) => post.data.type !== 'photo').slice(0, limit);
+}
+
+export async function getPhotos(): Promise<CollectionEntry<'posts'>[]> {
+  const posts = await getPublishedPosts();
+  return posts.filter((post) => post.data.type === 'photo');
 }
 
 export async function getAllTags(): Promise<{ tag: string; count: number }[]> {

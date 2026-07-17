@@ -41,6 +41,10 @@ the project starts tagging releases.
   autodiscovery link and a footer link), and a `robots.txt` pointing at the
   sitemap (T-17).
 - Vercel Web Analytics (`@vercel/analytics/astro`) in `BaseLayout` (T-18).
+- Photography section scaffolding: new `type: "photo"` on the `posts`
+  collection (cover required, enforced at build), `/photography` gallery
+  grid, nav link, and a photo-specific (uncropped) cover treatment on the
+  post detail page. No photos published yet — waiting on real files (T-19).
 
 ### Changed
 

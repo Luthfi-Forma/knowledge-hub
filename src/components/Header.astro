@@ -1,20 +1,21 @@
 ---
 const navItems = [
   { href: '/explore', label: 'Explore' },
+  { href: '/photography', label: 'Photography' },
   { href: '/about', label: 'About' },
   { href: '/#contact', label: 'Contact' },
 ];
 ---
 
 <header class="sticky top-0 z-10 border-b border-line bg-paper">
-  <div class="mx-auto flex max-w-(--container-content) items-center justify-between px-5 py-4">
-    <a href="/" class="font-display text-lg text-ink">Afreza Hernanda</a>
-    <nav aria-label="Primary" class="flex gap-1 text-xs font-medium tracking-wide text-ink-muted uppercase">
+  <div class="mx-auto flex max-w-(--container-content) flex-wrap items-center justify-between gap-x-3 gap-y-1 px-5 py-4">
+    <a href="/" class="font-display text-base text-ink sm:text-lg">Afreza Hernanda</a>
+    <nav aria-label="Primary" class="flex flex-wrap gap-x-0.5 text-xs font-medium tracking-wide text-ink-muted uppercase">
       {
         navItems.map((item) => (
           <a
             href={item.href}
-            class="inline-flex min-h-11 items-center px-2 text-ink-muted hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            class="inline-flex min-h-11 items-center px-1.5 text-ink-muted hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-2"
           >
             {item.label}
           </a>

@@ -10,11 +10,10 @@
 
 ## Now
 
-Tidak ada — sisa M3 diblokir menunggu input user (lihat Backlog).
+- [ ] T-19: section photography — kode & `type: "photo"` sudah dibangun (schema, `/photography` grid, nav link, cover tanpa crop paksa); **diblokir**: menunggu file foto nyata ditaruh user di `src/content/posts/` (lihat instruksi di docs/memory/STATE.md) (M3)
 
 ## Backlog
 
-- [ ] T-19: section photography — putuskan `type: "photo"` vs tag `photography` (open question ARCHITECTURE.md), lalu bangun halaman/section-nya; butuh foto nyata dari user (M3)
 - [ ] T-20: custom domain — user eksplisit menunda ini ("belum butuh", 2026-07-17); putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel saat diminta (M3)
 - [ ] T-21: arsipkan repo `Website_Portfolio` lama — task terakhir M3, setelah custom domain live & konten/foto termigrasi penuh dari T-13/T-19 (M3)
 
