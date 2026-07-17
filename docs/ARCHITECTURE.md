@@ -28,6 +28,7 @@ Pengunjung ──> Vercel (situs statis Astro)
 | Styling | Tailwind CSS | OS default |
 | Konten | MDX via Astro content collections + zod schema | ADR-001 |
 | Search | Pagefind (client-side, M2) | Tanpa backend |
+| OG images | Satori + resvg (M3, T-16) — static PNG endpoints, di-generate saat build | Tetap statis, tanpa runtime function (ADR-001) |
 | Deploy | Vercel | OS default; alternatif ditolak di ADR-001 |
 
 ## Components
@@ -62,6 +63,7 @@ Tidak boleh: field `year` (turunan `date`) atau `status` selain `draft`.
 | `/projects/[name]` | Project hub: semua post satu proyek + repo/demo (M2) |
 | `/tags/[tag]` | Post per tag (M2) |
 | `/about`, `/404` | About/CV, not found |
+| `/og/[slug].png`, `/og/default.png` | OG image per post + fallback site-wide (M3, T-16) |
 
 ## Data flow
 
@@ -104,6 +106,26 @@ standard's own defaults, short of the hard bans).
   `@layer utilities`, and layered CSS always loses to *unlayered* CSS
   regardless of specificity, so this reset must stay inside `@layer base` or
   every heading weight utility across the site silently stops working.
+
+## OG images (T-16, M3)
+
+`src/lib/og-image.ts` renders a 1200×630 PNG with Satori (JSX-free object
+tree → SVG) + `@resvg/resvg-js` (SVG → PNG), reusing the site's actual
+design tokens (cream paper, Bodoni Moda headline, Karla meta) so shared
+links look like the site instead of a generic card. `src/pages/og/
+[slug].png.ts` generates one per published post at build time (static
+output, no runtime function — keeps the "no backend" invariant from
+ADR-001); `src/pages/og/default.png.ts` covers every non-post page via
+`BaseLayout`'s `image` prop default. `BaseLayout.astro` emits the full
+`og:*`/`twitter:*` meta set plus `<link rel="canonical">`, both requiring
+`Astro.site` — set in `astro.config.mjs` to the current Vercel URL, update
+it if/when T-20 (custom domain) lands.
+
+Fonts for Satori are TTF files checked into `src/lib/og-fonts/` (OFL-licensed,
+downloaded from Google Fonts) and read via `fs.readFileSync` against
+`process.cwd()`, not `import.meta.url` — Vite relocates this module to
+`dist/.prerender/chunks/` at build time, which breaks module-relative paths
+but leaves the process's working directory (the project root) unchanged.
 
 ## Deployment shape
 

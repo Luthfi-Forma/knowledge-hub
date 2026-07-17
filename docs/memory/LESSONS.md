@@ -1,5 +1,26 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-17 — `import.meta.url`-relative file reads break once Vite relocates the module at build [harvest-candidate]
+
+Tags: #astro #vite #build
+
+`src/lib/og-image.ts` (T-16) loads local TTF font files at build time for
+Satori with plain Node `fs.readFileSync`. First attempt resolved the path
+with the standard ESM idiom — `fileURLToPath(new URL('./og-fonts/x.ttf',
+import.meta.url))` — which works perfectly in `astro dev` but threw `ENOENT
+.../dist/.prerender/chunks/og-fonts/bodoni-800.ttf` during `astro build`.
+Cause: Astro/Vite bundles this module into a chunk under
+`dist/.prerender/chunks/` for the prerender step, so `import.meta.url`
+correctly points at the *bundled* file's new location — but the raw
+`.ttf` files were never copied there (they're read via a runtime `fs` call,
+invisible to Vite's static import-graph analysis, unlike an `import`
+statement Vite would bundle/copy as an asset). Fix: resolve the path from
+`process.cwd()` instead — the project root is stable across dev and build,
+unlike the bundled module's own location. General rule: `import.meta.url`-
+relative `fs` reads are only safe for files Vite treats as real imports
+(copied/inlined); for anything read as a runtime side-channel (`fs`,
+dynamic `require`), resolve from `process.cwd()`.
+
 ## 2026-07-17 — Verifying computed style right after a same-tick DOM mutation gives a stale read [harvest-candidate]
 
 Tags: #browser-verification #css

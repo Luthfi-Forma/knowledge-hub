@@ -34,6 +34,9 @@ the project starts tagging releases.
 - Interactive experience timeline on the About page — expandable entries
   (native `<details>`) with role descriptions sourced from the old
   portfolio's content deck, translated and condensed (T-15).
+- Branded OG image per post (Satori + resvg, generated at build time) plus
+  a site-wide default; full `og:*`/`twitter:*` meta tags and `<link
+  rel="canonical">` on every page (T-16).
 
 ### Changed
 

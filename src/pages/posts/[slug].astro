@@ -25,7 +25,7 @@ const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 const sections = headings.filter((heading) => heading.depth === 2);
 ---
 
-<BaseLayout title={`${title} — Afreza Hernanda`} description={summary}>
+<BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
   <article class="mx-auto max-w-(--container-content) px-5 py-10">
     <p class="mb-2.5 text-xs font-medium tracking-wide text-accent uppercase">
       {typeLabel} · {readingMinutes} min read · {formattedDate}
