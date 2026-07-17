@@ -15,7 +15,7 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 
 <BaseLayout title={`${typeLabel} — Explore — Afreza Hernanda`}>
   <section class="mx-auto max-w-(--container-content) px-5 py-8">
-    <h1 class="font-display mb-5 text-xl font-bold text-ink">Explore</h1>
+    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Explore</h1>
     <TypeFilter active={type} />
     <PostList posts={posts} emptyMessage={`No ${type} posts yet.`} />
   </section>

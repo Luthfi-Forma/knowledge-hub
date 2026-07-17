@@ -24,10 +24,10 @@ const tabs = [
         href={tab.href}
         aria-current={tab.key === active ? 'page' : undefined}
         class:list={[
-          'inline-flex min-h-11 items-center rounded-md border px-3.5 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+          'inline-flex min-h-11 items-center rounded-sm border px-3.5 text-sm font-medium focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
           tab.key === active
             ? 'border-ink bg-ink text-paper'
-            : 'border-line text-ink hover:border-ink',
+            : 'border-line text-ink-muted hover:border-ink hover:text-ink',
         ]}
       >
         {tab.label}

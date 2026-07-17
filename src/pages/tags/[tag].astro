@@ -18,12 +18,12 @@ const posts = await getPostsByTag(tag);
 
 <BaseLayout title={`#${tag} — Afreza Hernanda`} description={`Posts tagged ${tag}.`}>
   <section class="mx-auto max-w-(--container-content) px-5 py-8">
-    <h1 class="font-display mb-5 text-xl font-bold text-ink">#{tag}</h1>
+    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">#{tag}</h1>
     {
       posts.length === 0 ? (
         <EmptyState message={`No posts tagged "${tag}" yet.`} ctaHref="/tags" ctaLabel="Browse all tags" />
       ) : (
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col border-b border-line">
           {posts.map((post) => (
             <PostListItem post={post} href={`/posts/${post.id}`} headingLevel="h2" />
           ))}

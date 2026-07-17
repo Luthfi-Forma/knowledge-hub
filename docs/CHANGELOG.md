@@ -29,6 +29,15 @@ the project starts tagging releases.
 - Real About page content (bio, education, expertise, experience,
   documents) and four GIS/urban-planning research case studies migrated
   from the previous portfolio site (T-13).
+- Static table of contents and computed reading time on post detail pages
+  (T-14).
+
+### Changed
+
+- Final visual identity applied site-wide, replacing the M1 provisional
+  zinc/Plus Jakarta Sans tokens: cream paper palette, Bodoni Moda (display +
+  article body) paired with Karla (UI/meta), sharp/minimal corner radii in
+  place of pill/rounded-lg defaults (T-14).
 
 ### Fixed
 

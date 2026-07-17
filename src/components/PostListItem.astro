@@ -14,8 +14,9 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 const Heading = headingLevel;
 ---
 
-<article>
-  <Heading class="text-[0.9375rem] font-semibold text-ink">
+<article class="border-t border-line py-4">
+  <p class="text-xs tracking-wide text-accent uppercase">{formattedDate} · {typeLabel}</p>
+  <Heading class="mt-1.5 text-lg leading-snug text-ink">
     {
       href ? (
         <a href={href} class="hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
@@ -26,6 +27,5 @@ const Heading = headingLevel;
       )
     }
   </Heading>
-  <p class="mt-1 text-sm leading-normal text-ink-muted">{summary}</p>
-  <p class="mt-1 text-xs text-ink-muted">— {formattedDate} · {typeLabel}</p>
+  <p class="mt-1.5 text-sm leading-normal text-ink-muted">{summary}</p>
 </article>

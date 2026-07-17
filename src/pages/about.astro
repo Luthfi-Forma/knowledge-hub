@@ -62,11 +62,11 @@ const organizations = [
         alt="Portrait of Afreza Luthfi Hernanda"
         width="160"
         height="160"
-        class="h-32 w-32 shrink-0 rounded-2xl object-cover sm:h-40 sm:w-40"
+        class="h-32 w-32 shrink-0 rounded-sm object-cover sm:h-40 sm:w-40"
       />
       <div>
-        <p class="mb-2 text-xs font-medium text-ink-muted">Urban &amp; Regional Planner</p>
-        <h1 class="font-display mb-3 text-2xl font-bold text-ink sm:text-3xl">Afreza Luthfi Hernanda</h1>
+        <p class="mb-2 text-xs font-medium tracking-wide text-accent uppercase">Urban &amp; Regional Planner</p>
+        <h1 class="font-display mb-3 text-3xl font-extrabold text-ink sm:text-4xl">Afreza Luthfi Hernanda</h1>
         <p class="max-w-[48ch] text-sm leading-relaxed text-ink-muted">
           I read regions through their data — mapping how industry, environment, and communities
           compete for the same ground, so plans are built on evidence rather than assumption.
@@ -121,12 +121,12 @@ const organizations = [
     <div class="grid gap-6 sm:grid-cols-2">
       {
         expertise.map((area) => (
-          <div class="rounded-lg border border-line p-5">
-            <h3 class="text-[0.9375rem] font-semibold text-ink">{area.title}</h3>
+          <div class="rounded-sm border border-line p-5">
+            <h3 class="text-lg text-ink">{area.title}</h3>
             <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{area.description}</p>
             <ul class="mt-3 flex flex-wrap gap-1.5">
               {area.chips.map((chip) => (
-                <li class="inline-flex items-center rounded-full border border-line px-2.5 py-1 text-xs text-ink-muted">
+                <li class="inline-flex items-center border border-line px-2.5 py-1 text-xs text-ink-muted">
                   {chip}
                 </li>
               ))}
@@ -146,7 +146,7 @@ const organizations = [
     <ul class="space-y-3">
       {
         documents.map((doc) => (
-          <li class="rounded-lg border border-line px-4 py-3">
+          <li class="rounded-sm border border-line px-4 py-3">
             <p class="text-sm font-semibold text-ink">{doc.title}</p>
             <p class="mt-0.5 text-xs text-ink-muted">{doc.org}</p>
           </li>

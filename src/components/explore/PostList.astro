@@ -15,7 +15,7 @@ const { posts, emptyMessage } = Astro.props;
   posts.length === 0 ? (
     <EmptyState message={emptyMessage} ctaHref="/explore" ctaLabel="Back to all" />
   ) : (
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col border-b border-line">
       {posts.map((post) => (
         <PostListItem post={post} href={`/posts/${post.id}`} headingLevel="h2" />
       ))}

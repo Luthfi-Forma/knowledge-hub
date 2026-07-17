@@ -1,5 +1,25 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-17 — Tailwind v4: unlayered custom CSS always beats `@layer utilities`, regardless of specificity [harvest-candidate]
+
+Tags: #tailwind #css
+
+Added `h1,h2,h3 { font-weight: 400; }` to `global.css` (below `@import
+"tailwindcss";`, not wrapped in any `@layer`) to reset the browser's default
+bold on headings for a font loaded without a 700 weight. Result: every
+per-element `font-extrabold`/`font-bold`/`font-medium` utility across the
+site silently stopped working — headings all rendered at 400 regardless of
+the class applied. Root cause: Tailwind v4's utilities live inside `@layer
+utilities`, and CSS's cascade-layer rule is that **unlayered declarations
+always win over layered ones**, independent of selector specificity — a
+bare element selector (`h1`, specificity 0,0,1) with no layer beat a `.font-
+extrabold` class (0,1,0) sitting inside a layer. Fix: wrap custom base CSS
+in `@layer base { ... }` so it participates in the same layer ordering as
+Tailwind's own base/utilities and utility classes can override it normally.
+Caught by asserting `getComputedStyle(h1).fontWeight` in the browser after
+applying the class, not by eyeballing rendered text (an 800 vs 400 Bodoni
+Moda headline looks subtly different at a glance, easy to miss).
+
 <!-- APPEND-ONLY, newest first. Write an entry after: a bug with a non-obvious
      cause, a milestone retro, or whenever something cost more than an hour to
      learn. Tag with topics (#python #gis #fastapi ...) so /harvest-lessons can

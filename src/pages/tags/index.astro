@@ -8,7 +8,7 @@ const tags = (await getAllTags()).sort((a, b) => b.count - a.count || a.tag.loca
 
 <BaseLayout title="Tags — Afreza Hernanda" description="Browse all posts by tag.">
   <section class="mx-auto max-w-(--container-content) px-5 py-8">
-    <h1 class="font-display mb-5 text-xl font-bold text-ink">Tags</h1>
+    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Tags</h1>
     {
       tags.length === 0 ? (
         <EmptyState message="No tags yet." ctaHref="/explore" ctaLabel="Browse all posts" />
@@ -18,7 +18,7 @@ const tags = (await getAllTags()).sort((a, b) => b.count - a.count || a.tag.loca
             <li>
               <a
                 href={`/tags/${tag}`}
-                class="inline-flex min-h-11 items-center rounded-md border border-line px-3 py-1.5 text-sm text-ink-muted hover:border-ink hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                class="inline-flex min-h-11 items-center border border-accent px-3 py-1.5 text-sm text-accent hover:bg-accent hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 {tag} ({count})
               </a>

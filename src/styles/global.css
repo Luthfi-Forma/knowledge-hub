@@ -1,33 +1,51 @@
 @import "tailwindcss";
 
 /*
- * Provisional design tokens (M1 "layout dasar"). Final visual identity is
- * owned by M3 — see docs/ROADMAP.md and docs/memory/STATE.md. Neutral zinc
- * palette + Plus Jakarta Sans/Manrope, deliberately distinct from the old
- * portfolio site being replaced.
+ * Final design tokens (M3, T-14). Cream paper + high-contrast Didone serif,
+ * mockup-first process against a client-supplied reference (editorial travel
+ * blog) — see docs/ARCHITECTURE.md "Visual identity" for the rationale.
+ * Replaces the M1 provisional zinc/Plus Jakarta Sans tokens.
  */
 @theme {
-  --color-ink: #18181b;
-  --color-ink-muted: #52525b;
-  --color-paper: #ffffff;
-  --color-line: #e4e4e7;
-  --color-accent: #2563eb;
+  --color-ink: #18140f;
+  --color-ink-muted: #6b6152;
+  --color-paper: #f5efe1;
+  --color-paper-raised: #efe8d5;
+  --color-line: #ddd3bc;
+  --color-accent: #38523a;
 
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bodoni Moda", Georgia, serif;
+  --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
 
   --container-content: 50rem;
 }
 
-body {
-  background-color: var(--color-paper);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  line-height: 1.6;
-}
+/*
+ * Wrapped in Tailwind's `base` layer (not left unlayered) so that per-element
+ * utility classes (font-extrabold, font-medium, ...) — which Tailwind v4
+ * generates inside `@layer utilities` — can still override these defaults.
+ * Unlayered CSS always beats layered CSS in the cascade regardless of
+ * specificity, so leaving this unlayered would make every heading ignore
+ * its weight utility.
+ */
+@layer base {
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
 
-h1,
-h2,
-h3 {
-  font-family: var(--font-display);
+  /*
+   * Bodoni Moda is only loaded at 400/500(italic)/800 (see BaseLayout.astro)
+   * — reset the UA stylesheet's default bold (700) on headings so the
+   * browser never synthesizes a fake-bold weight for a high-contrast Didone
+   * serif. Callers opt back into weight explicitly (font-extrabold, etc).
+   */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
 }

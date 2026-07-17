@@ -1,6 +1,6 @@
 # Architecture — knowledge-hub
 
-- Updated: 2026-07-16
+- Updated: 2026-07-17
 - Process: `C:\Users\Luthfi\Documents\Claude Code\Claude Engineering OS\standards\architecture\system-design-process.md`
 
 <!-- Keep this document TRUE. When reality diverges, update it in the same
@@ -69,6 +69,41 @@ Tidak boleh: field `year` (turunan `date`) atau `status` selain `draft`.
    → halaman, listing, tag, dan related posts ter-generate otomatis.
 2. Pengunjung menjelajah: post → (project hub) → repo GitHub / live demo, atau
    post → tag → post lain.
+
+## Visual identity
+
+Final identity (T-14, M3), replacing the M1 provisional zinc/Plus Jakarta Sans
+tokens. Determined mockup-first: proposed 3 original directions grounded in
+the site's subject (urban planning + GIS field research + software builds),
+then converged with the user against a client-supplied reference (an
+editorial travel-blog layout) per
+`OS_ROOT\standards\design\web-design.md` §2 (references override the
+standard's own defaults, short of the hard bans).
+
+- **Palette** — `--color-paper #F5EFE1` (warm cream), `--color-paper-raised
+  #EFE8D5`, `--color-ink #18140F`, `--color-ink-muted #6B6152`,
+  `--color-line #DDD3BC`, `--color-accent #38523A` (deep green, used
+  sparingly: tags, active-state accents, links). Accent deliberately avoids
+  terracotta — cream paper + serif + terracotta is a flagged generic-AI
+  cliché combination.
+- **Type** — `--font-display` = Bodoni Moda (headlines, post/section titles,
+  article body copy, italic lead paragraphs — loaded at weights 400/800 and
+  italic 500 only; see below), `--font-body` = Karla (nav, meta rows, tags,
+  buttons, captions). Both chosen to be less common than typical
+  AI-portfolio pairings (Fraunces/Playfair + Inter/Space Grotesk).
+- **Composition** — single-column editorial rhythm (generous whitespace,
+  italic lead, underlined subheadings), ledger-style bordered rows for post
+  lists, a static table-of-contents block on post pages (no scroll-spy JS —
+  kept deliberately simple), sharp/minimal corner radius (`rounded-sm` or
+  none) instead of pills, in place of the M1 rounded-lg/rounded-full
+  defaults.
+- **Font-weight gotcha** — Bodoni Moda is loaded at only 400/800/500(italic)
+  to keep the font payload small. `global.css` resets the UA default bold
+  (700) on `h1,h2,h3` inside `@layer base` so callers must opt into weight
+  explicitly (`font-extrabold`, etc.) — Tailwind v4 utility classes live in
+  `@layer utilities`, and layered CSS always loses to *unlayered* CSS
+  regardless of specificity, so this reset must stay inside `@layer base` or
+  every heading weight utility across the site silently stops working.
 
 ## Deployment shape
 
