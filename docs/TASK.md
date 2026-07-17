@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-07-16
+- Updated: 2026-07-17
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).

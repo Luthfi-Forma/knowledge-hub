@@ -1,32 +1,36 @@
 # Security — knowledge-hub
 
-- Updated: 2026-07-16
+- Updated: 2026-07-17
 - Baseline: `C:\Users\Luthfi\Documents\Claude Code\Claude Engineering OS\standards\security.md` (this doc records only what is
   specific to this project)
 
 ## Auth model
 
-<!-- Who can do what, and how identity is established. "None — public read-only
-     app" is a valid answer; write it explicitly. -->
+None — public read-only static site. No accounts, no login, no
+authenticated routes. Content is edited by committing MDX files to the
+repo, not through any in-app interface.
 
 ## Secrets inventory
 
-<!-- Every secret the project uses. Names and storage location only — NEVER
-     values. If a value ever lands in git, rotate it immediately. -->
-
-| Secret | Used for | Stored in |
-|---|---|---|
-| | | `.env` (gitignored) |
+None. The site has no backend, no API calls at runtime, and no `.env` file
+(there is nothing to configure — see docs/DEPLOYMENT.md's Configuration
+table). Search (Pagefind) runs entirely client-side against a static index
+generated at build time.
 
 ## Data sensitivity
 
-<!-- What personal or sensitive data the system touches, where it is stored,
-     and retention. "None" is a valid, explicit answer. -->
+None. No user data is collected, stored, or processed — no forms, no
+analytics currently wired up, no cookies beyond what Vercel's platform sets.
+Contact happens via `mailto:`/external LinkedIn links, not an in-site form.
 
 ## Threat notes
 
-<!-- Project-specific risks worth naming (e.g., scraping, abuse of a public
-     API, injection via user content) + the mitigation for each. -->
+- Content injection: all post content is authored by the site owner via
+  MDX files in the repo (not user-submitted), so XSS-via-content isn't a
+  live risk today. If a public contribution/comment path is ever added
+  (out of scope through M2, see docs/ROADMAP.md icebox), revisit this.
+- Dependency supply chain: standard `npm audit` hygiene applies; no
+  project-specific mitigation beyond that yet.
 
 ## Pre-release check
 
