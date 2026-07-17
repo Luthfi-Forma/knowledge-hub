@@ -30,6 +30,7 @@ Pengunjung ──> Vercel (situs statis Astro)
 | Search | Pagefind (client-side, M2) | Tanpa backend |
 | OG images | Satori + resvg (M3, T-16) — static PNG endpoints, di-generate saat build | Tetap statis, tanpa runtime function (ADR-001) |
 | Sitemap / RSS | `@astrojs/sitemap`, `@astrojs/rss` (M3, T-17) | Standar Astro, statis |
+| Analytics | Vercel Web Analytics via `@vercel/analytics/astro` (M3, T-18) | Privacy-friendly, tanpa cookie; native ke platform deploy |
 | Deploy | Vercel | OS default; alternatif ditolak di ADR-001 |
 
 ## Components
@@ -144,6 +145,12 @@ static `public/robots.txt`) specifically so its `Sitemap:` line reads
 
 - Git push ke `main` → Vercel build & deploy otomatis; preview deploy per branch.
 - Satu environment publik; tanpa env secrets (tidak ada backend).
+- Vercel Web Analytics (T-18): `<Analytics />` dari `@vercel/analytics/astro`
+  terpasang di `BaseLayout` dan mengirim pageview ke `/_vercel/insights/*`
+  di production. **Perlu diaktifkan manual sekali** di dashboard Vercel
+  (Project → Analytics → Enable) — itu toggle akun/dashboard yang tidak bisa
+  disentuh dari kode/CLI. Tanpa langkah itu, script terpasang tapi Vercel
+  akan menolak/mengabaikan datanya.
 
 ## Decisions
 

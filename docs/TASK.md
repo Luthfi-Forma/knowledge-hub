@@ -10,12 +10,12 @@
 
 ## Now
 
-- [ ] T-18: pasang Vercel Analytics (M3)
+Tidak ada — sisa M3 diblokir menunggu input user (lihat Backlog).
 
 ## Backlog
 
 - [ ] T-19: section photography — putuskan `type: "photo"` vs tag `photography` (open question ARCHITECTURE.md), lalu bangun halaman/section-nya; butuh foto nyata dari user (M3)
-- [ ] T-20: custom domain — putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel (M3)
+- [ ] T-20: custom domain — user eksplisit menunda ini ("belum butuh", 2026-07-17); putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel saat diminta (M3)
 - [ ] T-21: arsipkan repo `Website_Portfolio` lama — task terakhir M3, setelah custom domain live & konten/foto termigrasi penuh dari T-13/T-19 (M3)
 
 ## Done
@@ -37,4 +37,5 @@
 - [x] T-15: About/CV jadi lebih interaktif — timeline pengalaman dengan entri yang bisa di-expand, konten baru digali dari portfolio lama (M3) — 2026-07-17
 - [x] T-16: OG image per post (Satori + resvg, statis) + og:/twitter: meta tags site-wide (M3) — 2026-07-17
 - [x] T-17: sitemap + RSS feed + robots.txt (M3) — 2026-07-17
+- [x] T-18: pasang Vercel Web Analytics (`@vercel/analytics/astro`) — perlu diaktifkan manual sekali di dashboard Vercel (M3) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

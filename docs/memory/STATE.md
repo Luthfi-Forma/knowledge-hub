@@ -4,80 +4,67 @@
      by /project-status, grounded in git log — not recall. -->
 
 - Updated: 2026-07-17
-- Milestone: M1 dan M2 selesai — M3 (Identitas & polish) sedang berjalan: T-14–T-17 selesai (see docs/ROADMAP.md)
+- Milestone: M1 dan M2 selesai — M3 (Identitas & polish) sedang berjalan: T-14–T-18 selesai, sisanya diblokir input user (see docs/ROADMAP.md)
 
 ## Current status
 
-M1, M2, T-14, T-15, T-16, dan T-17 selesai. Situs live di
+M1, M2, dan T-14–T-18 (M3) selesai. Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. Situs punya
-8 post nyata (4 case study software + 4 case study riset GIS/planning),
-Home, Explore (filter type + tag + search Pagefind), detail post (+TOC,
-reading time, related posts, OG image per post), halaman tag (`/tags`),
-project hub (`/projects`), About dengan timeline pengalaman interaktif,
-404 custom, sitemap + RSS feed + robots.txt. **Identitas visual final sudah
-diterapkan** (bukan lagi provisional M1): kertas krem `#F5EFE1`, ink
-`#18140F`, aksen hijau tua `#38523A`, serif Bodoni Moda (display + body) +
-sans Karla (UI/meta) — lihat ARCHITECTURE.md bagian "Visual identity" untuk
-token lengkap dan alasannya.
+8 post nyata, Home, Explore (filter + search Pagefind), detail post (+TOC,
+reading time, related posts, OG image per post), halaman tag, project hub,
+About dengan timeline pengalaman interaktif, 404 custom, sitemap + RSS +
+robots.txt, dan Vercel Web Analytics terpasang. **Identitas visual final
+sudah diterapkan** (bukan lagi provisional M1): kertas krem `#F5EFE1`, ink
+`#18140F`, aksen hijau tua `#38523A`, serif Bodoni Moda + sans Karla — lihat
+ARCHITECTURE.md bagian "Visual identity" untuk detail dan alasannya.
+
+**Aksi tersisa untuk user (bukan kode):** aktifkan Web Analytics secara
+manual di dashboard Vercel (Project → Analytics → Enable) — Claude tidak
+bisa menyentuh toggle dashboard/akun itu; skrip `<Analytics />` sudah
+terpasang dan siap begitu diaktifkan.
 
 ## Last session
 
-2026-07-16 s/d 2026-07-17: T-01–T-08 (M1) lalu T-09–T-13 (M2) dikerjakan via
-Workflow multi-agent paralel — detail proses & recovery BSOD ada di
-`docs/memory/LESSONS.md`. Kemudian T-14 (M3, identitas visual final)
-dikerjakan solo: proses mockup-first dengan 3 arah orisinal (Field Notes /
-Blueprint / Reading Room) di-publish sebagai Artifact, user memilih
-komposisi Reading Room + palet Field Notes, minta font "kurang
-AI-generated" (Piazzolla+Karla / Besley+Jost sebagai opsi), lalu user
-memberi referensi visual nyata (travel-blog editorial: kertas krem,
-headline serif Didone tebal, meta row, TOC sidebar) yang jadi arah final —
-kertas krem + Bodoni Moda + Karla, aksen hijau tua (bukan terracotta,
-dihindari sebagai kombinasi klise). Diterapkan ke `global.css` + ~20
-komponen/halaman, plus TOC statis dan reading time di halaman post. Satu
-bug non-trivial: reset `font-weight` unlayered mengalahkan semua utility
-class Tailwind `font-*` (cascade-layer gotcha, didokumentasikan di
-LESSONS.md). Lanjut T-15 (timeline pengalaman About, interaktif via native
-`<details>`): riset ke repo `Website_Portfolio` lama menemukan deskripsi
-per-role di `Portofolio Content.pdf` (termasuk satu baris deskripsi yang
-ternyata salah-tempel/duplikat di sumbernya — diverifikasi ke user sebelum
-dipakai, 2 entri dihapus dari draft atas permintaan user). Timeline
-divalidasi lolos build + browser (toggle expand/collapse, marker rotate,
-no overflow 375–1440). Ditemukan dan diperbaiki satu gotcha verifikasi:
-`getComputedStyle` segera setelah mutasi DOM di tick skrip yang sama bisa
-memberi nilai basi — sempat mengira ada bug CSS padahal rule-nya benar
-(didokumentasikan di LESSONS.md). Lanjut T-16 (OG image per post): OG image
-1200×630 di-generate saat build dengan Satori + resvg, pakai token desain
-situs yang sama (kertas krem, Bodoni Moda, Karla) — jadi bukan gambar
-generik, tapi kartu yang terlihat seperti situsnya sendiri saat dibagikan.
-Ditambahkan juga meta tag `og:*`/`twitter:*` lengkap + `<link
-rel="canonical">` yang sebelumnya sama sekali tidak ada di `BaseLayout`.
-`astro.config.mjs` diberi `site:` (URL Vercel saat ini) supaya URL absolut
-bisa dibangun — perlu diupdate saat T-20 (custom domain) selesai. Satu
-gotcha build-time ditemukan & diperbaiki: baca file font via
-`import.meta.url`-relative path gagal setelah Vite memindahkan modul ke
-`dist/.prerender/chunks/` saat build (`fs.readFileSync` tidak terlihat oleh
-Vite sebagai import, jadi file `.ttf`-nya tidak ikut ter-copy) — fix-nya
-resolve path dari `process.cwd()` (didokumentasikan di LESSONS.md). Semua
-9 gambar OG (8 post + 1 default) diverifikasi visual lewat Read tool
-(dimensi 1200×630, layout benar termasuk judul panjang 4-baris). Ditutup
-dengan T-17 (sitemap + RSS + robots.txt): `@astrojs/sitemap` (filter
-mengecualikan endpoint `/og/*.png` dan `/404`), `/rss.xml` berisi semua 8
-post nyata (title/summary/tags/date, urut terbaru dulu), `robots.txt` jadi
-endpoint dinamis (bukan file statis) supaya baris `Sitemap:`-nya selalu
-sinkron dengan `Astro.site` — tidak akan basi saat domain custom (T-20)
-dipasang nanti. Autodiscovery link + link RSS terlihat di footer.
-Diverifikasi: 37 URL di sitemap (tanpa /og/ atau /404), RSS XML valid untuk
-semua post, robots.txt terlayani benar di dev.
+2026-07-16 s/d 2026-07-17: T-01–T-13 (M1+M2, sebagian via Workflow
+multi-agent — detail & recovery BSOD di LESSONS.md). Lalu M3 T-14–T-18
+dikerjakan solo berurutan dalam sesi yang sama:
+
+- **T-14** — identitas visual final: mockup-first (3 arah di-publish sebagai
+  Artifact), user memilih komposisi Reading Room + palet Field Notes +
+  font anti-mainstream, lalu konvergen ke referensi nyata user (kertas
+  krem, serif Didone Bodoni Moda, meta row, TOC) — diterapkan ke seluruh
+  situs. Satu bug ditemukan: reset `font-weight` unlayered mengalahkan
+  semua utility Tailwind `font-*` (cascade-layer gotcha).
+- **T-15** — timeline pengalaman interaktif di About (native `<details>`),
+  konten digali dari `Website_Portfolio` lama, diverifikasi ke user sebelum
+  dipakai (1 deskripsi ternyata salah-tempel di sumber, dibuang).
+- **T-16** — OG image per post (Satori + resvg, 1200×630, pakai token
+  desain situs sendiri) + meta tag `og:*`/`twitter:*` lengkap yang
+  sebelumnya tidak ada sama sekali. `astro.config.mjs` diberi `site:` (URL
+  Vercel saat ini).
+- **T-17** — sitemap (`@astrojs/sitemap`, exclude `/og/*` & `/404`), RSS
+  feed semua post, `robots.txt` sebagai endpoint dinamis (bukan file
+  statis) supaya selalu sinkron dengan `Astro.site`.
+- **T-18** — Vercel Web Analytics (`@vercel/analytics/astro`) terpasang di
+  `BaseLayout`; perlu diaktifkan manual di dashboard (lihat "Current
+  status" di atas).
+
+Detail teknis & gotcha non-obvious tiap task ada di
+`docs/memory/LESSONS.md`; rasionale desain lengkap di ARCHITECTURE.md.
+Semua task diverifikasi build + browser sebelum commit.
+
+User eksplisit menunda T-20 (custom domain) — "belum butuh" (2026-07-17).
 
 ## Next steps
 
-1. T-18: pasang Vercel Analytics.
+1. Tunggu arahan user: T-19 (photography, butuh foto nyata) atau task lain.
+2. T-20/T-21 menunggu keputusan custom domain dari user.
 
 ## Blockers
 
-None.
+None — sisa M3 backlog menunggu input/aset dari user, bukan blocker teknis.
 
 ## Open questions
 

@@ -40,6 +40,7 @@ the project starts tagging releases.
 - Sitemap (`@astrojs/sitemap`), RSS feed of all posts (`/rss.xml`, with
   autodiscovery link and a footer link), and a `robots.txt` pointing at the
   sitemap (T-17).
+- Vercel Web Analytics (`@vercel/analytics/astro`) in `BaseLayout` (T-18).
 
 ### Changed
 
