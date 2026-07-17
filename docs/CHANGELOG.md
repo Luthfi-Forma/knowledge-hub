@@ -37,6 +37,9 @@ the project starts tagging releases.
 - Branded OG image per post (Satori + resvg, generated at build time) plus
   a site-wide default; full `og:*`/`twitter:*` meta tags and `<link
   rel="canonical">` on every page (T-16).
+- Sitemap (`@astrojs/sitemap`), RSS feed of all posts (`/rss.xml`, with
+  autodiscovery link and a footer link), and a `robots.txt` pointing at the
+  sitemap (T-17).
 
 ### Changed
 

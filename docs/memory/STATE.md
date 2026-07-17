@@ -4,23 +4,23 @@
      by /project-status, grounded in git log — not recall. -->
 
 - Updated: 2026-07-17
-- Milestone: M1 dan M2 selesai — M3 (Identitas & polish) sedang berjalan: T-14, T-15, T-16 selesai (see docs/ROADMAP.md)
+- Milestone: M1 dan M2 selesai — M3 (Identitas & polish) sedang berjalan: T-14–T-17 selesai (see docs/ROADMAP.md)
 
 ## Current status
 
-M1, M2, T-14, T-15, dan T-16 selesai. Situs live di
+M1, M2, T-14, T-15, T-16, dan T-17 selesai. Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. Situs punya
 8 post nyata (4 case study software + 4 case study riset GIS/planning),
 Home, Explore (filter type + tag + search Pagefind), detail post (+TOC,
 reading time, related posts, OG image per post), halaman tag (`/tags`),
-project hub (`/projects`), About dengan timeline pengalaman interaktif, dan
-404 custom. **Identitas visual final sudah diterapkan** (bukan lagi
-provisional M1): kertas krem `#F5EFE1`, ink `#18140F`, aksen hijau tua
-`#38523A`, serif Bodoni Moda (display + body) + sans Karla (UI/meta) —
-lihat ARCHITECTURE.md bagian "Visual identity" untuk token lengkap dan
-alasannya.
+project hub (`/projects`), About dengan timeline pengalaman interaktif,
+404 custom, sitemap + RSS feed + robots.txt. **Identitas visual final sudah
+diterapkan** (bukan lagi provisional M1): kertas krem `#F5EFE1`, ink
+`#18140F`, aksen hijau tua `#38523A`, serif Bodoni Moda (display + body) +
+sans Karla (UI/meta) — lihat ARCHITECTURE.md bagian "Visual identity" untuk
+token lengkap dan alasannya.
 
 ## Last session
 
@@ -61,12 +61,19 @@ gotcha build-time ditemukan & diperbaiki: baca file font via
 Vite sebagai import, jadi file `.ttf`-nya tidak ikut ter-copy) — fix-nya
 resolve path dari `process.cwd()` (didokumentasikan di LESSONS.md). Semua
 9 gambar OG (8 post + 1 default) diverifikasi visual lewat Read tool
-(dimensi 1200×630, layout benar termasuk judul panjang 4-baris).
+(dimensi 1200×630, layout benar termasuk judul panjang 4-baris). Ditutup
+dengan T-17 (sitemap + RSS + robots.txt): `@astrojs/sitemap` (filter
+mengecualikan endpoint `/og/*.png` dan `/404`), `/rss.xml` berisi semua 8
+post nyata (title/summary/tags/date, urut terbaru dulu), `robots.txt` jadi
+endpoint dinamis (bukan file statis) supaya baris `Sitemap:`-nya selalu
+sinkron dengan `Astro.site` — tidak akan basi saat domain custom (T-20)
+dipasang nanti. Autodiscovery link + link RSS terlihat di footer.
+Diverifikasi: 37 URL di sitemap (tanpa /og/ atau /404), RSS XML valid untuk
+semua post, robots.txt terlayani benar di dev.
 
 ## Next steps
 
-1. T-17: sitemap + RSS feed.
-2. T-18: pasang Vercel Analytics.
+1. T-18: pasang Vercel Analytics.
 
 ## Blockers
 

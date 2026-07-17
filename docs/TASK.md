@@ -10,7 +10,6 @@
 
 ## Now
 
-- [ ] T-17: sitemap + RSS feed (M3)
 - [ ] T-18: pasang Vercel Analytics (M3)
 
 ## Backlog
@@ -37,4 +36,5 @@
 - [x] T-14: tentukan & terapkan identitas visual final (tipografi, palet, komposisi) menggantikan token provisional M1 (M3) — 2026-07-17
 - [x] T-15: About/CV jadi lebih interaktif — timeline pengalaman dengan entri yang bisa di-expand, konten baru digali dari portfolio lama (M3) — 2026-07-17
 - [x] T-16: OG image per post (Satori + resvg, statis) + og:/twitter: meta tags site-wide (M3) — 2026-07-17
+- [x] T-17: sitemap + RSS feed + robots.txt (M3) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

@@ -29,6 +29,7 @@ Pengunjung ──> Vercel (situs statis Astro)
 | Konten | MDX via Astro content collections + zod schema | ADR-001 |
 | Search | Pagefind (client-side, M2) | Tanpa backend |
 | OG images | Satori + resvg (M3, T-16) — static PNG endpoints, di-generate saat build | Tetap statis, tanpa runtime function (ADR-001) |
+| Sitemap / RSS | `@astrojs/sitemap`, `@astrojs/rss` (M3, T-17) | Standar Astro, statis |
 | Deploy | Vercel | OS default; alternatif ditolak di ADR-001 |
 
 ## Components
@@ -64,6 +65,7 @@ Tidak boleh: field `year` (turunan `date`) atau `status` selain `draft`.
 | `/tags/[tag]` | Post per tag (M2) |
 | `/about`, `/404` | About/CV, not found |
 | `/og/[slug].png`, `/og/default.png` | OG image per post + fallback site-wide (M3, T-16) |
+| `/sitemap-index.xml`, `/rss.xml`, `/robots.txt` | Discoverability — sitemap, RSS feed of all posts, robots directive pointing at the sitemap (M3, T-17) |
 
 ## Data flow
 
@@ -126,6 +128,17 @@ downloaded from Google Fonts) and read via `fs.readFileSync` against
 `process.cwd()`, not `import.meta.url` — Vite relocates this module to
 `dist/.prerender/chunks/` at build time, which breaks module-relative paths
 but leaves the process's working directory (the project root) unchanged.
+
+## Discoverability (T-17, M3)
+
+`@astrojs/sitemap` generates `sitemap-index.xml`/`sitemap-0.xml` from every
+static route, filtered to exclude `/og/*.png` (image endpoints, not pages)
+and `/404`. `src/pages/rss.xml.ts` lists all published posts via the same
+`getPublishedPosts()` used everywhere else, so a post is never in one feed
+but not the other. `src/pages/robots.txt.ts` is a dynamic endpoint (not a
+static `public/robots.txt`) specifically so its `Sitemap:` line reads
+`Astro.site` instead of a hardcoded URL — it can't drift out of sync with
+`astro.config.mjs` when the domain changes (T-20).
 
 ## Deployment shape
 
