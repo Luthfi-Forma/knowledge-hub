@@ -1,6 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const POST_TYPES = ['project', 'article', 'research', 'journal', 'photo'] as const;
+export const POST_TYPES = ['project', 'article', 'research', 'photo'] as const;
 export type PostType = (typeof POST_TYPES)[number];
 
 export async function getPublishedPosts(): Promise<CollectionEntry<'posts'>[]> {

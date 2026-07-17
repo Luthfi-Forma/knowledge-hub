@@ -9,7 +9,7 @@ const posts = defineCollection({
         title: z.string(),
         summary: z.string(),
         date: z.coerce.date(),
-        type: z.enum(['project', 'article', 'research', 'journal', 'photo']),
+        type: z.enum(['project', 'article', 'research', 'photo']),
         tags: z.array(z.string().regex(/^[a-z0-9-]+$/, 'tags must be lowercase kebab-case')),
         project: z.string().optional(),
         repo: z.string().url().optional(),

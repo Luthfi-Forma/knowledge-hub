@@ -44,7 +44,7 @@ invalid):
 title: string
 summary: string
 date: date
-type: "project" | "article" | "research" | "journal" | "photo"
+type: "project" | "article" | "research" | "photo"
 tags: string[]            // lowercase, vocabulary terkontrol (topic + technology dilebur)
 project?: string          // slug proyek — menghubungkan post lintas-jenis
 repo?: string (url)

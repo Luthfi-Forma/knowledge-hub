@@ -23,6 +23,7 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 const wordCount = post.body?.trim().split(/\s+/).filter(Boolean).length ?? 0;
 const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 const sections = headings.filter((heading) => heading.depth === 2);
+const isArticle = type === 'article';
 ---
 
 <BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
@@ -74,7 +75,7 @@ const sections = headings.filter((heading) => heading.depth === 2);
 
     {sections.length > 0 && <TableOfContents sections={sections} />}
 
-    <div class="prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink">
+    <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
       <Content />
     </div>
 
@@ -160,6 +161,40 @@ const sections = headings.filter((heading) => heading.depth === 2);
     padding-left: 1em;
     color: var(--color-ink-muted);
     font-style: italic;
+  }
+
+  /*
+   * Article-only reading polish (T-23): narrower measure, a Medium-style
+   * drop cap on the opening paragraph, and a centered pull-quote treatment.
+   * Scoped to .prose-article so project/research posts (which may carry
+   * code blocks or need the full container width) are untouched.
+   */
+  .prose-article {
+    max-width: var(--container-prose);
+    margin-inline: auto;
+  }
+  .prose-article :global(p:first-of-type::first-letter) {
+    float: left;
+    margin-top: 0.03em;
+    margin-right: 0.09em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 3.4em;
+    line-height: 0.8;
+    color: var(--color-accent);
+  }
+  .prose-article :global(blockquote) {
+    margin: 2em 0;
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+    border-left: none;
+    padding: 1.5em 0;
+    text-align: center;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-style: italic;
+    line-height: 1.4;
   }
 </style>
 

@@ -10,12 +10,14 @@
 
 ## Now
 
-Tidak ada — sisa M3 diblokir menunggu keputusan user (lihat Backlog).
+Tidak ada — T-24/T-25 diblokir menunggu keputusan/input user (lihat Backlog).
 
 ## Backlog
 
 - [ ] T-20: custom domain — user eksplisit menunda ini ("belum butuh", 2026-07-17); putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel saat diminta (M3)
 - [ ] T-21: arsipkan repo `Website_Portfolio` lama — task terakhir M3, setelah custom domain live & konten/foto termigrasi penuh dari T-13/T-19 (M3)
+- [ ] T-24: carousel drag kiri/kanan di Featured Projects (Home) — perlu ADR interaktivitas (Astro islands) dulu (M4)
+- [ ] T-25: Research scrollytelling — blocked, menunggu user kirim prompt Lovable + source code Cikarang (M4)
 
 ## Done
 
@@ -38,4 +40,6 @@ Tidak ada — sisa M3 diblokir menunggu keputusan user (lihat Backlog).
 - [x] T-17: sitemap + RSS feed + robots.txt (M3) — 2026-07-17
 - [x] T-18: pasang Vercel Web Analytics (`@vercel/analytics/astro`) — perlu diaktifkan manual sekali di dashboard Vercel (M3) — 2026-07-17
 - [x] T-19: section photography — `type: "photo"` + `/photography` grid + 3 foto nyata (Tanggamus, Lampung, Okt 2022) (M3) — 2026-07-17
+- [x] T-22: lebur `type: journal` ke `article` — hapus enum & POST_TYPES, migrasi 1 post (`building-knowledge-hub.mdx`) (M4) — 2026-07-17
+- [x] T-23: polish baca Article ala Medium — drop cap, pull-quote, lebar ukur (measure) lebih sempit, khusus `type: article` (M4) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->
