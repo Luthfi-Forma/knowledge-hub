@@ -1,6 +1,6 @@
 # Development Guide — knowledge-hub
 
-- Updated: 2026-07-16
+- Updated: 2026-07-17
 
 <!-- The "new machine to running app" document. Test it by following it
      literally — every command copy-pasteable on Windows (PowerShell). -->
@@ -27,7 +27,9 @@ preview tools using the `knowledge-hub-dev` config in `.claude/launch.json`.
 
 Create `src/content/posts/<slug>.mdx` with frontmatter matching the schema
 in `src/content.config.ts` (see `docs/ARCHITECTURE.md` for the field list).
-`npm run build` fails loudly if frontmatter is invalid.
+`npm run build` fails loudly if frontmatter is invalid. For `type: "photo"`,
+`cover` is required (build fails without one) — co-locate the image file
+next to its `.mdx`, same as every other post's cover.
 
 ### Build for production
 
