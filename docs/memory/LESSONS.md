@@ -1,5 +1,48 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-17 — Verifying computed style right after a same-tick DOM mutation gives a stale read [harvest-candidate]
+
+Tags: #browser-verification #css
+
+Built an expand/collapse `<details>` timeline (About page, T-15) with a
+rotating "+" marker driven by `details[open] > summary .marker { transform:
+rotate(45deg) }`. First verification attempt set `details.open = true` and
+read `getComputedStyle(marker).transform` in the *same* `javascript_tool`
+call — got `matrix(1,0,0,1,0,0)` (identity, i.e. "not rotated") every time,
+which looked like the CSS rule wasn't matching at all. Spent real effort
+chasing a phantom CSS specificity/cascade-layer bug (even tried a Tailwind
+`motion-safe:group-open:rotate-45` compound variant first and blamed *that*
+for the same symptom) before realizing: reading a computed style
+immediately after mutating `.open`/a class/an attribute in the same script
+tick can return a stale pre-mutation value — the engine hasn't necessarily
+recalculated style before the next line runs. Splitting the mutation and
+the read into two separate `javascript_tool` calls (so a real task
+boundary/reflow happens between them) showed the correct `matrix(0.707,
+0.707, -0.707, 0.707, 0, 0)` (45°) immediately. When a CSS state-change
+appears not to apply during verification, re-check with the mutation and
+the read in separate calls before concluding the selector/cascade is wrong.
+
+## 2026-07-17 — Prefer plain scoped CSS over deeply-stacked Tailwind v4 arbitrary variants for state-based selectors [harvest-candidate]
+
+Tags: #tailwind #css
+
+While chasing the false-negative above, also independently confirmed that
+`motion-safe:group-open:rotate-45` on a `<details class="group">` *did*
+generate a real, matching CSS rule in this project's Tailwind v4 build
+(`element.matches(selectorText)` returned `true`, and the generated
+selector correctly used `:is(:where(.group):is([open], :popover-open,
+:open) *)`) — so it likely would have worked once the stale-read issue
+above was understood. Switched to a plain scoped `<style>` block
+(`details[open] > summary .marker { transform: rotate(45deg) }`) anyway and
+kept it, because a 3-deep stacked variant (`motion-safe:` +
+`group-open:` + `rotate-45`) relying on the newest CSS nesting/`:is()`
+forgiving-selector-list behavior is materially harder to debug than five
+lines of plain CSS when something *does* go wrong — plain CSS was verified
+correct on the first try once the stale-read issue was fixed. Reserve
+Tailwind's stacked arbitrary/state variants for cases with no simple plain-
+CSS equivalent; reach for a scoped `<style>` block for anything combining
+3+ conditions (motion preference + parent state + descendant).
+
 ## 2026-07-17 — Tailwind v4: unlayered custom CSS always beats `@layer utilities`, regardless of specificity [harvest-candidate]
 
 Tags: #tailwind #css

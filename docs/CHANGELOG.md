@@ -31,6 +31,9 @@ the project starts tagging releases.
   from the previous portfolio site (T-13).
 - Static table of contents and computed reading time on post detail pages
   (T-14).
+- Interactive experience timeline on the About page — expandable entries
+  (native `<details>`) with role descriptions sourced from the old
+  portfolio's content deck, translated and condensed (T-15).
 
 ### Changed
 

@@ -10,7 +10,6 @@
 
 ## Now
 
-- [ ] T-15: About/CV jadi lebih interaktif (timeline pengalaman dsb.) — evolusi dari konten nyata T-13a, mengikuti identitas visual T-14 (M3)
 - [ ] T-16: OG image per post (M3)
 - [ ] T-17: sitemap + RSS feed (M3)
 - [ ] T-18: pasang Vercel Analytics (M3)
@@ -37,4 +36,5 @@
 - [x] T-12: Pagefind search (M2) — 2026-07-17
 - [x] T-13: migrasi konten + foto dari Website_Portfolio lama (M2) — 2026-07-17
 - [x] T-14: tentukan & terapkan identitas visual final (tipografi, palet, komposisi) menggantikan token provisional M1 (M3) — 2026-07-17
+- [x] T-15: About/CV jadi lebih interaktif — timeline pengalaman dengan entri yang bisa di-expand, konten baru digali dari portfolio lama (M3) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

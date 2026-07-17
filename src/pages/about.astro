@@ -2,6 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 
+interface ExperienceEntry {
+  role: string;
+  org: string;
+  dates: string;
+  description?: string;
+}
+
 const expertise = [
   {
     title: 'Spatial Analysis & GIS',
@@ -36,16 +43,54 @@ const documents = [
   { title: 'RPPLH — South Papua Province', org: 'Ministry of Environment & Forestry' },
 ];
 
-const experience = [
-  { role: 'Assistant to Expert', org: 'HAS Consulting · Jakarta', dates: 'Sep 2024 — Present' },
-  { role: 'Support Staff — Drafter', org: 'Dinas Cipta Karya & Penataan Ruang · Bekasi Regency', dates: 'Sep — Dec 2024' },
-  { role: 'GIS Operator & Drafter', org: 'CV. Hasta Tunggal Pratama · Bandar Lampung', dates: 'Apr — Aug 2024' },
+const experience: ExperienceEntry[] = [
+  {
+    role: 'Assistant to Expert',
+    org: 'HAS Consulting · Jakarta',
+    dates: 'Sep 2024 — Present',
+    description:
+      "Drafting the Environmental Protection & Management Plan (RPPLH) for South Papua — ecosystem-vulnerability analysis and a review of customary land affected by the Food Estate program.",
+  },
+  {
+    role: 'Support Staff — Drafter',
+    org: 'Dinas Cipta Karya & Penataan Ruang · Bekasi Regency',
+    dates: 'Sep — Dec 2024',
+    description: "Coordinated the technical-material revision of Bekasi Regency's 2022–2042 Regional Spatial Plan (RTRW).",
+  },
+  {
+    role: 'GIS Operator & Drafter',
+    org: 'CV. Hasta Tunggal Pratama · Bandar Lampung',
+    dates: 'Apr — Aug 2024',
+    description:
+      "Drafted Lampung Timur's regional drinking-water strategy (Jakstrada SPAM) and ran a macro–micro gravity analysis for the Jabung coastal-area development plan.",
+  },
   { role: 'GIS Team', org: 'Dinas PU & Tata Ruang · Kota Metro, Lampung', dates: 'Jan — Mar 2024' },
   { role: 'Analyst Intern', org: 'Ministry of Environment & Forestry (KLHK) · Remote', dates: 'Sep — Dec 2023' },
-  { role: 'Urban & Regional Planning Intern', org: 'PT. Planosentris Nusantara · Samarinda', dates: 'Sep — Dec 2023' },
-  { role: 'GIS Team — Freelance', org: 'Ministry of Public Works (PUPR) · Jakarta', dates: 'Feb — Jun 2023' },
-  { role: 'Drafter — Freelance', org: 'BPS-Statistics · Purwakarta', dates: 'Dec 2022 — Jan 2023' },
-  { role: 'Surveyor & Analyst Assistant', org: 'PT. Hutama Karya · South Lampung', dates: 'Mar — Apr 2022' },
+  {
+    role: 'Urban & Regional Planning Intern',
+    org: 'PT. Planosentris Nusantara · Samarinda',
+    dates: 'Sep — Dec 2023',
+    description:
+      'Poverty assessment study, RDTR technical guidance for Bongan Regency, and spatial-order law enforcement work in Kutai Kartanegara.',
+  },
+  {
+    role: 'GIS Team — Freelance',
+    org: 'Ministry of Public Works (PUPR) · Jakarta',
+    dates: 'Feb — Jun 2023',
+    description: 'Feasibility study for the Panjang–Kota Agung toll road in Lampung.',
+  },
+  {
+    role: 'Drafter — Freelance',
+    org: 'BPS-Statistics · Purwakarta',
+    dates: 'Dec 2022 — Jan 2023',
+    description: 'Regional economic accounting and drafting for the Purwakarta Regency in Figures 2023 report.',
+  },
+  {
+    role: 'Surveyor & Analyst Assistant',
+    org: 'PT. Hutama Karya · South Lampung',
+    dates: 'Mar — Apr 2022',
+    description: 'Field survey and break-even point calculations for the Palembang–Betung toll road.',
+  },
 ];
 
 const organizations = [
@@ -157,27 +202,52 @@ const organizations = [
 
   <section class="mx-auto max-w-(--container-content) px-5 pb-16">
     <SectionHeading title="Experience" />
-    <ol class="space-y-3">
+    <p class="mb-5 text-xs text-ink-muted">Roles with a description can be expanded for detail.</p>
+    <ol class="relative ml-1 border-l border-line">
       {
-        experience.map((xp) => (
-          <li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line pb-3">
-            <div class="min-w-0">
-              <p class="text-sm font-semibold text-ink">{xp.role}</p>
-              <p class="text-xs text-ink-muted">{xp.org}</p>
-            </div>
-            <p class="shrink-0 text-xs text-ink-muted">{xp.dates}</p>
-          </li>
-        ))
+        experience.map((xp) =>
+          xp.description ? (
+            <li class="relative pb-7 pl-6 last:pb-0">
+              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true" />
+              <details>
+                <summary class="flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4 gap-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  <span class="min-w-0">
+                    <span class="font-display block text-lg text-ink">
+                      {xp.role}
+                      <span class="timeline-marker ml-1.5 text-accent" aria-hidden="true">
+                        +
+                      </span>
+                    </span>
+                    <span class="block text-xs text-ink-muted">{xp.org}</span>
+                  </span>
+                  <span class="shrink-0 text-xs text-ink-muted">{xp.dates}</span>
+                </summary>
+                <p class="mt-2 max-w-[58ch] text-sm leading-relaxed text-ink-muted">{xp.description}</p>
+              </details>
+            </li>
+          ) : (
+            <li class="relative pb-7 pl-6 last:pb-0">
+              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 rounded-full border border-line bg-paper" aria-hidden="true" />
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <span class="min-w-0">
+                  <span class="font-display block text-lg text-ink">{xp.role}</span>
+                  <span class="block text-xs text-ink-muted">{xp.org}</span>
+                </span>
+                <span class="shrink-0 text-xs text-ink-muted">{xp.dates}</span>
+              </div>
+            </li>
+          ),
+        )
       }
     </ol>
 
-    <p class="mt-8 mb-3 text-xs font-medium text-ink-muted">Organizations</p>
+    <p class="mt-10 mb-3 text-xs font-medium tracking-wide text-ink-muted uppercase">Organizations</p>
     <ol class="space-y-3">
       {
         organizations.map((xp) => (
           <li class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-line pb-3">
             <div class="min-w-0">
-              <p class="text-sm font-semibold text-ink">{xp.role}</p>
+              <p class="font-display text-base text-ink">{xp.role}</p>
               <p class="text-xs text-ink-muted">{xp.org}</p>
             </div>
             <p class="shrink-0 text-xs text-ink-muted">{xp.dates}</p>
@@ -194,3 +264,19 @@ const organizations = [
     </p>
   </section>
 </BaseLayout>
+
+<style>
+  .timeline-marker {
+    display: inline-block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .timeline-marker {
+      transition: transform 200ms ease;
+    }
+
+    details[open] > summary .timeline-marker {
+      transform: rotate(45deg);
+    }
+  }
+</style>
