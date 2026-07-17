@@ -150,7 +150,7 @@ Resolved the open question below: `type: "photo"` is a fifth value on the
 existing `posts` collection, not a `photography` tag bolted onto the
 existing types — a photo entry is structurally different (image + a short
 caption, no long-form MDX body), so it earns its own type the same way
-`project`/`article`/`research`/`journal` already do. `getPhotos()`
+`project`/`article`/`research` already do. `getPhotos()`
 (`src/lib/posts.ts`) filters to that type; `/photography` renders them as a
 2/3/4-column `<PhotoTile>` grid (square crop, real `alt` text — the photo
 *is* the content, unlike other types' decorative `alt=""` covers).
@@ -164,6 +164,20 @@ Compression: no custom pipeline needed — every photo goes through
 `astro:assets`' `<Image>` component exactly like existing post covers,
 which already runs on Sharp (bundled with Astro) to resize and re-encode
 to WebP at build time.
+
+## Interactivity (ADR-002, M4)
+
+Client-side interactivity is added per-component, following the two-tier
+policy in [ADR-002](decisions/ADR-002-astro-islands-for-interactivity.md).
+Default remains zero-JS SSG.
+
+- **Tier 1 — vanilla script (T-24):** `FeaturedProjects.astro`'s carousel is
+  a `scroll-snap` track with a `<script>` layering mouse click-drag (pointer
+  events) and prev/next buttons on top. No-JS fallback: the row is still a
+  native horizontally-scrollable/swipeable list — CSS alone gets you there,
+  the script only adds mouse-drag and the buttons.
+- **Tier 2 — React island (T-25, not yet built):** reserved for
+  scrollytelling, per ADR-002 — not wired up yet.
 
 ## Deployment shape
 

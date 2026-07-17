@@ -59,6 +59,9 @@ the project starts tagging releases.
 - Medium-style reading polish scoped to `type: article` posts: drop cap,
   centered pull-quote, and a narrower measure (`--container-prose`, 42rem);
   project/research posts keep the full content width (T-23).
+- Featured Projects on Home is now a drag/swipe carousel (`scroll-snap` +
+  vanilla-JS click-drag and prev/next buttons), per ADR-002 tier 2 — works
+  as a plain scrollable row with zero JS (T-24).
 
 ### Removed
 
