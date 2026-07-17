@@ -10,9 +10,20 @@
 
 ## Now
 
-M2 selesai. Menunggu prioritas M3 berikutnya — lihat docs/ROADMAP.md.
+- [ ] T-14: tentukan & terapkan identitas visual final (tipografi, palet, komposisi) menggantikan token provisional M1 — proses mockup-first + referensi seperti T-03, diterapkan ke seluruh halaman (M3)
 
 ## Next
+
+- [ ] T-15: About/CV jadi lebih interaktif (timeline pengalaman dsb.) — evolusi dari konten nyata T-13a, mengikuti identitas visual T-14 (M3)
+- [ ] T-16: OG image per post (M3)
+- [ ] T-17: sitemap + RSS feed (M3)
+- [ ] T-18: pasang Vercel Analytics (M3)
+
+## Backlog
+
+- [ ] T-19: section photography — putuskan `type: "photo"` vs tag `photography` (open question ARCHITECTURE.md), lalu bangun halaman/section-nya; butuh foto nyata dari user (M3)
+- [ ] T-20: custom domain — putuskan nama domain (open question ARCHITECTURE.md), konfigurasi DNS + Vercel (M3)
+- [ ] T-21: arsipkan repo `Website_Portfolio` lama — task terakhir M3, setelah custom domain live & konten/foto termigrasi penuh dari T-13/T-19 (M3)
 
 ## Done
 
