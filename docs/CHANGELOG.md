@@ -41,10 +41,11 @@ the project starts tagging releases.
   autodiscovery link and a footer link), and a `robots.txt` pointing at the
   sitemap (T-17).
 - Vercel Web Analytics (`@vercel/analytics/astro`) in `BaseLayout` (T-18).
-- Photography section scaffolding: new `type: "photo"` on the `posts`
-  collection (cover required, enforced at build), `/photography` gallery
-  grid, nav link, and a photo-specific (uncropped) cover treatment on the
-  post detail page. No photos published yet — waiting on real files (T-19).
+- Photography section: new `type: "photo"` on the `posts` collection
+  (cover required, enforced at build), `/photography` gallery grid, nav
+  link, a photo-specific (uncropped) cover treatment on the post detail
+  page, and three real photos from the Tanggamus coast, Lampung (Oct 2022)
+  (T-19).
 
 ### Changed
 
@@ -58,3 +59,5 @@ the project starts tagging releases.
 - Post detail pages now render their `cover` image (was silently unused).
 - Project titles on `/projects` respect real acronyms (e.g.
   "CDMP-Jabodetabek") instead of naively title-casing the URL slug.
+- Mobile header nav overflow at 375px, exposed by adding the fourth
+  "Photography" link (T-19).

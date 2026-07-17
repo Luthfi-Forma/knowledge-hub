@@ -10,7 +10,7 @@
 
 ## Now
 
-- [ ] T-19: section photography — kode & `type: "photo"` sudah dibangun (schema, `/photography` grid, nav link, cover tanpa crop paksa); **diblokir**: menunggu file foto nyata ditaruh user di `src/content/posts/` (lihat instruksi di docs/memory/STATE.md) (M3)
+Tidak ada — sisa M3 diblokir menunggu keputusan user (lihat Backlog).
 
 ## Backlog
 
@@ -37,4 +37,5 @@
 - [x] T-16: OG image per post (Satori + resvg, statis) + og:/twitter: meta tags site-wide (M3) — 2026-07-17
 - [x] T-17: sitemap + RSS feed + robots.txt (M3) — 2026-07-17
 - [x] T-18: pasang Vercel Web Analytics (`@vercel/analytics/astro`) — perlu diaktifkan manual sekali di dashboard Vercel (M3) — 2026-07-17
+- [x] T-19: section photography — `type: "photo"` + `/photography` grid + 3 foto nyata (Tanggamus, Lampung, Okt 2022) (M3) — 2026-07-17
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->
