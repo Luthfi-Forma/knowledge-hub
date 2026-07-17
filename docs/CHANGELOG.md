@@ -46,6 +46,9 @@ the project starts tagging releases.
   link, a photo-specific (uncropped) cover treatment on the post detail
   page, and three real photos from the Tanggamus coast, Lampung (Oct 2022)
   (T-19).
+- ADR-002: adopt Astro Islands for bounded client-side interactivity —
+  React islands for rich experiences (scrollytelling), vanilla `<script>`
+  for simple DOM interactions (carousel); default stays zero-JS SSG.
 
 ### Changed
 
@@ -53,6 +56,14 @@ the project starts tagging releases.
   zinc/Plus Jakarta Sans tokens: cream paper palette, Bodoni Moda (display +
   article body) paired with Karla (UI/meta), sharp/minimal corner radii in
   place of pill/rounded-lg defaults (T-14).
+- Medium-style reading polish scoped to `type: article` posts: drop cap,
+  centered pull-quote, and a narrower measure (`--container-prose`, 42rem);
+  project/research posts keep the full content width (T-23).
+
+### Removed
+
+- `type: "journal"` merged into `type: "article"` — only one post used it
+  and it rendered identically; the sole journal post was migrated (T-22).
 
 ### Fixed
 
