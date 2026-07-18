@@ -366,7 +366,7 @@ const sections: ScrollytellingSection[] = [
     id: 'intro',
     kicker: 'Setting the scene',
     title: 'Cikarang is one parcel of land with two things growing on it at once.',
-    body: 'Between 2016 and 2023, Cikarang added both factory floor and family homes — often on the same stretch of ground, with very little formal separation between them. This is the same corridor the thesis above studied at the building level; this section walks through the province-scale numbers behind it, drawn from the published paper.',
+    body: 'Between 2016 and 2023, Cikarang added both factory floor and family homes — often on the same stretch of ground, with very little formal separation between them. The same corridor was earlier studied at the building level in an undergraduate thesis; this section re-tells the province-scale numbers instead, drawn from that thesis’s published follow-up paper.',
     citations: [
       { label: 'Rahman & Hernanda (2025)', where: 'Abstract, p. 1' },
     ],
@@ -414,7 +414,7 @@ const sections: ScrollytellingSection[] = [
     id: 'conclusion',
     kicker: 'Where this leads',
     title: 'The 2023 footprint is the map a spatial plan has to work with now.',
-    body: "This is the same overlap the building-level thesis above flags for buffer requirements and zoning revision — except now it's measured province-scale, across seven years, with numbers a planning document can cite directly. Cikarang Pusat and Cikarang Selatan are the districts where that revision is most overdue.",
+    body: "This is the same overlap the building-level thesis flags for buffer requirements and zoning revision — except now it's measured province-scale, across seven years, with numbers a planning document can cite directly. Cikarang Pusat and Cikarang Selatan are the districts where that revision is most overdue.",
     citations: [{ label: 'Table 1', where: '2023 composition, discussed pp. 13–17' }],
     vizCitation: { fig: 'Table 1 · 2023 composition', source: 'Discussion & Conclusion, pp. 13–17' },
   },

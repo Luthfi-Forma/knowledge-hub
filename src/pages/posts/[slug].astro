@@ -11,7 +11,11 @@ import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling
 // + viz + shell). Astro's `client:*` hydration needs a statically-analyzable
 // import reference in the template — not a variable assigned at runtime from
 // a lookup map — so a new scrollytelling post gets its own explicit branch
-// here rather than a generic slug → component registry.
+// here rather than a generic slug → component registry. To add one:
+//   1. Static-import the post's wired-up island component below (see
+//      CikarangIndustrialSettlementScrollytelling).
+//   2. Add a branch next to the existing one, further down this file:
+//      {isScrollytelling && post.id === '<slug>' && <Component client:visible />}
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -31,19 +35,23 @@ const wordCount = post.body?.trim().split(/\s+/).filter(Boolean).length ?? 0;
 const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 const sections = headings.filter((heading) => heading.depth === 2);
 const isArticle = type === 'article';
-const isCikarangScrollytelling = post.data.presentation === 'scrollytelling' && post.id === 'cikarang-industrial-settlement-pattern';
+const isScrollytelling = post.data.presentation === 'scrollytelling';
 ---
 
 <BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
   <article class="mx-auto max-w-(--container-content) px-5 py-10">
     <p class="mb-2.5 text-xs font-medium tracking-wide text-accent uppercase">
-      {typeLabel} · {readingMinutes} min read · {formattedDate}
+      {isScrollytelling ? `${typeLabel} · ${formattedDate}` : `${typeLabel} · ${readingMinutes} min read · ${formattedDate}`}
     </p>
-    <h1 class="font-display mb-4 text-3xl leading-[1.1] font-extrabold text-ink sm:text-4xl">{title}</h1>
-    <p class="font-display mb-6 max-w-[52ch] text-lg leading-relaxed text-ink-muted italic">{summary}</p>
+    {!isScrollytelling && (
+      <h1 class="font-display mb-4 text-3xl leading-[1.1] font-extrabold text-ink sm:text-4xl">{title}</h1>
+    )}
+    {!isScrollytelling && (
+      <p class="font-display mb-6 max-w-[52ch] text-lg leading-relaxed text-ink-muted italic">{summary}</p>
+    )}
 
     {
-      cover &&
+      !isScrollytelling && cover &&
         (type === 'photo' ? (
           <Image
             src={cover}
@@ -81,13 +89,17 @@ const isCikarangScrollytelling = post.data.presentation === 'scrollytelling' && 
       )
     }
 
-    {sections.length > 0 && <TableOfContents sections={sections} />}
+    {!isScrollytelling && sections.length > 0 && <TableOfContents sections={sections} />}
 
-    <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
-      <Content />
-    </div>
+    {!isScrollytelling && (
+      <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
+        <Content />
+      </div>
+    )}
 
-    {isCikarangScrollytelling && <CikarangIndustrialSettlementScrollytelling client:visible />}
+    {isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && (
+      <CikarangIndustrialSettlementScrollytelling client:visible />
+    )}
 
     {
       tags.length > 0 && (

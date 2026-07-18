@@ -1,5 +1,45 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-18 — Additive-first, then full-replace once seen live: a case for shipping the smaller diff first
+
+Tags: #astro #product-decisions
+
+T-25 (scrollytelling pilot) deliberately appended the new React island
+*below* the existing MDX prose rather than replacing it outright — the
+smaller, reversible diff, so the pilot could ship and be judged on its own
+merits without also committing to deleting existing content. After seeing it
+live on Vercel, the user's actual call was "replace it entirely" (T-27) —
+which turned out to be the right call (the island's own hero/Sources panel
+already duplicated everything the old prose said), but only became obvious
+*after* seeing both versions side by side on a real deployed page, not from
+describing the options in the abstract. Two follow-on lessons from doing the
+full-replace:
+
+1. **Cross-references baked into content can point at page position, not
+   just content.** The scrollytelling section copy said "the thesis above"
+   and "the building-level thesis above" — true when the old MDX prose was
+   still rendered above the island, silently wrong once that prose was
+   removed (nothing "above" the reference anymore). Caught by re-reading the
+   rendered page text after the restructure, not by the build (no error) or
+   type-checking (plain strings). When removing/reordering content that
+   OTHER content refers to positionally, grep the surviving content for
+   spatial language ("above", "below", "earlier", "the following") before
+   calling it done.
+2. **Generalizing a one-off hardcoded gate is cheap if done immediately.**
+   The original per-post boolean (`isCikarangScrollytelling`, combining the
+   general `presentation` check AND a specific `post.id` check in one name)
+   was fine for a single pilot post but would have made every future
+   scrollytelling post's diff progressively messier (either copy-pasting a
+   similarly-named boolean, or refactoring under time pressure once several
+   posts existed). Splitting it into a general `isScrollytelling` boolean
+   (drives all the shared UI-skip logic) plus a separate, explicit
+   `post.id === '<slug>'` branch per post (still required — ADR-002:
+   `client:*` needs a statically-imported component reference, not a
+   runtime lookup) cost nothing extra to do at the 2-post mark (well,
+   1-pilot-plus-the-next-one-coming mark) and makes every future addition a
+   clean, obvious two-line diff (one import + one branch) instead of a
+   refactor.
+
 ## 2026-07-18 — Astro islands: `layout` is a reserved MDX frontmatter key; `client:*` hydration needs a statically-imported component reference [harvest-candidate]
 
 Tags: #astro #react #mdx

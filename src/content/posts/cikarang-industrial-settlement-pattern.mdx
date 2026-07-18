@@ -9,60 +9,14 @@ presentation: scrollytelling
 draft: false
 ---
 
-Cikarang, in Bekasi Regency, is one of the densest industrial corridors in
-Southeast Asia — and also, increasingly, a place people live. Factories and
-housing have grown up next to each other with very little formal spatial
-separation, and the usual way of studying that (walking the area, digitizing
-land parcels by hand) doesn't scale to a district this size. This thesis
-asked a narrower, answerable question: where exactly do industrial and
-residential building footprints concentrate, and where do the two land uses
-sit close enough to each other that friction — noise, traffic, pollution
-exposure — becomes likely.
+{/*
+  This post's content lives in the scrollytelling island now, not here:
+  src/lib/scrollytelling/cikarang-industrial-settlement-pattern.tsx
+  (mounted by src/pages/posts/[slug].astro when presentation: "scrollytelling").
 
-## Detecting buildings from open satellite data
-
-Rather than digitizing footprints manually, the study pulled building
-polygons for the study area from Google's Open Building dataset inside
-Google Earth Engine, then classified each footprint as industrial or
-residential using a combination of footprint size, shape regularity, and
-cross-referencing against existing land-use layers — industrial buildings in
-Cikarang tend to be large, rectangular, and clustered in gated estates, which
-gives a genuine visual and geometric signal to separate them from the
-smaller, denser, more irregular footprints of surrounding kampung housing. A
-Python pipeline handled the cleanup: removing sliver polygons, resolving
-buildings split across tile boundaries, and exporting the final classified
-set as vector data for analysis.
-
-## Kernel density and nearest-neighbour distance
-
-With both building sets extracted, the analysis had two parts. Kernel
-density estimation was run separately for industrial and residential
-footprints to produce continuous surfaces of where each land use
-concentrates most heavily — turning a scatter of individual buildings into a
-readable heat map of industrial cores and residential cores. Nearest-neighbour
-distance analysis then measured, building by building, how close each
-residential footprint sits to the nearest industrial one, which is where
-IBM SPSS came in for the statistical side: testing whether the observed
-clustering and proximity patterns were significant rather than what you'd
-expect from a random distribution of buildings across the same area.
-
-## What the pattern shows
-
-The combined output is a spatial association map: zones where industrial and
-residential density peaks overlap or sit within a short buffer of each
-other, versus zones where the two land uses stay genuinely separated by
-distance or by intervening land. Those overlap zones are the ones a spatial
-plan would need to address first — through buffer requirements, zoning
-revisions, or infrastructure that mitigates the exposure — rather than
-treating industrial-residential proximity across Cikarang as a uniform
-problem. As a thesis, the deliverable was the analysis and its statistical
-validation rather than a shipped tool, but the same footprint-detection and
-kernel-density workflow is directly reusable for any other Indonesian
-industrial corridor with Open Building coverage.
-
-Published as Rahman, Y. & Hernanda, A. L. (2025). *Spatial Analysis of
-Industrial and Residential Growth Patterns in Cikarang, Bekasi (2016 –
-2023).* Jurnal Tunas Geografi, Institut Teknologi Sumatera. The interactive
-data narrative below re-tells that published paper's province-scale land-use
-and building-growth findings — every figure links back to the table and page
-it's drawn from.
+  The long-form prose that used to live in this file — building detection
+  methodology, kernel-density/nearest-neighbour analysis, findings, and the
+  published-paper citation — is now folded into that island's section copy
+  and its Sources panel. Edit the island file to change the post's actual
+  content; this MDX file intentionally renders nothing.
+*/}

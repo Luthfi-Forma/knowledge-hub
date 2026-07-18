@@ -188,6 +188,30 @@ key literally named `layout` as a magic import path to a layout component,
 so a plain string value there breaks the build trying to resolve it as a
 module specifier (see LESSONS.md, 2026-07-18).
 
+**Full replacement, not additive.** The pilot initially rendered the
+scrollytelling island *below* the post's original long-form MDX prose — after
+seeing that live, the user asked for the old narrative to be fully replaced
+instead. For a `presentation: "scrollytelling"` post, `posts/[slug].astro`
+skips the page-level `<h1>` title, the dek/summary paragraph, the cover
+image, and `<TableOfContents />` — the island's own hero (`eyebrow`/`title`/
+`dek`/`meta` props) and Sources panel already cover title, dek, and
+citations, so keeping the page-level versions too was pure duplication. The
+cover image is skipped as well (not just the title/dek) — stacking a static
+photo directly above the island's own large animated hero would read as two
+competing "openings"; the cover still does its job everywhere else (Explore/
+tags/related-posts card grids, the OG image). What stays: the meta row (type
++ date — the `· X min read` segment is dropped too, since a word-count
+estimate doesn't map onto a scroll-driven narrative and the reference app
+doesn't show one either), the tags row, and `RelatedPosts` — kept for
+navigation consistency with every other post type. The post's MDX body
+itself is trimmed to a single explanatory comment pointing at the island
+file, so a future editor opening the `.mdx` isn't confused by an apparently
+content-less post; `render(post)` on a comment-only MDX body is safe (compiles
+to a no-op component). This has no RSS impact (`rss.xml.ts` only reads
+frontmatter `title`/`summary`/`date`, never `post.body`) and no meaningful
+Pagefind impact (the island's section prose SSRs fully and unconditionally,
+independent of hydration state, so it's indexed either way).
+
 There is **no generic auto-chart system** — this mirrors the Lovable
 reference app (`cikarangcountryside`) this pattern was ported from, which
 also hand-built one bespoke set of visualizations for its one paper. Each
@@ -219,16 +243,35 @@ detail in LESSONS.md, 2026-07-18):
 
 1. `client:*` hydration requires a *statically-imported* component reference
    used directly in the template's JSX — not a variable assigned at runtime
-   from a lookup map. So `posts/[slug].astro` has one explicit
-   `{condition && <CikarangIndustrialSettlementScrollytelling client:visible />}`
-   branch per scrollytelling post, rather than a generic slug → component
-   registry.
+   from a lookup map. `posts/[slug].astro` splits this into two layers: a
+   general `isScrollytelling = post.data.presentation === 'scrollytelling'`
+   boolean drives every UI skip described above (title/dek/cover/TOC/body),
+   and mounting the *correct* island is a separate, explicit
+   `{isScrollytelling && post.id === '<slug>' && <Component client:visible />}`
+   branch per post — one static import + one branch, not a generic slug →
+   component registry. See "Adding a new scrollytelling post" below.
 2. A prop crossing the Astro → island hydration boundary must be
    JSON-serializable — a `viz: Record<string, ComponentType>` map of
    component *functions* can't be passed in from `.astro` frontmatter. This
    is why the data module wires `Scrollytelling` + its own section/viz data
    together internally and exports one ready-to-mount component, instead of
    exporting raw `sections`/`viz` for the `.astro` page to pass as props.
+
+**Adding a new scrollytelling post** — the repeatable process, once a source
+document is available:
+
+1. Get the source document (paper/thesis) for the post.
+2. Analyze it for key figures, findings, and quotable claims.
+3. Update that post's MDX: `presentation: scrollytelling` in frontmatter,
+   body trimmed to a short comment pointing at the island file (see the
+   Cikarang precedent).
+4. Write `src/lib/scrollytelling/<slug>.tsx` — a bespoke module wiring the
+   shared `Scrollytelling` shell to that post's own section copy, citations,
+   and viz components (no generic auto-chart system, per above).
+5. Add a static import and an `isScrollytelling && post.id === '<slug>'`
+   branch in `posts/[slug].astro`.
+6. Verify with `npm run build` and a browser check (see "Known verification
+   gap" below for the caveat on scroll-triggered viz swapping).
 
 **Layout**: the island renders inside the post's existing
 `.max-w-(--container-content)` article container (not a full-bleed

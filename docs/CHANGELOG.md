@@ -69,6 +69,13 @@ the project starts tagging releases.
 - Medium-style reading polish scoped to `type: article` posts: drop cap,
   centered pull-quote, and a narrower measure (`--container-prose`, 42rem);
   project/research posts keep the full content width (T-23).
+- Scrollytelling posts (T-27) now **fully replace** the MDX body instead of
+  appending the island below it: page-level title/dek/cover image/table of
+  contents are skipped, and the meta row drops the `· X min read` segment —
+  the island's own hero and Sources panel already cover title, dek, and
+  citations. The per-post island-mounting pattern was generalized
+  (`isScrollytelling` boolean + one explicit `post.id` branch per post) so
+  adding the next scrollytelling post is a mechanical two-line diff.
 - Featured Projects on Home is now a drag/swipe carousel (`scroll-snap` +
   vanilla-JS click-drag and prev/next buttons), per ADR-002 tier 1 — works
   as a plain scrollable row with zero JS (T-24).
