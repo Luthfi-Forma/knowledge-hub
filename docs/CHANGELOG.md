@@ -67,6 +67,15 @@ the project starts tagging releases.
   time of the source report. No individual-level P3KE records (names,
   NIK, addresses) are reproduced — every figure is an aggregate already
   public in the source presentation.
+- Third scrollytelling post: `jabung-lampung-coastal-development` (T-29),
+  with a methodology correction — the previous version described a
+  "gravity model," but the source report's actual method is a Skalogram
+  settlement-hierarchy analysis across 12 kecamatan plus SWOT (the word
+  "gravity"/"gravitasi" does not appear anywhere in the 93-page report).
+  Sorts the study area into one main growth pole (Way Jepara), four
+  secondary centers, and seven hinterland kecamatan, tracing the case for
+  one Agropolitan zone (Bandar Sribhawono) and one Minapolitan zone
+  (Labuhan Maringgai + Pasir Sakti) directly to that hierarchy.
 
 ### Changed
 
