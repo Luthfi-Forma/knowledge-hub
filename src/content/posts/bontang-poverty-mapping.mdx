@@ -1,55 +1,22 @@
 ---
-title: "Poverty Characteristic Mapping — Bontang: putting a face on P3KE's extreme-poverty data"
-summary: "A hotspot map and sub-district profiling study built from Indonesia's P3KE extreme-poverty target data, showing where Bontang's poorest families live and what employment, education, housing, sanitation, and stunting look like around them."
+title: "Poverty Characteristic Mapping — Kalimantan Timur: Bontang first, nine kabupaten/kota to go"
+summary: "A province-wide poverty mapping initiative for Kalimantan Timur — hotspot maps and 19-indicator characteristic profiles built from Indonesia's P3KE extreme-poverty data — with Bontang as the only one of ten kabupaten/kota to complete both analysis tracks."
 date: 2023-07-10
 type: research
 tags: [gis, arcgis, poverty-mapping]
 cover: ./bontang-poverty-mapping-cover.jpg
+presentation: scrollytelling
 draft: false
 ---
 
-P3KE — Pendataan Keluarga Sejahtera, Indonesia's national registry for
-targeting extreme-poverty programs — gives every region a household-level
-list of families flagged as extremely poor. What it doesn't give a local
-government is a map: P3KE ships as tabular data, tied to administrative
-addresses, with no built-in way to see where those households actually
-cluster or what conditions surround them. This project took Bontang City's
-P3KE records and turned them into something a planning team could actually
-use — a spatial picture of extreme poverty across the city's sub-districts.
+{/*
+  This post's content lives in the scrollytelling island now, not here:
+  src/lib/scrollytelling/bontang-poverty-mapping.tsx
+  (mounted by src/pages/posts/[slug].astro when presentation: "scrollytelling").
 
-## From address list to hotspot map
-
-The first step was preparing and updating the raw P3KE target data —
-checking household records against current administrative boundaries,
-resolving addresses that didn't geocode cleanly, and joining the cleaned
-data to sub-district and kelurahan polygons in ArcGIS. From there, kernel
-density estimation produced a hotspot surface showing where extremely poor
-households concentrate most heavily across the city, rather than just a
-count per administrative unit — a hotspot map distinguishes a few dense
-pockets of deep poverty from the same total number of households spread
-thinly across a wide area, and those two situations call for different
-interventions.
-
-## Profiling each sub-district
-
-A hotspot alone doesn't say why an area is poor or what it needs. The second
-half of the work profiled every sub-district against five characteristics
-drawn from the P3KE dataset and supporting local statistics: employment
-status, education level, housing condition, access to sanitation, and
-stunting risk among children. Layering these against the hotspot surface let
-the analysis distinguish, for example, a coastal sub-district where poverty
-tracks closely with poor sanitation access from an inland one where the
-driver looks more like informal or absent employment — distinctions that
-matter for deciding whether a program should lead with infrastructure,
-livelihood support, or health intervention.
-
-## Output
-
-The deliverable was a set of thematic maps and a sub-district profile table
-handed to the city government as an input to targeting decisions —
-identifying which sub-districts should be prioritized first and on what
-basis, grounded in the same P3KE data the national program already collects
-rather than a new survey. The value of the work was less in new data
-collection and more in making data that already existed, but sat locked in
-spreadsheets, visible and actionable at the sub-district level where poverty
-programs actually get delivered.
+  This post originally covered Bontang City alone. It's now reframed as
+  Bontang's role within Bappeda Kalimantan Timur's province-wide poverty
+  mapping study — Bontang was the only one of the province's ten
+  kabupaten/kota to complete both analysis tracks at the time of the source
+  report. Edit the island file to change the post's actual content.
+*/}

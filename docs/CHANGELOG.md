@@ -59,6 +59,14 @@ the project starts tagging releases.
   land-use and building-growth findings of its published paper (Rahman &
   Hernanda, 2025, Jurnal Tunas Geografi) across 7 sourced, chart-backed
   sections (T-25).
+- Second scrollytelling post: `bontang-poverty-mapping` (T-28), reframed
+  from a Bontang-only case study to Bontang's role within Bappeda
+  Kalimantan Timur's province-wide poverty mapping study — Bontang was the
+  only one of the province's ten kabupaten/kota to complete both analysis
+  tracks (hotspot mapping + 19-indicator characteristic clustering) at the
+  time of the source report. No individual-level P3KE records (names,
+  NIK, addresses) are reproduced — every figure is an aggregate already
+  public in the source presentation.
 
 ### Changed
 

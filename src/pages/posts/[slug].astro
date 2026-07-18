@@ -6,6 +6,7 @@ import RelatedPosts from '../../components/RelatedPosts.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import { getPublishedPosts, getRelatedPosts } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
+import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
 
 // ADR-002: each scrollytelling post is a bespoke wired-up React island (data
 // + viz + shell). Astro's `client:*` hydration needs a statically-analyzable
@@ -99,6 +100,9 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
 
     {isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && (
       <CikarangIndustrialSettlementScrollytelling client:visible />
+    )}
+    {isScrollytelling && post.id === 'bontang-poverty-mapping' && (
+      <BontangPovertyMappingScrollytelling client:visible />
     )}
 
     {
