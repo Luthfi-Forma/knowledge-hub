@@ -1,6 +1,6 @@
 # Lessons Learned — knowledge-hub
 
-## 2026-07-21 — This session's Browser-pane tool doesn't fire IntersectionObserver, requestAnimationFrame, or ResizeObserver [harvest-candidate]
+## 2026-07-21 — This session's Browser-pane tool doesn't fire IntersectionObserver, requestAnimationFrame, or ResizeObserver [harvested 2026-07-21]
 
 Tags: #browser-verification #react #recharts
 
@@ -43,7 +43,7 @@ a site defect. A real-browser sanity check after each scrollytelling
 deploy is still worth doing once, per the existing "Known verification
 gap" note in ARCHITECTURE.md.
 
-## 2026-07-21 — `pdftoppm` (Read tool's PDF-page renderer) isn't installed here; `pdftotext` + PyMuPDF (`fitz`) fill the gap [harvest-candidate]
+## 2026-07-21 — `pdftoppm` (Read tool's PDF-page renderer) isn't installed here; `pdftotext` + PyMuPDF (`fitz`) fill the gap [harvested 2026-07-21]
 
 Tags: #pdf #tooling
 
@@ -73,7 +73,7 @@ any PDF; fall back to per-page `fitz` rendering specifically for pages
 that read as garbled/low-information text (slide decks, infographic-heavy
 reports) rather than rendering every page of every document.
 
-## 2026-07-18 — Additive-first, then full-replace once seen live: a case for shipping the smaller diff first
+## 2026-07-18 — Additive-first, then full-replace once seen live: a case for shipping the smaller diff first [partially harvested 2026-07-21 — cross-reference sub-point only]
 
 Tags: #astro #product-decisions
 
@@ -113,7 +113,7 @@ full-replace:
    clean, obvious two-line diff (one import + one branch) instead of a
    refactor.
 
-## 2026-07-18 — Astro islands: `layout` is a reserved MDX frontmatter key; `client:*` hydration needs a statically-imported component reference [harvest-candidate]
+## 2026-07-18 — Astro islands: `layout` is a reserved MDX frontmatter key; `client:*` hydration needs a statically-imported component reference [harvested 2026-07-21]
 
 Tags: #astro #react #mdx
 
@@ -149,7 +149,7 @@ composed internally, in React-land where passing component references as
 props is normal) instead of exporting raw data for the `.astro` file to
 assemble.
 
-## 2026-07-17 — `import.meta.url`-relative file reads break once Vite relocates the module at build [harvest-candidate]
+## 2026-07-17 — `import.meta.url`-relative file reads break once Vite relocates the module at build [harvested 2026-07-21]
 
 Tags: #astro #vite #build
 
@@ -170,7 +170,7 @@ relative `fs` reads are only safe for files Vite treats as real imports
 (copied/inlined); for anything read as a runtime side-channel (`fs`,
 dynamic `require`), resolve from `process.cwd()`.
 
-## 2026-07-17 — Verifying computed style right after a same-tick DOM mutation gives a stale read [harvest-candidate]
+## 2026-07-17 — Verifying computed style right after a same-tick DOM mutation gives a stale read [harvested 2026-07-21]
 
 Tags: #browser-verification #css
 
@@ -192,7 +192,7 @@ boundary/reflow happens between them) showed the correct `matrix(0.707,
 appears not to apply during verification, re-check with the mutation and
 the read in separate calls before concluding the selector/cascade is wrong.
 
-## 2026-07-17 — Prefer plain scoped CSS over deeply-stacked Tailwind v4 arbitrary variants for state-based selectors [harvest-candidate]
+## 2026-07-17 — Prefer plain scoped CSS over deeply-stacked Tailwind v4 arbitrary variants for state-based selectors [harvested 2026-07-21]
 
 Tags: #tailwind #css
 
@@ -213,7 +213,7 @@ Tailwind's stacked arbitrary/state variants for cases with no simple plain-
 CSS equivalent; reach for a scoped `<style>` block for anything combining
 3+ conditions (motion preference + parent state + descendant).
 
-## 2026-07-17 — Tailwind v4: unlayered custom CSS always beats `@layer utilities`, regardless of specificity [harvest-candidate]
+## 2026-07-17 — Tailwind v4: unlayered custom CSS always beats `@layer utilities`, regardless of specificity [harvested 2026-07-21]
 
 Tags: #tailwind #css
 
@@ -239,7 +239,7 @@ Moda headline looks subtly different at a glance, easy to miss).
      classify. Mark entries worth generalizing to the OS with [harvest-candidate];
      after harvesting they get marked [harvested YYYY-MM-DD]. -->
 
-## 2026-07-17 — Recovering a Workflow (multi-agent) run after a host crash [harvest-candidate]
+## 2026-07-17 — Recovering a Workflow (multi-agent) run after a host crash [harvested 2026-07-21]
 
 Tags: #workflow #git #multi-agent
 
@@ -281,7 +281,7 @@ not reassuring on its own. What actually happened, and how to recover:
    agent had flagged, plus a whitespace-trim slip that showed up in newly
    written prose independent of any single agent's diff).
 
-## 2026-07-16 — `vercel whoami` can silently complete a device-auth login
+## 2026-07-16 — `vercel whoami` can silently complete a device-auth login [harvested 2026-07-21]
 
 Tags: #vercel #deploy
 
@@ -297,7 +297,7 @@ treat it as a potential auth action and tell the user it happened, don't
 assume "just checking status" has no side effects. `vercel link` afterward
 also auto-detected and connected the GitHub remote without being asked to.
 
-## 2026-07-16 — Astro trims newline whitespace around inline elements [harvest-candidate]
+## 2026-07-16 — Astro trims newline whitespace around inline elements [harvested 2026-07-21]
 
 Tags: #astro
 
@@ -311,7 +311,7 @@ inline/prose text that wraps a link mid-sentence — block-level elements are
 unaffected. Caught by reading actual rendered `outerHTML`, not by eyeballing
 `get_page_text` output (its whitespace normalization masked the bug).
 
-## 2026-07-16 — Tailwind v4 `focus-visible:outline-*` needs the bare `outline` class [harvest-candidate]
+## 2026-07-16 — Tailwind v4 `focus-visible:outline-*` needs the bare `outline` class [harvested 2026-07-21]
 
 Tags: #tailwind #accessibility
 
@@ -325,7 +325,7 @@ Caught by testing with a real keyboard `Tab` press in the browser and reading
 that check silently passes even when the ring is broken; must drive focus
 with an actual key press to verify.
 
-## 2026-07-16 — Astro scaffolding gotchas
+## 2026-07-16 — Astro scaffolding gotchas [harvested 2026-07-21]
 
 Tags: #astro
 
