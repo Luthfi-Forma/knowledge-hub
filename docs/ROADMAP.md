@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-17
+- Updated: 2026-07-18
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -10,17 +10,18 @@
 |---|---|---|---|
 | M1 | Fondasi & Content Engine | Situs Astro live di Vercel: schema frontmatter tervalidasi, Home + Explore + halaman post, 3 case study nyata ter-publish | done |
 | M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | done |
-| M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics, custom domain; repo portfolio lama diarsipkan | planned |
+| M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics | done |
+| M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
+
+Custom domain dan arsip repo lama (awalnya bagian M3) ditunda eksplisit oleh
+user — lihat T-20/T-21 di TASK.md Backlog.
 
 ## Current focus
 
-M1 selesai 2026-07-16, M2 selesai 2026-07-17 (dikerjakan multi-agent paralel
-— lihat docs/memory/STATE.md untuk detail proses). Situs live di
-[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app):
-filter tag (`/tags`), related posts, project hub (`/projects`), search
-client-side (Pagefind) di Explore, About terisi konten nyata + 4 case study
-tambahan dari portfolio lama. Belum ada task M3 yang di-breakdown ke
-TASK.md — lakukan itu sebelum mulai coding lagi (aturan CLAUDE.md).
+M1–M4 selesai. Situs live di
+[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app).
+Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai dari Backlog
+(T-20/T-21, menunggu keputusan user) atau permintaan baru.
 
 ## Phase detail
 
@@ -49,7 +50,21 @@ TASK.md — lakukan itu sebelum mulai coding lagi (aturan CLAUDE.md).
 - Desain visual final (typography, palette) per standar desain OS.
 - About/CV interaktif; section photography.
 - OG image per post, RSS, sitemap, Vercel Analytics.
-- Custom domain; arsipkan repo `Website_Portfolio`.
+
+### M4 — Interaktivitas (Astro Islands)
+
+- ADR-002: kebijakan two-tier islands (vanilla script untuk interaksi
+  sederhana, React island untuk pengalaman kaya) — default situs tetap
+  zero-JS SSG.
+- Lebur `type: journal` ke `article`; polish baca ala Medium (drop cap,
+  pull-quote) khusus `type: article`.
+- Carousel drag kiri/kanan di Featured Projects (Home) — tier 1, vanilla.
+- Scrollytelling (tier 2, React island) untuk `type: research` — opt-in via
+  `presentation: "scrollytelling"`, full-replace (bukan append) narasi MDX
+  lama. Diterapkan ke 4 post: `cikarang-industrial-settlement-pattern`
+  (pilot), `bontang-poverty-mapping` (reframe ke konteks provinsi Kaltim),
+  `jabung-lampung-coastal-development` (koreksi metodologi gravity model →
+  Skalogram), `rpplh-south-papua`.
 
 ## Icebox
 

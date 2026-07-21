@@ -1,5 +1,78 @@
 # Lessons Learned — knowledge-hub
 
+## 2026-07-21 — This session's Browser-pane tool doesn't fire IntersectionObserver, requestAnimationFrame, or ResizeObserver [harvest-candidate]
+
+Tags: #browser-verification #react #recharts
+
+Discovered incrementally across T-25/28/29/30 while verifying scrollytelling
+posts: this project's `mcp__Claude_Browser__*` tool, in this environment,
+never fires any paint/compositor-tied browser callback —
+
+1. `IntersectionObserver` — confirmed via a from-scratch test observer that
+   never received even the spec-guaranteed initial callback. This is why
+   `client:visible` hydration never triggers (Astro's directive is
+   IO-based) and why the in-island `useActiveSection` hook never updates on
+   scroll.
+2. `requestAnimationFrame` — confirmed by queuing a self-rescheduling rAF
+   loop and polling a counter; it stayed at 0 after a 500ms wait. This is
+   why `AnimatedNumber` components display a frozen `0` instead of
+   counting up.
+3. `ResizeObserver` — confirmed indirectly: a `recharts` `<ResponsiveContainer>`
+   rendered zero `<svg>` elements and `getBoundingClientRect()` on its
+   container returned all-zero, even though the parent chain has real
+   computed CSS height (`h-[68vh]` etc.). Recharts measures via
+   `ResizeObserver` and never draws without a real measurement — this is
+   *not* a rendering bug in the chart code, it's this same class of issue.
+
+**Working verification technique** (used repeatedly this session, always
+reverted before commit): temporarily change the target `client:*` directive
+to `client:load` (bypasses the IO-gated trigger) *and* temporarily hardcode
+the shared shell's `useState(ids[N])` initial value in
+`src/islands/Scrollytelling.tsx` to force a specific section active, then
+check `document.querySelectorAll('svg').length` and `.textContent` on the
+sticky viz box. This proves the component mounts, the specific chart/data
+renders correctly, and there are no console errors — independent of the
+scroll-linked swap, which cannot be observed in this tool at all. Always
+`git diff src/islands/Scrollytelling.tsx` after reverting to confirm a
+clean no-op before committing (a stray hardcoded `useState(ids[N])` left
+in the shared shell would silently break every scrollytelling post at once).
+
+Real browsers (Chrome/Firefox/Safari/Edge) support all three APIs
+natively and have for years — this is specific to the automated tool, not
+a site defect. A real-browser sanity check after each scrollytelling
+deploy is still worth doing once, per the existing "Known verification
+gap" note in ARCHITECTURE.md.
+
+## 2026-07-21 — `pdftoppm` (Read tool's PDF-page renderer) isn't installed here; `pdftotext` + PyMuPDF (`fitz`) fill the gap [harvest-candidate]
+
+Tags: #pdf #tooling
+
+The `Read` tool's built-in PDF handling (page-range rendering) depends on
+`pdftoppm` (poppler-utils), which errored as not installed in this
+environment. Two things ARE available and cover the same need:
+
+- `pdftotext -layout <pdf> <out.txt>` (poppler-utils' text extractor,
+  found at `/mingw64/bin/pdftotext.exe` — poppler is partially installed,
+  just missing the image-rendering binary) — fast, good for text-heavy
+  reports (a 93-page formal report extracted cleanly with real paragraph
+  structure), but produces garbled/unusable output for slide-deck-style
+  PDFs whose content is mostly infographics (chart labels scatter with no
+  positional meaning once flattened to text).
+- For those slide-deck PDFs, rendered individual pages to PNG directly via
+  Python's `fitz` (PyMuPDF, already installed — `python -c "import fitz"`
+  succeeds): `fitz.open(path)[page_index].get_pixmap(dpi=110).save(out.png)`,
+  then read the PNG with the `Read` tool as an image. Wrote this as a small
+  reusable script (`render_pdf.py`) taking a path, a filename prefix, and a
+  comma-separated page list, rather than inlining it in Bash `-c` each
+  time (Windows paths with backslashes inside a Python `-c` string hit
+  `unicodeescape` decode errors — write the script to a file with a raw
+  string constant instead).
+
+Practical split: use `pdftotext` first to get oriented (cheap, fast) on
+any PDF; fall back to per-page `fitz` rendering specifically for pages
+that read as garbled/low-information text (slide decks, infographic-heavy
+reports) rather than rendering every page of every document.
+
 ## 2026-07-18 — Additive-first, then full-replace once seen live: a case for shipping the smaller diff first
 
 Tags: #astro #product-decisions
