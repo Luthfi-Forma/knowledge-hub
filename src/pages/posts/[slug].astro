@@ -8,6 +8,7 @@ import { getPublishedPosts, getRelatedPosts } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
 import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
 import JabungLampungCoastalDevelopmentScrollytelling from '../../lib/scrollytelling/jabung-lampung-coastal-development';
+import RpplhSouthPapuaScrollytelling from '../../lib/scrollytelling/rpplh-south-papua';
 
 // ADR-002: each scrollytelling post is a bespoke wired-up React island (data
 // + viz + shell). Astro's `client:*` hydration needs a statically-analyzable
@@ -107,6 +108,9 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     )}
     {isScrollytelling && post.id === 'jabung-lampung-coastal-development' && (
       <JabungLampungCoastalDevelopmentScrollytelling client:visible />
+    )}
+    {isScrollytelling && post.id === 'rpplh-south-papua' && (
+      <RpplhSouthPapuaScrollytelling client:visible />
     )}
 
     {

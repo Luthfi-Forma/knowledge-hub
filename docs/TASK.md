@@ -10,7 +10,7 @@
 
 ## Now
 
-- [ ] T-30: scrollytelling `rpplh-south-papua` — Food Estate 1,2 juta ha/6 distrik vs. 471.026 ha ruang budaya adat tumpang-tindih, skor jasa lingkungan, status desa IPD, temuan lapangan. Sumber: `PAPARAN AWAL RANCANGAN RPPLH PAPSEL 2024.pdf` (M4)
+Tidak ada.
 
 ## Backlog
 
@@ -45,4 +45,5 @@
 - [x] T-27: scrollytelling full-replace — narasi MDX lama dihapus total (bukan append lagi); skip `<h1>`/dek/cover/TOC/body untuk post scrollytelling, meta row tanpa "min read"; generalisasi gating (`isScrollytelling` + branch per-post eksplisit) supaya post scrollytelling berikutnya jadi diff mekanis (M4) — 2026-07-18
 - [x] T-28: scrollytelling `bontang-poverty-mapping` — reframe sebagai studi kasus Bontang di dalam Kajian Pemetaan Karakteristik Masyarakat Miskin Prov. Kaltim (Bappeda Kaltim, 2023); Bontang satu-satunya kab/kota 100% tuntas saat laporan dibuat (7 section: konteks provinsi, metode 2-jalur, kenapa Bontang, peta hotspot, close-up Kelurahan Tanjung Laut Indah, status rollout 9 kab/kota lain) (M4) — 2026-07-18
 - [x] T-29: scrollytelling `jabung-lampung-coastal-development` — koreksi metodologi (Analisis Skalogram 12 kecamatan + SWOT, bukan gravity model — kata "gravity" tidak muncul sama sekali di laporan 93 halaman) → zonasi Agropolitan (Bandar Sribhawono) & Minapolitan (Labuhan Maringgai, Pasir Sakti), 3 skenario capaian (M4) — 2026-07-18
+- [x] T-30: scrollytelling `rpplh-south-papua` — Food Estate 1,2 juta ha/6 distrik vs. 471.026 ha ruang budaya adat tumpang-tindih (7 kategori), skor jasa lingkungan (74,63% pangan kelas-4, 67,88% kehati kelas-5), status desa IPD (89% tertinggal/sangat tertinggal), temuan lapangan (200 ekskavator, 135/140km jalan tanpa AMDAL), tradisi Sasi OAP (M4) — 2026-07-18
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

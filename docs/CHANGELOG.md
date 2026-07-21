@@ -76,6 +76,15 @@ the project starts tagging releases.
   secondary centers, and seven hinterland kecamatan, tracing the case for
   one Agropolitan zone (Bandar Sribhawono) and one Minapolitan zone
   (Labuhan Maringgai + Pasir Sakti) directly to that hierarchy.
+- Fourth and final scrollytelling post of this batch: `rpplh-south-papua`
+  (T-30) — South Papua's draft RPPLH measured against the national Food
+  Estate program's 1.2-million-hectare footprint: 471,026 ha of overlapping
+  customary/sacred land across 7 categories, ecosystem-service vulnerability
+  scores (74.63% high food-provisioning, 67.88% very-high biodiversity
+  support — the same land scores high on both), village development status
+  (89% of 125 villages under/very-underdeveloped), and field findings
+  (excavators, road construction outpacing AMDAL permitting). Closes on the
+  OAP Sasi tradition as a customary conservation practice.
 
 ### Changed
 
