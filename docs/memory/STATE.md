@@ -3,7 +3,7 @@
 <!-- SNAPSHOT file: overwrite it, do not append. Updated at every session close
      by /project-status, grounded in git log — not recall. -->
 
-- Updated: 2026-07-18
+- Updated: 2026-07-22
 - Milestone: M1–M4 selesai (see docs/ROADMAP.md). Tidak ada task aktif di TASK.md Now.
 
 ## Current status
@@ -33,6 +33,19 @@ dashboard Vercel (belum berubah dari sesi lalu — toggle akun, tidak bisa
 disentuh dari kode).
 
 ## Last session
+
+**2026-07-22**: Migrasi ke Claude Engineering OS v1.1 (ADR-006 di repo OS).
+`.claude/settings.json` menambahkan 2 hook non-blocking:
+`commit_message_gate` + `code_quality_reminder`. `data_validation_check`
+dan `perf_reminder` **sengaja tidak dipasang** — project ini tidak punya
+data JSON/GeoJSON sama sekali dan tidak ada komponen map/render (ini blog
+konten, bukan aplikasi peta). Gap diketahui: `code_quality_reminder`
+hanya cover `.ts/.tsx/.js/.jsx/.py`, **tidak** `.astro`/`.mdx` — padahal
+mayoritas source project ini (27 `.astro` + 11 `.mdx` vs 7 `.ts` + 5
+`.tsx`). Dicatat di `docs/RULES.md` sebagai kandidat harvest-lessons
+(perbaikan level-OS, bukan tambal per-project). Diuji dengan payload
+nyata: nudge muncul di file `.tsx` scrollytelling, diam di `.astro`.
+Tidak ada perubahan konten/fitur.
 
 **2026-07-21** (dua sesi berurutan, di-summarize bersama):
 

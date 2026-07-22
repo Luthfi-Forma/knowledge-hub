@@ -5,5 +5,27 @@
       "Bash(git log:*)",
       "Bash(git diff:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python \"C:\\Users\\Luthfi\\Documents\\Claude Code\\Claude Engineering OS\\hooks\\library\\commit_message_gate.py\"", "timeout": 10 }
+        ],
+        "description": "Warn (never block) if a git commit's staged diff has debug leftovers.",
+        "id": "pre:bash:commit-message-gate"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "python \"C:\\Users\\Luthfi\\Documents\\Claude Code\\Claude Engineering OS\\hooks\\library\\code_quality_reminder.py\"", "timeout": 10 }
+        ],
+        "description": "Nudge toward /code-quality-review after .ts/.tsx source edits (islands, scrollytelling components).",
+        "id": "post:edit-write:code-quality-reminder"
+      }
+    ]
   }
 }

@@ -25,6 +25,14 @@ Read the relevant one before starting that kind of work (paths relative to
 Project-local deviations from OS standards live in `docs/RULES.md` **only** —
 this file stays a pointer, never a rulebook.
 
+## Automation (OS v1.1, since 2026-07-22)
+
+`.claude/settings.json` wires 2 optional OS hooks (git debug-marker
+warning, code-quality nudge on `.ts`/`.tsx` edits) — non-blocking. See
+`docs/RULES.md` for why the data-validation and perf hooks were skipped
+here, and `OS_ROOT\hooks\README.md` for how hooks work. New skill
+available: `/code-quality-review`.
+
 ## Session protocol
 
 **START**
