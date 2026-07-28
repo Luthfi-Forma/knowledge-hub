@@ -157,7 +157,11 @@ function VizProblem() {
           r="40"
           fill={IND}
           animate={{ cx: [80, 105, 80] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          // Plays once (3s) instead of looping forever: WCAG 2.2.2 requires a
+          // pause control for motion running past 5s, and this viz has none.
+          // One converge-and-settle still reads as "these two land uses move
+          // toward each other" — the loop added nothing but a violation.
+          transition={{ duration: 3, ease: 'easeInOut' }}
         />
         <motion.circle
           cx="320"
@@ -165,7 +169,11 @@ function VizProblem() {
           r="40"
           fill={RES}
           animate={{ cx: [320, 295, 320] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          // Plays once (3s) instead of looping forever: WCAG 2.2.2 requires a
+          // pause control for motion running past 5s, and this viz has none.
+          // One converge-and-settle still reads as "these two land uses move
+          // toward each other" — the loop added nothing but a violation.
+          transition={{ duration: 3, ease: 'easeInOut' }}
         />
         <text x="80" y="225" textAnchor="middle" fill={IND} fontSize="12" letterSpacing="2">
           INDUSTRY

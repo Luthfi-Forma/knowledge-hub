@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-07-18
+- Updated: 2026-07-28
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).
@@ -10,7 +10,31 @@
 
 ## Now
 
-Tidak ada.
+**M5 · S1 — Etalase.** Semua item di bawah terverifikasi lewat membaca diff;
+nol risiko arsitektural. Dikerjakan lebih dulu karena kriteria sukses
+PROJECT_BRIEF (`post → project hub → repo/demo` dalam ≤ 2 klik) hari ini
+putus di setiap sambungan.
+
+- [ ] T-31: tambah `repo:` + `demo:` ke 3 post `type: project`; perbaiki org salah di `building-knowledge-hub.mdx:7` (`afrezahernanda` → `Luthfi-Forma`, saat ini 404); telusuri jalur ≤ 2 klik secara manual dan catat hasilnya di `docs/TESTING.md` (M5)
+- [ ] T-33: `cover:` + 3–5 screenshot ber-caption di dalam body tiap case study; mematikan 3 placeholder krem di Featured Projects (`PostCard` fallback saat `cover` kosong); OG image ikut ter-regenerate otomatis (M5)
+- [ ] T-36: ukur baseline Lighthouse via PageSpeed Insights (web UI — tanpa install, tanpa hak admin) untuk `/` dan satu post scrollytelling; catat di `docs/TESTING.md`. Target ≥ 90 di brief belum pernah diukur sekali pun (M5)
+
+## Next
+
+**M5 · S2 — Fondasi dual-mode** (kunci arsitektural; kalau gagal, hentikan
+sebelum S3)
+
+- [ ] T-37: ADR-003 — 3 klausa: Tier-0 CSS platform features; Tier-1 vanilla diizinkan di layout global dengan anggaran byte sementara hidrasi framework tetap dilarang (reinterpretasi ADR-002 klausa 4, diputuskan user 2026-07-28); dual-mode sebagai remap token pada `data-mode`, bukan pohon route kedua (M5)
+- [ ] T-38: blok `:root[data-mode="immersive"]` di `global.css` **di dalam `@layer base`** — remap 8 token warna + `--font-display`/`--font-body` yang sudah ada, **bukan** token paralel. Terverifikasi: 0 hex literal & 72 `var(--color-*)` di 4 modul scrollytelling + island, 26 `.astro` memakai utility token — jadi seluruh situs ikut berganti identitas tanpa edit React (M5)
+- [ ] T-39: `ModeController` Tier-1 — script `is:inline` pra-paint membaca `localStorage` dan menstempel `data-mode` sebelum first paint (nol FOUC); tombol toggle di `Header.astro`; script yang sama meng-inject `<link>` font Immersive hanya saat mode immersive supaya Reading Mode tidak membayar sebyte pun (M5)
+
+**M5 · S3–S5**
+
+- [ ] T-40: identitas DATUM di homepage — collar lembar survei (judul seri, nomor sheet, tick lintang, string proyeksi/datum), field graticule CSS murni (`repeating-linear-gradient` + crosshair SVG data-URI, tanpa aset gambar/canvas), plate berhatch per `type` dengan koordinat asli, legenda-sebagai-filter ke `/explore/[type]`. Penempatan diturunkan dari `type` + `date` — **bukan** 11 `grid-area` tulis tangan (pajak pemeliharaan tiap post baru) (M5)
+- [ ] T-41: tetapkan tipografi Immersive — self-hosted woff2; bukan Bodoni/Karla, dan Fraunces/Playfair/Inter/Space Grotesk terlarang sebagai penanda AI-generik. Usulan awal: Archivo Expanded / Spectral / Spline Sans Mono (M5)
+- [ ] T-42: registration seam — overlay fixed `clip-path: inset(0 calc(100% - var(--seam)) 0 0)`, digerakkan `pointerdown`/`pointermove` + `setPointerCapture`, grip `role="slider"` dengan arrow/Home/End. Tanpa `rAF`, tanpa clone DOM. Plus `@view-transition { navigation: auto }` CSS murni — **bukan** `<ClientRouter />`, yang akan merusak init carousel di `FeaturedProjects.astro` dan injeksi Pagefind di `explore/index.astro` (M5)
+- [ ] T-43: perluas Immersive ke `/explore` + `/about`; layout mobile terpisah untuk collar (di 375px, collar 88px vertikal + 112px horizontal terlalu rakus — butuh desain kedua, bukan penyusutan) (M5)
+- [ ] T-44: tutup M5 — ukur ulang Lighthouse, tulis aturan motion ke `docs/RULES.md` (bukan file `docs/MOTION.md` baru), perbarui ROADMAP/STATE/CHANGELOG (M5)
 
 ## Backlog
 
@@ -45,5 +69,8 @@ Tidak ada.
 - [x] T-27: scrollytelling full-replace — narasi MDX lama dihapus total (bukan append lagi); skip `<h1>`/dek/cover/TOC/body untuk post scrollytelling, meta row tanpa "min read"; generalisasi gating (`isScrollytelling` + branch per-post eksplisit) supaya post scrollytelling berikutnya jadi diff mekanis (M4) — 2026-07-18
 - [x] T-28: scrollytelling `bontang-poverty-mapping` — reframe sebagai studi kasus Bontang di dalam Kajian Pemetaan Karakteristik Masyarakat Miskin Prov. Kaltim (Bappeda Kaltim, 2023); Bontang satu-satunya kab/kota 100% tuntas saat laporan dibuat (7 section: konteks provinsi, metode 2-jalur, kenapa Bontang, peta hotspot, close-up Kelurahan Tanjung Laut Indah, status rollout 9 kab/kota lain) (M4) — 2026-07-18
 - [x] T-29: scrollytelling `jabung-lampung-coastal-development` — koreksi metodologi (Analisis Skalogram 12 kecamatan + SWOT, bukan gravity model — kata "gravity" tidak muncul sama sekali di laporan 93 halaman) → zonasi Agropolitan (Bandar Sribhawono) & Minapolitan (Labuhan Maringgai, Pasir Sakti), 3 skenario capaian (M4) — 2026-07-18
+- [x] T-34: terjemahkan label & caption chart Indonesia → English di 4 modul `src/lib/scrollytelling/*.tsx` — lingkupnya ternyata jauh lebih luas dari 8 kemunculan yang tertandai semula: data label chart (Kelas 1–5, status desa, tenure TLI, skenario, dll.), caption di bawah chart, `vizCitation.fig`/`source` (dirender sebagai "Drawn from" untuk tiap section, bukan cuma section aktif), locator `citations[].where` di panel "Sources for this claim" (dirender untuk semua section), heading "Sumber" → "Source", dan format angka `toLocaleString('id-ID')` → `'en-US'`. Istilah resmi tata ruang yang sudah dipakai apa adanya di body prose English (RTRW, PKL/PKLp/PPK/PPL, Skalogram, Hierarki, IPD, kecamatan/kelurahan/kabupaten-kota, Sasaran 1/2, P3KE, AMDAL) sengaja **dipertahankan** sebagai loanword, mengikuti preseden yang sudah ada di teks post — bukan luput tak sengaja. Judul dokumen sumber yang dikutip literal tetap dalam Bahasa Indonesia (praktik sitasi standar, tidak menerjemahkan judul karya). Terverifikasi lewat `npm run build` + grep pada `dist/`: nol sisa Indonesia pada seluruh teks yang ter-SSR (M5) — 2026-07-28
+- [x] T-32: "Project: X" jadi link nyata — `<span>` → `<a href="/projects/...">` di `src/pages/posts/[slug].astro`, memakai `getProjectTitle()` supaya labelnya sama dengan halaman `/projects`; sebelumnya post → project hub adalah nol klik (M5) — 2026-07-28
+- [x] T-35: perbaikan aset & a11y — `portrait.png` dipindah ke `src/assets/` + `<Image>` (982.410 → 11.892 byte webp, −98,8%); dua `repeat: Infinity` di `cikarang-industrial-settlement-pattern.tsx` jadi sekali putar (WCAG 2.2.2); net `prefers-reduced-motion` global di `global.css` (sengaja unlayered + `!important` — kebalikan dari reset heading, karena harus menang atas scoped `<style>` di `about.astro`/`FeaturedProjects.astro`); `--font-mono` didefinisikan (dipakai 8× tapi tidak pernah ada, diam-diam jatuh ke default Tailwind) (M5) — 2026-07-28
 - [x] T-30: scrollytelling `rpplh-south-papua` — Food Estate 1,2 juta ha/6 distrik vs. 471.026 ha ruang budaya adat tumpang-tindih (7 kategori), skor jasa lingkungan (74,63% pangan kelas-4, 67,88% kehati kelas-5), status desa IPD (89% tertinggal/sangat tertinggal), temuan lapangan (200 ekskavator, 135/140km jalan tanpa AMDAL), tradisi Sasi OAP (M4) — 2026-07-18
 <!-- - [x] T-00: example (M1) — 2026-01-01 -->

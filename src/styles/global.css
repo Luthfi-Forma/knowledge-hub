@@ -16,6 +16,15 @@
 
   --font-display: "Bodoni Moda", Georgia, serif;
   --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+  /*
+   * `font-mono` is used 8x across the scrollytelling shell and data modules
+   * (coordinates, figure numbers, tabular stats) but was never declared here,
+   * so it silently resolved to Tailwind's built-in default. Declaring it makes
+   * the fallback explicit and — more importantly — makes it a token the
+   * Immersive-mode remap (T-38) can swap along with the other two families.
+   * Deliberately a system stack: zero bytes, no new webfont request.
+   */
+  --font-mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
 
   --container-content: 50rem;
   --container-prose: 42rem;
@@ -57,5 +66,28 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 400;
+  }
+}
+
+/*
+ * Global reduced-motion safety net (T-35). Deliberately left UNLAYERED and
+ * marked !important — the opposite of the decision documented above, and for
+ * the opposite reason: the heading reset must LOSE to utilities, this must
+ * WIN over everything, including the scoped `<style>` blocks in about.astro
+ * and FeaturedProjects.astro and any future Immersive-mode keyframes.
+ *
+ * Scope note: this neutralises CSS animation/transition only. Motion driven
+ * from JS (motion/react inside the scrollytelling islands) is unaffected and
+ * must keep honouring `useReducedMotion()` in the shell — the four viz
+ * modules still don't, which is tracked separately, not fixed here.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

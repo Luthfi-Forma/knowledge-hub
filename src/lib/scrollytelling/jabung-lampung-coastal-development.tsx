@@ -31,15 +31,15 @@ const CAPITAL_CANDIDATES = [
 ];
 
 const HIERARCHY_TIERS = [
-  { name: 'Pusat pertumbuhan utama', value: 1 },
-  { name: 'Pusat pertumbuhan kedua', value: 4 },
-  { name: 'Kawasan hinterland', value: 7 },
+  { name: 'Main growth pole', value: 1 },
+  { name: 'Secondary growth pole', value: 4 },
+  { name: 'Hinterland area', value: 7 },
 ];
 
 const SCENARIOS = [
-  { name: 'Optimis', kawasan: 100, infrastruktur: 100 },
-  { name: 'Moderat', kawasan: 80, infrastruktur: 80 },
-  { name: 'Pesimis', kawasan: 50, infrastruktur: 50 },
+  { name: 'Optimistic', kawasan: 100, infrastruktur: 100 },
+  { name: 'Moderate', kawasan: 80, infrastruktur: 80 },
+  { name: 'Pessimistic', kawasan: 50, infrastruktur: 50 },
 ];
 
 const tooltipStyle = {
@@ -57,7 +57,7 @@ function VizIntro() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
       <div className="text-5xl font-semibold" style={{ color: ACCENT }}>12</div>
-      <div className="mt-2 text-xs tracking-[0.25em] text-ink-muted uppercase">kecamatan, satu wilayah perencanaan</div>
+      <div className="mt-2 text-xs tracking-[0.25em] text-ink-muted uppercase">kecamatan, one planning area</div>
       <div className="mt-8 grid grid-cols-4 gap-2">
         {names.map((n, i) => (
           <motion.div
@@ -96,14 +96,14 @@ function VizProblem() {
         </motion.div>
       ))}
       <div className="mt-2 text-center text-[10px] text-ink-muted italic">
-        Empat tingkatan RTRW — tapi tingkatan mana yang benar-benar layak jadi pusat pertumbuhan?
+        Four RTRW tiers — but which one is actually fit to lead growth?
       </div>
     </div>
   );
 }
 
 function VizMethod() {
-  const steps = ['19 indikator fasilitas & pelayanan', 'Pembobotan per kecamatan', 'Skor Skalogram', 'Hierarki 1 / 2 / 3'];
+  const steps = ['19 facility & service indicators', 'Weighting per kecamatan', 'Skalogram score', 'Hierarki 1 / 2 / 3'];
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6">
       {steps.map((s, i) => (
@@ -124,21 +124,21 @@ function VizMethod() {
 function VizFinding1() {
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Kandidat ibu kota — IPD &amp; jumlah jenis fasilitas (dari 19)</div>
+      <div className="mb-3 text-sm text-ink-muted">Capital candidates — IPD score &amp; facility-type count (of 19)</div>
       <div className="flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={CAPITAL_CANDIDATES} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="ipd" name="Skor IPD" fill={ACCENT} animationDuration={800} />
-            <Bar dataKey="facilities" name="Jenis fasilitas (/19)" fill={SECOND} animationDuration={800} />
+            <Bar dataKey="ipd" name="IPD score" fill={ACCENT} animationDuration={800} />
+            <Bar dataKey="facilities" name="Facility types (/19)" fill={SECOND} animationDuration={800} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-2 flex items-center gap-4 text-xs text-ink-muted">
-        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> Skor IPD</span>
-        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Jenis fasilitas</span>
+        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> IPD score</span>
+        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Facility types</span>
       </div>
     </div>
   );
@@ -171,8 +171,8 @@ function VizFinding2() {
 
 function VizFinding3() {
   const zones = [
-    { label: 'Agropolitan', place: 'Bandar Sribhawono', items: ['Jagung', 'Singkong', 'Padi', 'Karet', 'Sawit'], note: 'Jalur Feeder Road' },
-    { label: 'Minapolitan', place: 'Labuhan Maringgai + Pasir Sakti', items: ['Pel. Maringgai', 'Pel. Way Penet', 'Pel. Way Sekampung'], note: 'Pengolahan rajungan' },
+    { label: 'Agropolitan', place: 'Bandar Sribhawono', items: ['Corn', 'Cassava', 'Rice', 'Rubber', 'Palm oil'], note: 'Feeder Road corridor' },
+    { label: 'Minapolitan', place: 'Labuhan Maringgai + Pasir Sakti', items: ['Pel. Maringgai', 'Pel. Way Penet', 'Pel. Way Sekampung'], note: 'Crab processing' },
   ];
   return (
     <div className="flex h-full w-full items-center justify-around gap-4 p-6">
@@ -201,21 +201,21 @@ function VizFinding3() {
 function VizConclusion() {
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Tiga skenario perencanaan — % capaian akhir</div>
+      <div className="mb-3 text-sm text-ink-muted">Three planning scenarios — % final achievement</div>
       <div className="flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={SCENARIOS} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} unit="%" />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="kawasan" name="Pengembangan kawasan" fill={ACCENT} animationDuration={800} />
-            <Bar dataKey="infrastruktur" name="Pengembangan infrastruktur" fill={SECOND} animationDuration={800} />
+            <Bar dataKey="kawasan" name="Area development" fill={ACCENT} animationDuration={800} />
+            <Bar dataKey="infrastruktur" name="Infrastructure development" fill={SECOND} animationDuration={800} />
           </BarChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-2 flex items-center gap-4 text-xs text-ink-muted">
-        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> Kawasan</span>
-        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Infrastruktur</span>
+        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> Area</span>
+        <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Infrastructure</span>
       </div>
     </div>
   );
@@ -237,54 +237,54 @@ const sections: ScrollytellingSection[] = [
     kicker: 'Setting the scene',
     title: 'Twelve sub-districts, one coastal planning area — but not one role each.',
     body: 'East Lampung Regency’s Jabung sub-region and its coastal strip span twelve kecamatan, from inland agricultural land to fishing ports on the Java Sea. The regency wanted two development models running at once — agropolitan zoning inland, minapolitan zoning along the coast — but pursuing both everywhere at once would have meant no real center for either.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Latar Belakang, Bab I' }],
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Background, Chapter I' }],
   },
   {
     id: 'problem',
     kicker: 'The gap',
     title: 'RTRW already sorts kecamatan into four tiers. It doesn’t say which one should lead.',
     body: 'The regency’s existing spatial plan (RTRW 2011–2031) already classifies each kecamatan as a Pusat Kegiatan Lokal, Promosi, Kawasan, or Lingkungan center — a policy label, not a ranking. Deciding which sub-districts had the underlying capacity to anchor real growth needed a method that scored them against each other, not just against an administrative category.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Tabel IV.3 Sistem Pusat Pelayanan, p. 56' }],
-    vizCitation: { fig: 'Tabel IV.3', source: 'Sistem Pusat Pelayanan, p. 56' },
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.3 Service Center System, p. 56' }],
+    vizCitation: { fig: 'Table IV.3', source: 'Service Center System, p. 56' },
   },
   {
     id: 'method',
     kicker: 'Method',
     title: 'Skalogram Analysis — not a gravity model.',
     body: 'The actual method scores each kecamatan against 19 facility and service indicators, weights them, and produces a Skalogram hierarchy score — the higher the score, the more developed the sub-district’s service base, and the stronger its case to anchor growth rather than depend on a neighboring center.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Analisis Skalogram, pp. 56–57' }],
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Skalogram Analysis, pp. 56–57' }],
   },
   {
     id: 'finding1',
     kicker: 'Finding 01',
     title: 'Way Jepara scores highest — and becomes a candidate for a new district capital.',
     body: 'Way Jepara lands at Hierarki 1 with an IPD score of 32.73 and 13 of 19 facility types present — the strongest service base in the study area. Labuhan Maringgai, at Hierarki 2, actually carries more facility types (17 of 19) and a strategic coastal position, making both kecamatan candidates should Lampung Timur ever split into a new regency.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Tabel IV.4 Hasil Analisis Skalogram, pp. 56–62' }],
-    vizCitation: { fig: 'Tabel IV.4', source: 'Hasil Analisis Skalogram Wilayah, pp. 56–62' },
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.4 Skalogram Analysis Results, pp. 56–62' }],
+    vizCitation: { fig: 'Table IV.4', source: 'Area Skalogram Analysis Results, pp. 56–62' },
   },
   {
     id: 'finding2',
     kicker: 'Finding 02',
     title: 'One main center, four secondary, seven hinterland.',
     body: 'Sorting all twelve kecamatan by their Skalogram hierarchy produces a clear shape: Way Jepara alone as the main growth pole, four kecamatan (Labuhan Maringgai, Sekampung Udik, Pasir Sakti, Mataram Baru) as secondary centers, and the remaining seven classified as hinterland — areas the plan supports rather than expects to lead.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Tabel IV.4 Hasil Analisis Skalogram, pp. 56–62' }],
-    vizCitation: { fig: 'Tabel IV.4', source: 'Hasil Analisis Skalogram Wilayah, pp. 56–62' },
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.4 Skalogram Analysis Results, pp. 56–62' }],
+    vizCitation: { fig: 'Table IV.4', source: 'Area Skalogram Analysis Results, pp. 56–62' },
   },
   {
     id: 'finding3',
     kicker: 'Finding 03',
     title: 'The hierarchy becomes two zones: Agropolitan and Minapolitan.',
     body: 'Bandar Sribhawono — corn, cassava, rice, rubber, and palm oil, sitting on the province’s Feeder Road corridor — anchors the Agropolitan zone. Labuhan Maringgai and Pasir Sakti, with three working fishing ports and a growing crab-processing trade, anchor Minapolitan. Neither label was applied uniformly across the coastline — each traces back to a specific kecamatan’s Skalogram profile.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Konsep Agropolitan & Minapolitan, pp. 76–79' }],
-    vizCitation: { fig: 'Konsep pengembangan kawasan', source: 'Bab V.2, pp. 76–79' },
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Agropolitan & Minapolitan Concept, pp. 76–79' }],
+    vizCitation: { fig: 'Area development concept', source: 'Chapter V.2, pp. 76–79' },
   },
   {
     id: 'conclusion',
     kicker: 'Where this leads',
     title: 'Three futures, same map — the difference is how much of it actually gets built.',
     body: 'The plan carries three delivery scenarios: optimistic (100% of planned area and infrastructure development realized), moderate (80%), and pessimistic (50%) — each tied directly to whether economic growth, the human development index, and infrastructure provisioning hit, undershoot, or badly miss the plan’s targets. The hierarchy and zoning are fixed; how much of them materializes isn’t.',
-    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Tabel V.1 Perbandingan Skenario, p. 80' }],
-    vizCitation: { fig: 'Tabel V.1', source: 'Perbandingan Skenario Perencanaan, p. 80' },
+    citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table V.1 Scenario Comparison, p. 80' }],
+    vizCitation: { fig: 'Table V.1', source: 'Planning Scenario Comparison, p. 80' },
   },
 ];
 
@@ -303,10 +303,10 @@ export default function JabungLampungCoastalDevelopmentScrollytelling() {
       viz={viz}
       sourceCitation={
         <>
-          <div className="text-xs tracking-[0.25em] text-accent uppercase">Sumber</div>
-          <p className="mt-2 text-ink">Badan Perencanaan Pembangunan Daerah (Bappeda) Kabupaten Lampung Timur.</p>
+          <div className="text-xs tracking-[0.25em] text-accent uppercase">Source</div>
+          <p className="mt-2 text-ink">Regional Development Planning Agency (Bappeda), Lampung Timur Regency.</p>
           <p className="italic">Penyusunan Wilayah Jabung dan Kawasan Pesisir Kabupaten Lampung Timur.</p>
-          <p className="mt-1 text-xs">Laporan Akhir, 2024.</p>
+          <p className="mt-1 text-xs">Final Report, 2024.</p>
         </>
       }
     />

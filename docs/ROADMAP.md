@@ -12,16 +12,22 @@
 | M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | done |
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics | done |
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
+| M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; baseline Lighthouse tercatat | in progress |
 
 Custom domain dan arsip repo lama (awalnya bagian M3) ditunda eksplisit oleh
 user — lihat T-20/T-21 di TASK.md Backlog.
 
 ## Current focus
 
-M1–M4 selesai. Situs live di
-[knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app).
-Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai dari Backlog
-(T-20/T-21, menunggu keputusan user) atau permintaan baru.
+**M5 — DATUM.** Dipicu dokumen visi "Knowledge Hub 2.0" milik user, lalu
+dipersempit lewat brainstorming 14 agent (2 workflow). Tujuan yang menentukan
+arah: user menyatakan target 12 bulannya adalah **situsnya sendiri sebagai
+bukti kemampuan teknis** — pengunjung harus terkesan pada cara situs dibuat,
+bukan hanya isinya. Itu sebabnya identitas kedua dibangun, bukan sekadar
+konten ditambah.
+
+Rencana lengkap (arah visual, skor juri, daftar yang dibunuh):
+`C:\Users\Luthfi\.claude\plans\c-users-luthfi-desktop-knowledge-hub-m5-squishy-gadget.md`.
 
 ## Phase detail
 
@@ -66,6 +72,28 @@ Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai dari Backlog
   `jabung-lampung-coastal-development` (koreksi metodologi gravity model →
   Skalogram), `rpplh-south-papua`.
 
+### M5 — DATUM (dual-mode visual overhaul)
+
+Identitas krem sekarang menjadi **Reading Mode** dan tidak diubah; identitas
+kedua **Immersive Mode** dirancang dari nol dengan konsep *seri lembar peta*
+(DATUM): collar lembar survei, field bergraticule CSS, tiap post sebagai
+*plate* berkoordinat, tipe post sebagai kelas lahan berhatch.
+
+- **S1 — Etalase.** Kriteria sukses brief (`post → project hub → repo/demo`
+  dalam ≤ 2 klik) hari ini putus di setiap sambungan; ini diperbaiki lebih
+  dulu karena murah dan terverifikasi lewat baca diff.
+- **S2 — Fondasi dual-mode.** ADR-003, blok remap token di `@layer base`,
+  `ModeController` Tier-1 pra-paint. Kunci arsitekturnya: **remap 8 token
+  yang sudah ada, bukan bikin token paralel** — terverifikasi 0 hex literal
+  dan 72 `var(--color-*)` di 4 modul scrollytelling, sehingga seluruh situs
+  ikut berganti identitas tanpa edit React.
+- **S3 — Identitas DATUM** di homepage (collar, graticule, plate, legenda
+  sebagai filter). Tipografi Immersive ditetapkan di sini.
+- **S4 — Registration seam.** Wipe `clip-path` di bawah jari pengunjung,
+  pointer + keyboard, tanpa `rAF`, tanpa clone DOM.
+- **S5 — Perluasan + pengukuran.** `/explore` + `/about`, layout mobile
+  untuk collar, ukur ulang Lighthouse, aturan motion ke `docs/RULES.md`.
+
 ## Icebox
 
 - GitHub API enrichment (stars, last commit, activity feed).
@@ -74,3 +102,27 @@ Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai dari Backlog
 - i18n / versi Bahasa Indonesia.
 - Research page format paper ilmiah (Abstract/Methodology/...) — baru relevan
   saat ada ≥ 2 konten research.
+
+### Dibunuh di brainstorming M5 (jangan dihidupkan tanpa alasan baru)
+
+- three.js / camera system / Knowledge Observatory — butuh teknologi di luar
+  brief **dan** tidak bisa diverifikasi (`rAF` tidak pernah jalan di
+  environment ini).
+- Particle system + animated background — penanda AI-generik persis yang
+  T-14 habiskan satu milestone untuk dihindari.
+- Digital Workspace desk metaphor — butuh aset ilustrasi yang tidak ada, dan
+  mengunci 6 kategori ke dalam furnitur (bertentangan dengan keputusan
+  satu-tipe-konten di PROJECT_BRIEF).
+- Route Notes / Journal / Book Reviews — 0 post masing-masing; T-22 sudah
+  melebur `journal` → `article` persis karena alasan ini.
+- Restrukturisasi IA 10 route — memindahkan URL yang sudah terindeks dan
+  memutus satu sitasi eksternal nyata ke post Cikarang.
+- Metadata `difficulty`, Learning Path, GitHub auto-sync (non-goal tertulis
+  di brief yang sudah Approved).
+
+### Digerbangi, bukan dibunuh
+
+- **Knowledge graph SVG statis build-time** (nol library, tiap node `<a href>`
+  asli, satu file untuk dihapus) — gerbang: **≥ 20 post dan ≥ 15 cross-link
+  inline antar-post**. Hari ini nol cross-link ada di seluruh body MDX, dan
+  relasi `project` menyumbang nol edge karena tiap slug hanya dipakai 1 post.

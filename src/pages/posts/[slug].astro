@@ -4,7 +4,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RelatedPosts from '../../components/RelatedPosts.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
-import { getPublishedPosts, getRelatedPosts } from '../../lib/posts';
+import { getPublishedPosts, getProjectTitle, getRelatedPosts } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
 import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
 import JabungLampungCoastalDevelopmentScrollytelling from '../../lib/scrollytelling/jabung-lampung-coastal-development';
@@ -77,7 +77,14 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     {
       (project || repo || demo) && (
         <div class="mb-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-line py-3 text-sm">
-          {project && <span class="text-ink-muted">Project: {project}</span>}
+          {project && (
+            <span class="text-ink-muted">
+              Project:{' '}
+              <a href={`/projects/${project}`} class="text-accent hover:underline">
+                {getProjectTitle(project)}
+              </a>
+            </span>
+          )}
           {repo && (
             <a href={repo} target="_blank" rel="noopener" class="text-accent hover:underline">
               Repository ↗

@@ -1,6 +1,11 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
+// Moved out of public/ so astro:assets can process it: the source is a
+// 1023x1537 982 KB PNG being painted at 128-160px. Serving it raw made it
+// the single largest asset on any non-photo route.
+import portrait from '../assets/portrait.png';
 
 interface ExperienceEntry {
   role: string;
@@ -102,11 +107,10 @@ const organizations = [
 <BaseLayout title="About — Afreza Hernanda" description="About Afreza Luthfi Hernanda, Urban & Regional Planner — background, expertise, and experience.">
   <section class="mx-auto max-w-(--container-content) px-5 py-16">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
-      <img
-        src="/portrait.png"
+      <Image
+        src={portrait}
         alt="Portrait of Afreza Luthfi Hernanda"
-        width="160"
-        height="160"
+        width={320}
         class="h-32 w-32 shrink-0 rounded-sm object-cover sm:h-40 sm:w-40"
       />
       <div>
