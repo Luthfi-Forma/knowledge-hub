@@ -27,6 +27,94 @@ Content is real, not fixture data — every post in `src/content/posts/` is
 either the site owner's own real project or a real personal case study
 (see docs/RULES.md's content-first rule). There is no separate test dataset.
 
+## ≤2-click path walkthrough (T-31, T-33, 2026-07-28)
+
+PROJECT_BRIEF's success criterion — `post → project hub → repo/demo` in
+≤2 clicks — was verified broken at every hop before this session (no
+`repo:`/`demo:` on any project post, "Project: X" was plain text). Fixed
+this session (T-31/T-32/T-33) and manually walked in the built output
+(`dist/`, not just dev):
+
+| From | To | Clicks | Verified |
+|---|---|---|---|
+| `/posts/cdmp-jabodetabek` | `https://github.com/Luthfi-Forma/CDMP-Jabodetabek` | **1** (repo link is directly on the post's meta bar, not just the project hub) | yes — `<a href="...Repository ↗</a>` present |
+| `/posts/cdmp-jabodetabek` | `/projects/cdmp-jabodetabek` | 1 | yes — `Project:` is now a real `<a href>` |
+| `/projects/cdmp-jabodetabek` | `https://github.com/Luthfi-Forma/CDMP-Jabodetabek` | 1 (2 total via the hub) | yes |
+
+Same pattern confirmed for all 3 `type: project` posts (Jabodetabek-Connect,
+Jakarta Transit Heritage Explorer, CDMP-Jabodetabek) — repo links now
+resolve to real, user-supplied GitHub URLs under `Luthfi-Forma/*`. No
+`demo:` URLs were supplied this session (live demos aren't up yet per the
+posts' own "Status" sections — GitHub Pages/Vercel deploys are described as
+pending); `demo` stays unset, which the schema treats as optional.
+
+`building-knowledge-hub.mdx`'s `repo:` was also corrected — it pointed at
+`github.com/afrezahernanda/knowledge-hub` (wrong org, 404) and now resolves
+to the real `github.com/Luthfi-Forma/knowledge-hub`.
+
+**Cover art (T-33):** per the project owner's direction, covers are
+generated editorial diagrams rather than screenshots — each one encodes a
+real fact from its post (13 lines · 128 stations; the 3 named test nodes;
+1989–2027 · 14 projects) in the site's exact Reading Mode palette, built as
+hand-authored SVG rasterized via `@resvg/resvg-js` (same library and same
+embedded fonts as `src/lib/og-image.ts`, so no new dependency). Verified in
+`dist/`: all 3 Featured Projects cards on Home now render a real `<img>`;
+zero remaining `bg-paper-raised` placeholder boxes for these posts.
+
+## Measured baseline (T-36, 2026-07-28)
+
+The brief's success criterion — Lighthouse Performance & SEO ≥ 90 on Home
+and one post — had never actually been measured (verified: no score exists
+anywhere in the repo prior to this entry). Attempting to measure it hit two
+independent blockers, both worth recording as gotchas:
+
+- **PageSpeed Insights web UI** (pagespeed.web.dev): the run queues
+  successfully (`batchexecute` POST returns 200) but the page's client-side
+  polling loop never surfaces a result — stuck indefinitely on "Running
+  analysis / data loading" with zero follow-up network requests. Consistent
+  with this session's documented browser-tool limitation around JS timers
+  and async callbacks (see `docs/memory/LESSONS.md`, 2026-07-21 entry on
+  `IntersectionObserver`/`rAF`/`ResizeObserver`) — likely the same class of
+  issue extending to whatever polling mechanism the PSI frontend uses.
+- **PageSpeed Insights API** (`googleapis.com/pagespeedonline/v5`), tried
+  both via WebFetch and directly via `curl` from two different network
+  paths: both returned **HTTP 429** (keyless quota exhausted). Getting a
+  real Lighthouse score requires either a Google Cloud API key for the PSI
+  API, or running the PageSpeed Insights web UI from a real browser (not
+  this session's tooling) — **action item for the project owner**, not
+  something the agent could complete unattended this session.
+
+**What was measured instead** (raw production transfer weight via `curl`
+against the live Vercel deployment — a genuine proxy for the JS/CSS cost
+Lighthouse would score, not a substitute for the actual audit categories
+like accessibility, SEO markup, or CWV timing which need a real browser):
+
+| Route | HTML | CSS (br) | JS (br) | Total (br) | TTFB |
+|---|---|---|---|---|---|
+| `/` (Home) | 17.7 KB | 6.5 KB | 1.3 KB (`/_vercel/insights/script.js`, loaded by `<Analytics />` in `BaseLayout.astro`) | ~25.5 KB | 0.94 s |
+| `/posts/rpplh-south-papua` (scrollytelling) | 36.3 KB | 6.5 KB | 220.4 KB (`client.js` + 4 chunks: `rpplh-south-papua`, `PieChart`, `Scrollytelling`, `react-dom`) | ~263 KB | 0.95 s |
+
+The scrollytelling bundle's brotli-compressed weight (**~220 KB**) and raw
+weight (**~719 KB** across `client.CAF2SiBH.js` + the 4 chunks it pulls in)
+closely match the figures already recorded in `docs/ARCHITECTURE.md`
+("~700KB uncombined... ~220 KB gz") from the M4 session — good independent
+corroboration that those numbers hold in the current production build.
+Confirmed via chunk-import tracing (`grep` on the served JS for
+`from"./*.js"`) that the heavy chunk (`Scrollytelling.*.js`, 482 KB raw /
+146 KB br — the React+motion+recharts core) is pulled in only by the 4
+scrollytelling post pages, not by Home or any non-scrollytelling route —
+consistent with ADR-002's bundle-scoping requirement.
+
+TTFB for both routes is under 1s from this session's network path (not
+representative of a real user's location/connection — Lighthouse's mobile
+run applies deliberate network/CPU throttling that this measurement does
+not).
+
+**Still needed to close T-36 properly:** an actual Lighthouse run (PSI web
+UI in a real browser, or `npx lighthouse` if Node + Chrome are available
+locally) for the four audit categories (Performance, Accessibility, Best
+Practices, SEO) plus Core Web Vitals (LCP, CLS, TBT) on both routes above.
+
 ## Known gaps
 
 - No automated unit/integration/e2e test suite. Coverage today comes from

@@ -338,3 +338,41 @@ Tags: #astro
   `src/content.config.ts` (project-root-of-`src`, not `src/content/config.ts`
   like the old Content Collections API), with a `loader: glob({...})` and a
   `schema: ({ image }) => z.object({...})` callback.
+
+## 2026-07-28 — PageSpeed Insights is unreachable from this session by two independent paths
+
+Tags: #browser-verification #tooling #performance
+
+Attempting T-36 (Lighthouse baseline) hit two separate, unrelated blockers —
+worth distinguishing since they need different fixes:
+
+1. **PSI web UI (pagespeed.web.dev) hangs indefinitely.** Navigating to
+   `pagespeed.web.dev/analysis?url=...&form_factor=mobile` does queue a real
+   analysis — `read_network_requests` shows the `batchexecute` POST
+   returning `200` — but the page then sits on "Running analysis / data
+   loading" forever with zero follow-up polling requests, even after 2+
+   minutes and a full page reload. Likely the same class of issue as the
+   2026-07-21 entry above (this session's browser tool not firing whatever
+   timer/callback the page's polling loop depends on), just manifesting in
+   a third-party SPA instead of this project's own code — so it's a
+   property of the tool, not something fixable in this repo.
+2. **PSI's keyless REST API returns 429**, tried via both `WebFetch` and a
+   direct `curl` from the Bash tool (two different network paths, same
+   result): `googleapis.com/pagespeedonline/v5/runPagespeed` has a very low
+   shared quota for requests with no API key, and it's already exhausted.
+   Getting real numbers this way needs a Google Cloud API key.
+
+**Workaround used to still produce something real:** `curl -sI` /
+`curl -s --compressed -H "Accept-Encoding: br, gzip"` against the live
+Vercel deployment gives genuine TTFB and brotli-compressed transfer weight
+per route — not a Lighthouse score (no CWV timing, no accessibility/SEO
+audit), but real production numbers, and they independently corroborated
+the M4-era "~700KB uncombined / ~220KB gz" scrollytelling-bundle figure
+already recorded in `docs/ARCHITECTURE.md` almost exactly. Chunk-import
+tracing (`grep` the served JS for `from"./*.js"`, recursively) is a decent
+manual substitute for a bundle analyzer when there's no build tooling for
+one. See `docs/TESTING.md` § "Measured baseline" for the actual numbers.
+
+**Still true:** getting the real Lighthouse score needs either a real
+browser (outside this session's tooling) or a PSI API key — this is a
+task-owner action item, not something to keep retrying unattended.
