@@ -16,6 +16,13 @@ const posts = defineCollection({
         demo: z.string().url().optional(),
         cover: image().optional(),
         draft: z.boolean().default(false),
+        // Optional, display-only (M5/T-40) — a hand-picked real-world DMS
+        // coordinate stamped on the post's Immersive-mode "plate". Deliberately
+        // a pre-formatted string, not lat/lng numbers: nothing computes from
+        // it, so there's no reason to carry conversion logic for a decorative
+        // stamp. Omitted (not fabricated) for posts with no real place —
+        // building-knowledge-hub is about the site itself, not a location.
+        coordinates: z.string().optional(),
         // Opt-in per-post (ADR-002): renders a React scrollytelling island
         // instead of the MDX body. Each scrollytelling post also needs a
         // matching entry in src/lib/scrollytelling/ (bespoke data + viz —

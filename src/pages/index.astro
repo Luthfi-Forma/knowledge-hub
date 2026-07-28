@@ -3,16 +3,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
 import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import LatestPosts from '../components/home/LatestPosts.astro';
+import ImmersiveIndex from '../components/home/ImmersiveIndex.astro';
 import Contact from '../components/Contact.astro';
-import { getFeaturedProjects, getLatestPosts } from '../lib/posts';
+import { getFeaturedProjects, getLatestPosts, getPublishedPosts } from '../lib/posts';
 
 const featuredProjects = await getFeaturedProjects();
 const latestPosts = await getLatestPosts();
+const allPosts = await getPublishedPosts();
 ---
 
 <BaseLayout title="Afreza Hernanda — knowledge-hub">
-  <Hero />
-  <FeaturedProjects posts={featuredProjects} />
-  <LatestPosts posts={latestPosts} />
+  <div data-mode-view="reading">
+    <Hero />
+    <FeaturedProjects posts={featuredProjects} />
+    <LatestPosts posts={latestPosts} />
+  </div>
+  {
+    /*
+      data-pagefind-ignore: this view duplicates post titles the Reading
+      Mode markup above already carries (with fuller text — summaries,
+      not just title/coordinate/year). Pagefind indexes the whole <body>
+      regardless of CSS display:none, so without this both views' text
+      would be indexed side by side for no search benefit.
+    */
+  }
+  <div data-mode-view="immersive" class="mx-auto max-w-(--container-content) px-5 py-8" data-pagefind-ignore>
+    <ImmersiveIndex posts={allPosts} />
+  </div>
   <Contact />
 </BaseLayout>

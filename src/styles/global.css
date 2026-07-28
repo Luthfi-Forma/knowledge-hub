@@ -121,6 +121,23 @@
     --color-accent: #5a8d5d;
     --color-chart-2: #4aa3c7;
   }
+
+  /*
+   * Mode-scoped view toggle (M5/T-40). Both Reading and Immersive markup
+   * ship in the same static HTML (no runtime fetch, no second island, no
+   * second route — ADR-003) — this pure-CSS rule decides which one paints.
+   * Default (no data-mode, or data-mode='reading'): show `reading` views,
+   * hide `immersive` ones. Flips under `:root[data-mode='immersive']`.
+   */
+  [data-mode-view='immersive'] {
+    display: none;
+  }
+  :root[data-mode='immersive'] [data-mode-view='reading'] {
+    display: none;
+  }
+  :root[data-mode='immersive'] [data-mode-view='immersive'] {
+    display: block;
+  }
 }
 
 /*
