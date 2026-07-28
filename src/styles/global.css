@@ -53,6 +53,11 @@
     color: var(--color-ink);
     font-family: var(--font-body);
     line-height: 1.6;
+    /* So the Immersive-mode toggle (T-39) reads as a deliberate swap, not a
+       flicker — zeroed by the prefers-reduced-motion net below regardless. */
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
   }
 
   /*
@@ -66,6 +71,55 @@
   h3 {
     font-family: var(--font-display);
     font-weight: 400;
+  }
+
+  /*
+   * Immersive Mode (M5, ADR-003) — a client-persisted preference, not a
+   * frontmatter field or a second route. `data-mode` is stamped on <html>
+   * by the pre-paint script in BaseLayout.astro (T-39) before first paint,
+   * so this rule must win the moment it applies — hence staying inside
+   * `@layer base` alongside the heading reset above (same reason: unlayered
+   * CSS beats `@layer utilities` regardless of specificity, so this block
+   * would otherwise disable every Tailwind color/font utility on the page).
+   *
+   * This remaps the SAME 8 custom properties used everywhere else in the
+   * site — it does NOT introduce a parallel `--color-sheet-*` token set.
+   * Verified before this remap was written: 0 hex literals and 72
+   * `var(--color-*)` references across the 4 scrollytelling data modules
+   * and the shared island shell, so this block alone carries all of them
+   * (including every Recharts series) into Immersive Mode with zero React
+   * edits. `--color-chart-1` needs no entry here — its default value is
+   * itself `var(--color-accent)`, so it resolves to the remapped accent
+   * automatically.
+   *
+   * Palette: "DATUM" — the site as a plotted survey sheet at night.
+   * Brightened siblings of the Reading Mode accent/chart-2 (not the exact
+   * daylight hex) because the same green/blue read differently against a
+   * near-black field than against cream paper — contrast-checked against
+   * the new --color-paper below (WCAG AA, normal text, 4.5:1+):
+   *   ink on paper:        15.17:1
+   *   ink-muted on paper:   5.68:1
+   *   accent on paper:      5.14:1  (the plain daylight accent #38523a only
+   *                                  clears 4.18:1 here — AA-large only —
+   *                                  so this is a deliberately brighter
+   *                                  green, not the Reading Mode hex)
+   *   chart-2 on paper:     7.00:1
+   * Typography is deliberately NOT remapped here — Bodoni Moda/Karla stay
+   * in force under Immersive Mode until T-41 decides and self-hosts the
+   * real Immersive typefaces (current candidates: Archivo Expanded /
+   * Spectral / Spline Sans Mono — explicitly not Fraunces/Playfair/
+   * Inter/Space Grotesk, flagged as the generic-AI-portfolio pairing).
+   * --font-mono is left as-is too: its existing system-mono stack already
+   * fits DATUM's coordinate/notation role by coincidence.
+   */
+  :root[data-mode='immersive'] {
+    --color-ink: #dbe2de;
+    --color-ink-muted: #7d8b90;
+    --color-paper: #05090c;
+    --color-paper-raised: #0e161b;
+    --color-line: #1c2a33;
+    --color-accent: #5a8d5d;
+    --color-chart-2: #4aa3c7;
   }
 }
 

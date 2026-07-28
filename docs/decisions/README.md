@@ -7,3 +7,4 @@ Index of Architecture Decision Records. Process:
 |---|---|---|---|
 | [ADR-001](ADR-001-astro-over-nextjs.md) | Astro menggantikan Next.js untuk situs konten | Accepted | 2026-07-16 |
 | [ADR-002](ADR-002-astro-islands-for-interactivity.md) | Adopsi Astro Islands untuk interaktivitas terbatas | Accepted | 2026-07-18 |
+| [ADR-003](ADR-003-immersive-mode-mechanism.md) | Mekanisme dual-mode (Reading/Immersive) via token remap | Accepted | 2026-07-28 |

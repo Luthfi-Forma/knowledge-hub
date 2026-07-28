@@ -376,3 +376,54 @@ one. See `docs/TESTING.md` § "Measured baseline" for the actual numbers.
 **Still true:** getting the real Lighthouse score needs either a real
 browser (outside this session's tooling) or a PSI API key — this is a
 task-owner action item, not something to keep retrying unattended.
+
+## 2026-07-28 — Existing elements don't repaint after an in-page CSS custom-property attribute mutation in this session's browser tool
+
+Tags: #browser-verification #css #immersive-mode
+
+Verifying T-39 (the `data-mode="immersive"` toggle, ADR-003) hit a variant
+of the already-documented rendering-pipeline gap above (IntersectionObserver
+/ rAF / ResizeObserver never firing) — this time for a completely different,
+very standard technique: `:root[data-mode='immersive'] { --color-paper:
+#05090c; ... }` plus `body { background-color: var(--color-paper); }`, the
+same pattern countless dark-mode toggles use.
+
+Symptom, isolated with three separate probes:
+
+1. `document.documentElement.dataset.mode = 'immersive'` then, in a
+   **separate** `javascript_exec` call (to avoid the same-tick stale-read
+   gotcha two entries above), `getComputedStyle(document.documentElement)
+   .getPropertyValue('--color-paper')` correctly returned the new value
+   (`#05090c`) — the custom property itself updates fine.
+2. But `getComputedStyle(document.body).backgroundColor` — set purely by
+   `body { background-color: var(--color-paper) }`, confirmed via
+   `document.styleSheets` traversal to be the *only* rule touching that
+   property, no competing rule — stayed stuck at the old value
+   (`rgb(245, 239, 225)`), even after `void document.body.offsetHeight`
+   (the standard force-synchronous-reflow trick) before reading.
+3. A **freshly created** `<div>` with an *inline* `style.background =
+   'var(--color-paper)'`, appended and immediately queried, correctly
+   resolved to the new value. So `var()` resolution itself works — only
+   already-rendered elements relying on a *stylesheet* rule fail to
+   repaint after the attribute mutation.
+
+**A genuine full page reload (`navigate`) with the preference already in
+`localStorage` renders correctly from the first paint** — `body`
+background, text color, and the accent custom property all matched the
+Immersive palette exactly, because the pre-paint `is:inline` script in
+`BaseLayout.astro`'s `<head>` sets `data-mode` before this environment's
+first (and apparently only reliably-computed) style pass.
+
+**Working verification technique:** never trust a live in-page toggle click
+in this tool. Set the preference in `localStorage`, then `navigate()` to
+force a real page load, then read computed styles in a follow-up call. This
+is the same "reload rather than mutate-and-read" shape as the `client:load`
++ hardcoded-`useState` workaround two entries above — different API, same
+root cause (this session's browser doesn't reliably run parts of a real
+browser's rendering pipeline for in-page mutations, only for full
+navigations). Real browsers handle in-page custom-property attribute
+toggles like this correctly and near-instantly — dark-mode libraries have
+used this exact pattern for years — so this is a tooling gap, not a defect
+in the toggle mechanism itself. Relevant for verifying any future
+Immersive-mode work (T-40 composition, T-42 registration seam) that
+involves toggling `data-mode` live rather than reloading with it pre-set.

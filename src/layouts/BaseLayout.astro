@@ -23,6 +23,24 @@ const ogImageURL = new URL(image, Astro.site);
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!--
+      Immersive Mode pre-paint stamp (M5, ADR-003). Placed immediately after
+      the charset meta — before any stylesheet link, including the one
+      global.css compiles to — so `data-mode` is set before the browser has
+      anything to paint with the wrong colors. `is:inline` keeps this as a
+      literal synchronous <script>, not a bundled/deferred module.
+      Read by the token remap in src/styles/global.css
+      (`:root[data-mode='immersive']`) and toggled by the button + script in
+      Header.astro. Tier-1 vanilla per ADR-002 clause 2 / ADR-003 clause 2 —
+      no framework, no client:* directive, well under the 2KB gzip budget.
+    -->
+    <script is:inline>
+      try {
+        if (localStorage.getItem('kh-mode') === 'immersive') {
+          document.documentElement.dataset.mode = 'immersive';
+        }
+      } catch (e) {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="canonical" href={canonicalURL} />
