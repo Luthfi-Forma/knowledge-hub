@@ -1,6 +1,42 @@
 @import "tailwindcss";
 
 /*
+ * Immersive-mode typeface (M5/T-41). Self-hosted, unlike Reading Mode's
+ * Google Fonts CDN link in BaseLayout.astro — deliberately: this file is
+ * only ever fetched when Immersive Mode is actually active (see below),
+ * so self-hosting a single precisely-scoped file costs Reading Mode
+ * nothing, where the always-loaded CDN link would.
+ *
+ * A single TRUE variable font (wght 100–900, wdth 62–125%, latin subset,
+ * ~88KB) — one file covers both the "display" and "body" role, since the
+ * width axis IS the design device here (an expanded setting reads as a
+ * survey-sheet title stamp; normal width reads as body copy), not a
+ * decoration bolted onto two separate static cuts. Source: Google Fonts
+ * "Archivo" (SIL Open Font License), fetched via the fonts.googleapis.com
+ * css2 API's 2-axis range query and downloaded once into
+ * public/fonts/archivo-variable-latin.woff2 — same self-hosting pattern
+ * already used for src/lib/og-fonts/*.ttf, just served as a static asset
+ * instead of read server-side. Not Fraunces/Playfair/Inter/Space
+ * Grotesk — flagged in the M5 brainstorm as the generic-AI-portfolio
+ * pairing this project's identity was chosen specifically to avoid (T-14).
+ *
+ * No preload, no JS-injected <link>: @font-face fetches are lazy by
+ * default in every browser — this file is only requested once some
+ * visible text actually resolves to font-family: 'Archivo', which only
+ * happens under `:root[data-mode='immersive']` below. Reading Mode visitors
+ * never trigger the request. Verified via the network panel: 0 requests
+ * for this file with data-mode unset or 'reading'.
+ */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url("/fonts/archivo-variable-latin.woff2") format("woff2");
+}
+
+/*
  * Final design tokens (M3, T-14). Cream paper + high-contrast Didone serif,
  * mockup-first process against a client-supplied reference (editorial travel
  * blog) — see docs/ARCHITECTURE.md "Visual identity" for the rationale.
@@ -104,13 +140,15 @@
    *                                  so this is a deliberately brighter
    *                                  green, not the Reading Mode hex)
    *   chart-2 on paper:     7.00:1
-   * Typography is deliberately NOT remapped here — Bodoni Moda/Karla stay
-   * in force under Immersive Mode until T-41 decides and self-hosts the
-   * real Immersive typefaces (current candidates: Archivo Expanded /
-   * Spectral / Spline Sans Mono — explicitly not Fraunces/Playfair/
-   * Inter/Space Grotesk, flagged as the generic-AI-portfolio pairing).
-   * --font-mono is left as-is too: its existing system-mono stack already
-   * fits DATUM's coordinate/notation role by coincidence.
+   * Typography (T-41): --font-display and --font-body both resolve to the
+   * same self-hosted 'Archivo' variable face declared above — one family,
+   * two roles via its wdth/wght axes rather than two separate font files.
+   * Base text renders at the face's normal instance (font-stretch/weight
+   * default to 100%/400 per the CSS spec when unset); the heading rule
+   * further down bumps font-stretch for the "expanded, stamped" look the
+   * brainstorm specifically chose Archivo for. --font-mono is left as-is:
+   * its existing system-mono stack already fits DATUM's coordinate/
+   * notation role by coincidence, so no third font file is needed.
    */
   :root[data-mode='immersive'] {
     --color-ink: #dbe2de;
@@ -120,6 +158,22 @@
     --color-line: #1c2a33;
     --color-accent: #5a8d5d;
     --color-chart-2: #4aa3c7;
+    --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /*
+   * The one deliberate use of Archivo's width axis (T-41): headings render
+   * at an expanded stretch under Immersive Mode, evoking a plotted sheet's
+   * title stamp — the design reason this typeface was chosen over a
+   * conventional display/body pairing. Scoped to Immersive only; Reading
+   * Mode's Bodoni Moda headings are untouched.
+   */
+  :root[data-mode='immersive'] h1,
+  :root[data-mode='immersive'] h2,
+  :root[data-mode='immersive'] h3 {
+    font-stretch: 118%;
+    letter-spacing: 0.01em;
   }
 
   /*
