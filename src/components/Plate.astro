@@ -59,12 +59,13 @@ const Heading = headingLevel;
 
 <a
   href={href}
-  class:list={['plate', `plate-${size}`, `plate-hatch-${type}`, showCover && 'plate-with-cover']}
+  class:list={['plate', `plate-${size}`, showCover && 'plate-with-cover']}
   style={showCover ? { '--plate-cover-width': `${resolvedCoverWidth}px` } : undefined}
 >
+  <span class:list={['plate-overlay', `hatch-${type}`]} aria-hidden="true" />
   <div class="plate-body">
     <p class="plate-notation">
-      <span class={`plate-swatch plate-hatch-${type}`} aria-hidden="true" />
+      <span class:list={['plate-swatch', `hatch-${type}`]} aria-hidden="true" />
       <span>{notationLabel}</span>
       {isInteractive && <span class="plate-flag">Interactive</span>}
     </p>
@@ -102,17 +103,20 @@ const Heading = headingLevel;
     outline-offset: 2px;
   }
 
-  /* Low-opacity hatch overlay behind the content — same pattern as the
-     legend swatch, reused rather than a second decorative token set. */
-  .plate::before {
-    content: '';
+  /* Low-opacity hatch overlay behind the content. A real element (not
+     ::before) so it can share the global .hatch-* classes with the
+     notation swatch below and LegendRail's legend swatch — a pseudo-element
+     can't be targeted by a class shared with real elements without
+     duplicating the gradient declarations a second time. */
+  .plate-overlay {
     position: absolute;
     inset: 0;
     z-index: 0;
     opacity: 0.1;
     pointer-events: none;
   }
-  .plate > * {
+  .plate-body,
+  .plate-cover {
     position: relative;
     z-index: 1;
   }
@@ -254,30 +258,5 @@ const Heading = headingLevel;
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  /* Hatch patterns — reused verbatim at two places: the small notation
-     swatch above, and this 10%-opacity full-plate overlay. Values are the
-     handoff's own (docs/design/atlas/README.md "Legend swatch"), not
-     re-derived from the color tokens, since the hatch geometry (gap/angle)
-     is itself part of the spec, not just the color. */
-  .plate-hatch-research.plate-swatch,
-  a.plate-hatch-research::before {
-    background-image:
-      repeating-linear-gradient(45deg, var(--color-research) 0 2px, transparent 2px 7px),
-      repeating-linear-gradient(-45deg, var(--color-research) 0 2px, transparent 2px 7px);
-  }
-  .plate-hatch-project.plate-swatch,
-  a.plate-hatch-project::before {
-    background-image: repeating-linear-gradient(45deg, var(--color-project) 0 2px, transparent 2px 7px);
-  }
-  .plate-hatch-article.plate-swatch,
-  a.plate-hatch-article::before {
-    background-image: radial-gradient(var(--color-ink-muted) 1px, transparent 1.5px);
-    background-size: 7px 7px;
-  }
-  .plate-hatch-photo.plate-swatch,
-  a.plate-hatch-photo::before {
-    background-color: var(--color-line);
   }
 </style>

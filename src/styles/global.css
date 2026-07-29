@@ -102,8 +102,11 @@
    * available as a standard utility (font-bold, font-extrabold, ...) — so
    * components apply those two alongside the size utility explicitly.
    * Declared here, ahead of any consumer: Sheet title (SheetIndex, T-55)
-   * and Plate lead/title (Plate.astro, T-50) don't exist yet, matching how
-   * T-48 declared --color-flag before any component rendered a flag.
+   * didn't exist yet, matching how T-48 declared --color-flag before any
+   * component rendered a flag. Plate lead/title (Plate.astro, T-50) is now
+   * built and consumes --text-plate-lead/--text-plate-title directly —
+   * compact size uses its own 15px value instead, since the handoff gives
+   * it a distinct size from standard's 17px (see Plate.astro).
    */
   --text-sheet-title: 4rem; /* 64px, w800, wdth 125%, ls .004em — 1x per page */
   --text-sheet-title--line-height: 0.98;
@@ -111,7 +114,7 @@
   --text-page-title--line-height: 1.05;
   --text-plate-lead: 1.5rem; /* 24px, w700, wdth 115% — Plate size=lead */
   --text-plate-lead--line-height: 1.15;
-  --text-plate-title: 1.0625rem; /* 17px, w600, wdth 110% — Plate size=standard/compact */
+  --text-plate-title: 1.0625rem; /* 17px, w600, wdth 110% — Plate size=standard */
   --text-plate-title--line-height: 1.25;
   --text-body: 1rem; /* 16px, w400 — post prose renders at 17px, see posts/[slug].astro */
   --text-body--line-height: 1.65;
@@ -123,9 +126,9 @@
    * Four widths replace the single 800px column used everywhere before
    * Atlas (docs/design/atlas/README.md "Ruang & layout"). FIELD (full-bleed:
    * graticule, plates, photo backdrops) has no token of its own — it's
-   * simply the absence of a max-width. RAIL has no page-level caller yet
-   * (LegendRail lands in T-51); declared here so its value lives in one
-   * place alongside the other three from the start.
+   * simply the absence of a max-width. RAIL sizes LegendRail.astro (T-51);
+   * declared here alongside the other three from the start, even before
+   * that component existed.
    */
   --container-shell: 1240px;
   --container-rail: 224px;
@@ -144,6 +147,34 @@
    */
   --color-chart-1: var(--color-research);
   --color-chart-2: var(--color-project);
+}
+
+/*
+ * Land-class hatch per post type (docs/design/atlas/README.md "Legend
+ * swatch") — declared globally, once, rather than per-component: each
+ * pattern is reused at three sizes across two components (Plate.astro's
+ * 12px notation swatch + 10%-opacity full-plate overlay; LegendRail.astro's
+ * ~15px legend swatch, T-51), and the gradient's angle/gap is itself part
+ * of the spec, not something derivable from the color tokens alone — so
+ * duplicating it per component would risk the copies drifting apart.
+ * Unscoped (not inside @layer), matching Tailwind's own utility-class
+ * precedent: these are used as plain classes (`class="... hatch-research"`),
+ * not selectors that need to lose to anything.
+ */
+.hatch-research {
+  background-image:
+    repeating-linear-gradient(45deg, var(--color-research) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(-45deg, var(--color-research) 0 2px, transparent 2px 7px);
+}
+.hatch-project {
+  background-image: repeating-linear-gradient(45deg, var(--color-project) 0 2px, transparent 2px 7px);
+}
+.hatch-article {
+  background-image: radial-gradient(var(--color-ink-muted) 1px, transparent 1.5px);
+  background-size: 7px 7px;
+}
+.hatch-photo {
+  background-color: var(--color-line);
 }
 
 /*

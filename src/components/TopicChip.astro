@@ -1,0 +1,76 @@
+---
+// TopicChip — Atlas's single tag shape, two states (M6/T-51). Spec:
+// docs/design/atlas/README.md "TopicChip — satu bentuk, dua state".
+// Replaces three different tag styles the audit found (the topic-tag
+// styling on `/tags/[tag]` and `/posts/[slug]`, and the `TypeFilter` pill
+// tabs — TypeFilter itself is untouched here since it's a *type* filter,
+// not a topic tag; it's retired separately in T-55).
+interface Props {
+  topic: string;
+  count: number;
+  active?: boolean;
+  href?: string;
+}
+
+const { topic, count, active = false, href = `/topics/${topic}` } = Astro.props;
+---
+
+<a href={href} class:list={['topic-chip', active && 'is-active']} aria-current={active ? 'page' : undefined}>
+  <span>{topic}</span>
+  <span class="topic-chip-count">{count}</span>
+</a>
+
+<style>
+  /*
+   * 44px touch target via click AREA, not visual padding (handoff: "Target
+   * sentuh 44px dicapai lewat area klik, bukan padding visual") — the
+   * pseudo-element below expands the hit box invisibly instead of inflating
+   * the chip's own padding/height, which would make a 13px-text tag look
+   * oversized next to its neighbours.
+   */
+  .topic-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 13px;
+    padding: 4px 8px;
+    text-decoration: none;
+    color: var(--color-ink);
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper);
+    transition:
+      border-color 120ms ease,
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+  .topic-chip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 44px;
+    min-width: 44px;
+    transform: translate(-50%, -50%);
+  }
+  .topic-chip:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .topic-chip-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+
+  .topic-chip.is-active {
+    border-color: var(--color-ink);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+  }
+  .topic-chip.is-active .topic-chip-count {
+    color: var(--color-line);
+  }
+</style>

@@ -1,0 +1,261 @@
+---
+// LegendRail — Atlas's permanent left rail (M6/T-51). Spec:
+// docs/design/atlas/README.md "Legend swatch" + "Information Architecture"
+// + "Interactions & State"; layout reference:
+// docs/design/atlas/Hi-Fi - Atlas Screens.dc.html screens 01 (Sheet Index,
+// has both blocks below) and 02 (Topic, topics block only — no type
+// legend). The type-legend block is therefore optional per instance, not
+// always rendered.
+//
+// The "filter" is a real link, not client state: clicking a type swatch
+// navigates to /explore/[type] (activeType === null means `/`, per the
+// handoff's Interactions & State section) — no JS re-render, so it stays
+// correct under SSG and is shareable/bookmarkable. The only JS in this
+// component is the <1024px drawer toggle (Tier-1 vanilla, ADR-003 clause 2,
+// which ADR-004 carries forward unchanged).
+//
+// Not yet wired into any page — its callers (Sheet Index `/`, `/topics`,
+// `/topics/[topic]`) don't exist until T-55/T-56. Verified via a throwaway
+// scratch page during development, removed before this commit (see the
+// T-51 entry in docs/TASK.md for what that verification covered).
+import type { PostType } from '../lib/posts';
+import { TYPE_LABEL } from '../lib/posts';
+import TopicChip from './TopicChip.astro';
+
+interface TypeCount {
+  type: PostType;
+  count: number;
+}
+
+interface TopicCount {
+  tag: string;
+  count: number;
+}
+
+interface Props {
+  /** Omit entirely on pages that don't filter by type (e.g. /topics/[topic]) — the block simply doesn't render, matching the Hi-Fi Topic screen's rail. */
+  typeCounts?: TypeCount[];
+  topics: TopicCount[];
+  activeType?: PostType | null;
+  activeTopic?: string;
+  topicsHeading?: string;
+  moreTopicsHref?: string;
+  moreTopicsLabel?: string;
+}
+
+const {
+  typeCounts,
+  topics,
+  activeType = null,
+  activeTopic,
+  topicsHeading,
+  moreTopicsHref,
+  moreTopicsLabel,
+} = Astro.props;
+
+const resolvedTopicsHeading = topicsHeading ?? `Topics · ${topics.length}`;
+---
+
+<button type="button" id="legend-trigger" class="legend-trigger" aria-expanded="false" aria-controls="legend-rail">
+  Legend
+</button>
+<div class="legend-backdrop" data-legend-backdrop hidden></div>
+<aside id="legend-rail" class="legend-rail" aria-label="Filter by type and topic">
+  {
+    typeCounts && typeCounts.length > 0 && (
+      <div class="legend-block">
+        <p class="legend-heading">Legend · type</p>
+        <nav class="legend-types" aria-label="Filter by type">
+          {typeCounts.map(({ type, count }) => (
+            <a
+              href={`/explore/${type}`}
+              class:list={['legend-type-link', activeType === type && 'is-active']}
+              aria-current={activeType === type ? 'page' : undefined}
+            >
+              <span class:list={['legend-swatch', `hatch-${type}`]} aria-hidden="true" />
+              <span>{TYPE_LABEL[type]}</span>
+              <span class="legend-count">{count}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    )
+  }
+  <div class="legend-block">
+    <p class="legend-heading">{resolvedTopicsHeading}</p>
+    <div class="legend-topics">
+      {topics.map(({ tag, count }) => (
+        <TopicChip topic={tag} count={count} active={activeTopic === tag} />
+      ))}
+      {moreTopicsHref && (
+        <a href={moreTopicsHref} class="legend-more">
+          {moreTopicsLabel ?? 'More →'}
+        </a>
+      )}
+    </div>
+  </div>
+  <p class="legend-note">Rail permanent at ≥1024px. Below that, it's a drawer from the Legend button.</p>
+</aside>
+
+<script>
+  const trigger = document.getElementById('legend-trigger');
+  const rail = document.getElementById('legend-rail');
+  const backdrop = document.querySelector<HTMLElement>('[data-legend-backdrop]');
+
+  function openDrawer() {
+    rail?.classList.add('is-open');
+    trigger?.setAttribute('aria-expanded', 'true');
+    if (backdrop) backdrop.hidden = false;
+    rail?.querySelector<HTMLElement>('a, button')?.focus();
+  }
+
+  function closeDrawer() {
+    rail?.classList.remove('is-open');
+    trigger?.setAttribute('aria-expanded', 'false');
+    if (backdrop) backdrop.hidden = true;
+  }
+
+  trigger?.addEventListener('click', () => {
+    rail?.classList.contains('is-open') ? closeDrawer() : openDrawer();
+  });
+  backdrop?.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && rail?.classList.contains('is-open')) {
+      closeDrawer();
+      trigger?.focus();
+    }
+  });
+</script>
+
+<style>
+  .legend-trigger {
+    display: none;
+  }
+
+  .legend-rail {
+    width: var(--container-rail);
+    border-right: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .legend-heading {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .legend-types {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .legend-type-link {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 36px;
+    text-decoration: none;
+    color: var(--color-ink);
+    font-size: 14px;
+  }
+  .legend-type-link.is-active {
+    font-weight: 600;
+  }
+
+  .legend-swatch {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-ink);
+  }
+
+  .legend-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+  }
+
+  .legend-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .legend-more {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    padding: 4px 7px;
+  }
+  .legend-more:hover,
+  .legend-more:focus-visible {
+    color: var(--color-research);
+  }
+
+  .legend-note {
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-line);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.55;
+    color: var(--color-ink-muted);
+  }
+
+  /* Below 1024px the rail becomes a drawer: hidden off-canvas until the
+     Legend button reveals it as a fixed overlay. */
+  @media (max-width: 1023px) {
+    .legend-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 20px;
+      border: 1px solid var(--color-line-strong);
+      color: var(--color-ink);
+      background-color: var(--color-paper);
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .legend-trigger:focus-visible {
+      outline: 2px solid var(--color-research);
+      outline-offset: 2px;
+    }
+
+    .legend-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      background-color: rgb(23 21 18 / 40%);
+    }
+    .legend-backdrop[hidden] {
+      display: none;
+    }
+
+    .legend-rail {
+      position: fixed;
+      inset: 0 25% 0 0;
+      z-index: 40;
+      overflow-y: auto;
+      transform: translateX(-100%);
+      transition: transform 200ms ease;
+    }
+    .legend-rail.is-open {
+      transform: translateX(0);
+    }
+  }
+</style>
