@@ -3,28 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/Hero.astro';
 import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import LatestPosts from '../components/home/LatestPosts.astro';
-import ImmersiveIndex from '../components/home/ImmersiveIndex.astro';
-import RegistrationSeam from '../components/home/RegistrationSeam.astro';
 import Contact from '../components/Contact.astro';
-import { getFeaturedProjects, getLatestPosts, getPublishedPosts } from '../lib/posts';
+import { getFeaturedProjects, getLatestPosts } from '../lib/posts';
 
 const featuredProjects = await getFeaturedProjects();
 const latestPosts = await getLatestPosts();
-const allPosts = await getPublishedPosts();
 ---
 
 <BaseLayout title="Afreza Hernanda — knowledge-hub">
-  <RegistrationSeam>
-    <Fragment slot="reading">
-      <Hero />
-      <FeaturedProjects posts={featuredProjects} />
-      <LatestPosts posts={latestPosts} />
-    </Fragment>
-    <Fragment slot="immersive">
-      <div class="mx-auto max-w-(--container-content) px-5 py-8">
-        <ImmersiveIndex posts={allPosts} />
-      </div>
-    </Fragment>
-  </RegistrationSeam>
+  <Hero />
+  <FeaturedProjects posts={featuredProjects} />
+  <LatestPosts posts={latestPosts} />
   <Contact />
 </BaseLayout>

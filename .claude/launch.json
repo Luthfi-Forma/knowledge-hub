@@ -9,6 +9,15 @@
         "dev"
       ],
       "port": 4321
+    },
+    {
+      "name": "knowledge-hub-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview"
+      ],
+      "port": 4321
     }
   ]
 }

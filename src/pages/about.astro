@@ -2,7 +2,6 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
-import ImmersiveDossier from '../components/about/ImmersiveDossier.astro';
 // Moved out of public/ so astro:assets can process it: the source is a
 // 1023x1537 982 KB PNG being painted at 128-160px. Serving it raw made it
 // the single largest asset on any non-photo route.
@@ -106,7 +105,6 @@ const organizations = [
 ---
 
 <BaseLayout title="About — Afreza Hernanda" description="About Afreza Luthfi Hernanda, Urban & Regional Planner — background, expertise, and experience.">
-  <div data-mode-view="reading">
   <section class="mx-auto max-w-(--container-content) px-5 py-16">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
       <Image
@@ -269,17 +267,6 @@ const organizations = [
       on the homepage.
     </p>
   </section>
-  </div>
-  <div data-mode-view="immersive" class="mx-auto max-w-(--container-content) px-5 py-8" data-pagefind-ignore>
-    <ImmersiveDossier
-      coordinates="06°15'S 107°09'E"
-      degree="B.Eng. Urban & Regional Planning · ITERA"
-      expertise={expertise}
-      documents={documents}
-      experience={experience}
-      organizations={organizations}
-    />
-  </div>
 </BaseLayout>
 
 <style>

@@ -1,31 +1,25 @@
 @import "tailwindcss";
 
 /*
- * Immersive-mode typeface (M5/T-41). Self-hosted, unlike Reading Mode's
- * Google Fonts CDN link in BaseLayout.astro — deliberately: this file is
- * only ever fetched when Immersive Mode is actually active (see below),
- * so self-hosting a single precisely-scoped file costs Reading Mode
- * nothing, where the always-loaded CDN link would.
- *
- * A single TRUE variable font (wght 100–900, wdth 62–125%, latin subset,
- * ~88KB) — one file covers both the "display" and "body" role, since the
- * width axis IS the design device here (an expanded setting reads as a
- * survey-sheet title stamp; normal width reads as body copy), not a
- * decoration bolted onto two separate static cuts. Source: Google Fonts
- * "Archivo" (SIL Open Font License), fetched via the fonts.googleapis.com
- * css2 API's 2-axis range query and downloaded once into
- * public/fonts/archivo-variable-latin.woff2 — same self-hosting pattern
- * already used for src/lib/og-fonts/*.ttf, just served as a static asset
- * instead of read server-side. Not Fraunces/Playfair/Inter/Space
+ * Archivo — self-hosted variable font (M5/T-41; carried forward into Atlas,
+ * M6). A single TRUE variable font (wght 100–900, wdth 62–125%, latin
+ * subset, ~88KB) — one file covers both the "display" and "body" role,
+ * since the width axis IS the design device here (an expanded setting
+ * reads as a survey-sheet title stamp; normal width reads as body copy),
+ * not a decoration bolted onto two separate static cuts. Source: Google
+ * Fonts "Archivo" (SIL Open Font License), fetched via the
+ * fonts.googleapis.com css2 API's 2-axis range query and downloaded once
+ * into public/fonts/archivo-variable-latin.woff2 — same self-hosting
+ * pattern already used for src/lib/og-fonts/*.ttf, just served as a static
+ * asset instead of read server-side. Not Fraunces/Playfair/Inter/Space
  * Grotesk — flagged in the M5 brainstorm as the generic-AI-portfolio
  * pairing this project's identity was chosen specifically to avoid (T-14).
  *
- * No preload, no JS-injected <link>: @font-face fetches are lazy by
- * default in every browser — this file is only requested once some
- * visible text actually resolves to font-family: 'Archivo', which only
- * happens under `:root[data-mode='immersive']` below. Reading Mode visitors
- * never trigger the request. Verified via the network panel: 0 requests
- * for this file with data-mode unset or 'reading'.
+ * As of T-47 this face is declared but not yet wired into any token —
+ * the M5 dual-mode mechanism that used to scope it to the (now removed)
+ * mode-select attribute on <html> is gone (ADR-004). T-49 remaps
+ * --font-display/--font-body to it site-wide as part of Atlas's single
+ * typography system.
  */
 @font-face {
   font-family: "Archivo";
@@ -110,88 +104,14 @@
   }
 
   /*
-   * Immersive Mode (M5, ADR-003) — a client-persisted preference, not a
-   * frontmatter field or a second route. `data-mode` is stamped on <html>
-   * by the pre-paint script in BaseLayout.astro (T-39) before first paint,
-   * so this rule must win the moment it applies — hence staying inside
-   * `@layer base` alongside the heading reset above (same reason: unlayered
-   * CSS beats `@layer utilities` regardless of specificity, so this block
-   * would otherwise disable every Tailwind color/font utility on the page).
-   *
-   * This remaps the SAME 8 custom properties used everywhere else in the
-   * site — it does NOT introduce a parallel `--color-sheet-*` token set.
-   * Verified before this remap was written: 0 hex literals and 72
-   * `var(--color-*)` references across the 4 scrollytelling data modules
-   * and the shared island shell, so this block alone carries all of them
-   * (including every Recharts series) into Immersive Mode with zero React
-   * edits. `--color-chart-1` needs no entry here — its default value is
-   * itself `var(--color-accent)`, so it resolves to the remapped accent
-   * automatically.
-   *
-   * Palette: "DATUM" — the site as a plotted survey sheet at night.
-   * Brightened siblings of the Reading Mode accent/chart-2 (not the exact
-   * daylight hex) because the same green/blue read differently against a
-   * near-black field than against cream paper — contrast-checked against
-   * the new --color-paper below (WCAG AA, normal text, 4.5:1+):
-   *   ink on paper:        15.17:1
-   *   ink-muted on paper:   5.68:1
-   *   accent on paper:      5.14:1  (the plain daylight accent #38523a only
-   *                                  clears 4.18:1 here — AA-large only —
-   *                                  so this is a deliberately brighter
-   *                                  green, not the Reading Mode hex)
-   *   chart-2 on paper:     7.00:1
-   * Typography (T-41): --font-display and --font-body both resolve to the
-   * same self-hosted 'Archivo' variable face declared above — one family,
-   * two roles via its wdth/wght axes rather than two separate font files.
-   * Base text renders at the face's normal instance (font-stretch/weight
-   * default to 100%/400 per the CSS spec when unset); the heading rule
-   * further down bumps font-stretch for the "expanded, stamped" look the
-   * brainstorm specifically chose Archivo for. --font-mono is left as-is:
-   * its existing system-mono stack already fits DATUM's coordinate/
-   * notation role by coincidence, so no third font file is needed.
+   * M5's Immersive Mode remap (a second palette + Archivo typography
+   * scoped to a runtime attribute on <html>) and the show/hide rules that
+   * switched between two parallel markup trees have been removed here
+   * (T-47, ADR-004) — the site now has a single visual identity ("Atlas")
+   * rather than two selected at runtime. T-48 replaces the tokens above
+   * with Atlas's palette; T-49 wires Archivo/IBM Plex Mono into
+   * --font-display/--font-body/--font-mono site-wide.
    */
-  :root[data-mode='immersive'] {
-    --color-ink: #dbe2de;
-    --color-ink-muted: #7d8b90;
-    --color-paper: #05090c;
-    --color-paper-raised: #0e161b;
-    --color-line: #1c2a33;
-    --color-accent: #5a8d5d;
-    --color-chart-2: #4aa3c7;
-    --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
-    --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
-  }
-
-  /*
-   * The one deliberate use of Archivo's width axis (T-41): headings render
-   * at an expanded stretch under Immersive Mode, evoking a plotted sheet's
-   * title stamp — the design reason this typeface was chosen over a
-   * conventional display/body pairing. Scoped to Immersive only; Reading
-   * Mode's Bodoni Moda headings are untouched.
-   */
-  :root[data-mode='immersive'] h1,
-  :root[data-mode='immersive'] h2,
-  :root[data-mode='immersive'] h3 {
-    font-stretch: 118%;
-    letter-spacing: 0.01em;
-  }
-
-  /*
-   * Mode-scoped view toggle (M5/T-40). Both Reading and Immersive markup
-   * ship in the same static HTML (no runtime fetch, no second island, no
-   * second route — ADR-003) — this pure-CSS rule decides which one paints.
-   * Default (no data-mode, or data-mode='reading'): show `reading` views,
-   * hide `immersive` ones. Flips under `:root[data-mode='immersive']`.
-   */
-  [data-mode-view='immersive'] {
-    display: none;
-  }
-  :root[data-mode='immersive'] [data-mode-view='reading'] {
-    display: none;
-  }
-  :root[data-mode='immersive'] [data-mode-view='immersive'] {
-    display: block;
-  }
 }
 
 /*
@@ -238,10 +158,9 @@
  * ClientRouter turns navigation into client-side DOM swapping, which would
  * break scripts that only run once on initial parse (the carousel init in
  * FeaturedProjects.astro, the Pagefind injection in explore/index.astro).
- * A real, full document navigation still happens here — every script,
- * including the pre-paint mode-stamp in BaseLayout.astro, still runs
- * exactly as it does today; only the visual transition between the two
- * page snapshots changes. Unsupported browsers (Firefox, older Safari)
+ * A real, full document navigation still happens here — every script
+ * still runs exactly as it does today; only the visual transition between
+ * the two page snapshots changes. Unsupported browsers (Firefox, older Safari)
  * silently ignore this at-rule and keep the instant navigation they
  * already have — pure progressive enhancement, no fallback code needed.
  */

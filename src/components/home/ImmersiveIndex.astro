@@ -1,11 +1,9 @@
 ---
-// DATUM — the Immersive-mode homepage index (M5/T-40). Renders alongside
-// the Reading Mode homepage in the same static HTML; CSS in global.css
-// (`[data-mode-view]`) shows only one of the two depending on `data-mode`
-// on <html> (ADR-003) — no runtime fetch, no second island, no second
-// route. Colors below are all `var(--color-*)` references to the same 8
-// tokens Reading Mode uses, remapped under `:root[data-mode='immersive']`
-// in global.css (T-38) — nothing here is Immersive-specific CSS state.
+// DATUM index (M5/T-40) — no longer imported anywhere since T-47 removed
+// the dual-mode mechanism that used to switch between it and the Reading
+// Mode homepage (ADR-004). Kept as-is, unused, for M6/T-55 to promote into
+// `components/index/SheetIndex.astro`; colors below are `var(--color-*)`
+// references only, so it inherits Atlas's token overhaul (T-48) untouched.
 import type { CollectionEntry } from 'astro:content';
 import { POST_TYPES } from '../../lib/posts';
 
