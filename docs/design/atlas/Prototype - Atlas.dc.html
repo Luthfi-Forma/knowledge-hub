@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+body { background: #f2ebda; margin: 0; }
+a { color: #2c4630; }
+a:hover { color: #171512; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: #f2ebda; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; color: #171512;">
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 40px; border-bottom: 1px solid #171512;">
+<div onClick="{{ goIndex }}" style="font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 18px; white-space: nowrap; cursor: pointer;">Afreza L. Hernanda</div>
+<div style="display: flex; align-items: center; gap: 4px;">
+<div onClick="{{ goIndex }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#171512;white-space:nowrap;cursor:pointer;">Index</div>
+<div onClick="{{ goTopics }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;cursor:pointer;">Topics</div>
+<div onClick="{{ goProjects }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;cursor:pointer;">Projects</div>
+<div onClick="{{ goAbout }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;cursor:pointer;">About</div>
+<input value="{{ q }}" onChange="{{ onSearch }}" placeholder="Cari judul atau topik" style="min-height:44px;margin-left:10px;padding:0 12px;width:220px;border:1px solid #8e836a;background:#f2ebda;color:#171512;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;" />
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between; gap: 20px; white-space: nowrap; padding: 8px 40px; border-bottom: 1px solid #171512; background: #e8e0cb; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">
+<span>{{ breadcrumb }}</span>
+<span>Projection Web Mercator · Datum WGS84 · Compiled 2026</span>
+</div>
+
+<div style="display: grid; grid-template-columns: 240px 1fr;">
+
+<div style="border-right: 1px solid #171512; background: #e8e0cb; padding: 24px 16px; display: flex; flex-direction: column; gap: 24px;">
+<div>
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Legend · type</p>
+<div style="display: flex; flex-direction: column;">
+<div onClick="{{ setResearch }}" style="display:flex;align-items:center;gap:9px;min-height:38px;font-size:14px;cursor:pointer;"><span style="width:15px;height:15px;flex:none;border:1px solid #171512;background-image:repeating-linear-gradient(45deg,#2c4630 0 2px,transparent 2px 7px),repeating-linear-gradient(-45deg,#2c4630 0 2px,transparent 2px 7px);"></span>Research<span style="margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">4</span></div>
+<div onClick="{{ setProject }}" style="display:flex;align-items:center;gap:9px;min-height:38px;font-size:14px;cursor:pointer;"><span style="width:15px;height:15px;flex:none;border:1px solid #171512;background-image:repeating-linear-gradient(45deg,#2f5670 0 2px,transparent 2px 7px);"></span>Project<span style="margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">3</span></div>
+<div onClick="{{ setArticle }}" style="display:flex;align-items:center;gap:9px;min-height:38px;font-size:14px;cursor:pointer;"><span style="width:15px;height:15px;flex:none;border:1px solid #171512;background-image:radial-gradient(#4a4238 1px, transparent 1.5px);background-size:7px 7px;"></span>Article<span style="margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">1</span></div>
+<div onClick="{{ setPhoto }}" style="display:flex;align-items:center;gap:9px;min-height:38px;font-size:14px;cursor:pointer;"><span style="width:15px;height:15px;flex:none;border:1px solid #171512;background:#c9bfa6;"></span>Photo<span style="margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">3</span></div>
+</div>
+<div onClick="{{ clearAll }}" style="margin-top:8px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#2c4630;cursor:pointer;border-bottom:1px solid #2c4630;display:inline-block;">Reset filter</div>
+</div>
+
+<div>
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Topics · 20</p>
+<div style="display: flex; flex-wrap: wrap; gap: 5px;">
+<sc-for list="{{ topics }}" as="t" hint-placeholder-count="10">
+<div onClick="{{ t.open }}" style="{{ t.style }}">{{ t.name }} <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;">{{ t.count }}</span></div>
+</sc-for>
+</div>
+</div>
+
+<p style="margin: 0; padding-top: 16px; border-top: 1px solid #c9bfa6; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; line-height: 1.55; color: #4a4238;">Legenda ini adalah filter. Klik tipe atau topik untuk menyaring indeks; klik plate untuk membuka lembarnya.</p>
+</div>
+
+<div style="padding: 28px 40px 56px; background-image: repeating-linear-gradient(to right, #ddd5bf 0 1px, transparent 1px 44px), repeating-linear-gradient(to bottom, #ddd5bf 0 1px, transparent 1px 44px);">
+
+<sc-if value="{{ isIndex }}" hint-placeholder-val="{{ true }}">
+<div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 6px;">
+<h1 style="margin: 0; font-family: Archivo; font-stretch: 125%; font-weight: 800; font-size: 60px; line-height: .98; letter-spacing: .004em;">Knowledge Hub</h1>
+<p style="margin: 0; max-width: 42ch; font-size: 15px; line-height: 1.6; color: #4a4238;">Riset spasial, proyek, dan catatan lapangan perencanaan wilayah — satu indeks, bukan lima platform.</p>
+</div>
+<p style="margin: 0 0 20px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">{{ resultLine }}</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+<sc-for list="{{ plates }}" as="p" hint-placeholder-count="6">
+<div onClick="{{ p.open }}" style="border:1px solid #171512;background:#f2ebda;padding:16px;cursor:pointer;display:flex;flex-direction:column;gap:8px;">
+<p style="margin:0;display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;"><span style="{{ p.swatch }}"></span>{{ p.typeLabel }} · {{ p.plateNo }}<sc-if value="{{ p.interactive }}"><span style="color:#a8481f;border:1px solid #a8481f;padding:0 5px;font-size:11.5px;white-space:nowrap;">INTERACTIVE</span></sc-if></p>
+<p style="margin:0;font-family:Archivo;font-stretch:112%;font-weight:600;font-size:18px;line-height:1.25;">{{ p.title }}</p>
+<p style="margin:0;font-size:13.5px;line-height:1.55;color:#4a4238;">{{ p.summary }}</p>
+<p style="margin:0;display:flex;gap:14px;flex-wrap:wrap;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;"><span>{{ p.coords }}</span><span>{{ p.dateLabel }}</span><span style="color:#171512;">{{ p.impact }}</span></p>
+</div>
+</sc-for>
+</div>
+<sc-if value="{{ isEmpty }}">
+<div style="border:1px dashed #8e836a;background:#e8e0cb;padding:32px;text-align:center;">
+<p style="margin:0 0 10px;font-size:15px;color:#4a4238;">Tidak ada lembar yang cocok dengan filter ini.</p>
+<div onClick="{{ clearAll }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 18px;background:#171512;color:#f2ebda;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">Reset filter</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTopic }}">
+<div style="max-width: 1000px;">
+<p style="margin: 0 0 8px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">{{ topicMeta }}</p>
+<h1 style="margin: 0 0 14px; font-family: Archivo; font-stretch: 122%; font-weight: 800; font-size: 52px; line-height: 1;">{{ topicName }}</h1>
+<p style="margin: 0 0 8px; font-size: 18px; line-height: 1.6; max-width: 62ch;">{{ topicDef }}</p>
+<p style="margin: 0 0 28px; display: inline-block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11.5px; color: #a8481f; border: 1px dashed #a8481f; padding: 4px 7px;">definisi 1 kalimat: dari Anda — koleksi content/topics/</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 32px;">
+<sc-for list="{{ topicPlates }}" as="p" hint-placeholder-count="4">
+<div onClick="{{ p.open }}" style="border:1px solid #171512;background:#f2ebda;padding:16px;cursor:pointer;">
+<p style="margin:0 0 6px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;"><span style="{{ p.swatch }}"></span>{{ p.typeLabel }} · {{ p.year }}<sc-if value="{{ p.interactive }}"><span style="color:#a8481f;border:1px solid #a8481f;padding:0 5px;font-size:11.5px;white-space:nowrap;">INTERACTIVE</span></sc-if></p>
+<p style="margin:0 0 6px;font-family:Archivo;font-stretch:112%;font-weight:600;font-size:18px;line-height:1.25;">{{ p.title }}</p>
+<p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">{{ p.otherTags }}</p>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0 0 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Topik bertetangga — muncul bersama {{ topicName }}</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{ neighbours }}" as="n" hint-placeholder-count="4">
+<div onClick="{{ n.open }}" style="display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap;font-size:14px;padding:7px 11px;border:1px solid #8e836a;background:#e8e0cb;cursor:pointer;">{{ n.name }} <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#4a4238;">{{ n.together }}×</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isTopics }}">
+<div style="max-width: 1000px;">
+<h1 style="margin: 0 0 14px; font-family: Archivo; font-stretch: 122%; font-weight: 800; font-size: 52px; line-height: 1;">Topics</h1>
+<p style="margin: 0 0 24px; font-size: 17px; line-height: 1.6; max-width: 62ch; color: #4a4238;">Dua puluh topik dari <code style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.9em;">tags[]</code> di seluruh lembar. Klik satu untuk melihat isinya dan topik yang bertetangga dengannya.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<sc-for list="{{ topics }}" as="t" hint-placeholder-count="20">
+<div onClick="{{ t.open }}" style="display:inline-flex;align-items:baseline;gap:7px;white-space:nowrap;font-size:15px;padding:9px 13px;border:1px solid #171512;background:#f2ebda;cursor:pointer;">{{ t.name }} <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#4a4238;">{{ t.count }}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProjects }}">
+<div style="max-width: 1000px;">
+<h1 style="margin: 0 0 24px; font-family: Archivo; font-stretch: 122%; font-weight: 800; font-size: 52px; line-height: 1;">Projects</h1>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{ projects }}" as="pr" hint-placeholder-count="3">
+<div onClick="{{ pr.open }}" style="border:1px solid #171512;background:#f2ebda;padding:20px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;">
+<div>
+<p style="margin:0 0 6px;font-family:Archivo;font-stretch:115%;font-weight:700;font-size:24px;line-height:1.15;">{{ pr.title }}</p>
+<p style="margin:0 0 8px;font-size:14.5px;line-height:1.55;color:#4a4238;">{{ pr.summary }}</p>
+<p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;color:#171512;">{{ pr.impact }}</p>
+</div>
+<p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;">{{ pr.coords }}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPost }}">
+<div>
+<div style="max-width: 980px; margin-bottom: 28px;">
+<p style="margin: 0 0 12px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;"><span style="{{ postSwatch }}"></span>{{ postTypeLabel }}<sc-if value="{{ postInteractive }}"><span style="color:#a8481f;border:1px solid #a8481f;padding:1px 6px;font-size:12px;white-space:nowrap;">INTERACTIVE — narasi data bergulir</span></sc-if></p>
+<h1 style="margin: 0 0 16px; font-family: Archivo; font-stretch: 120%; font-weight: 800; font-size: 44px; line-height: 1.05; max-width: 30ch;">{{ postTitle }}</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: #4a4238; max-width: 64ch;">{{ postSummary }}</p>
+</div>
+<div style="display: grid; grid-template-columns: minmax(0, 680px) 300px; gap: 40px; align-items: start;">
+<div>
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 18px; margin-bottom: 22px;">
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Figure 01</p>
+<div style="height: 220px; border: 1px solid #8e836a; background-image: repeating-linear-gradient(45deg, #c9bfa6 0 1px, transparent 1px 8px); display: flex; align-items: flex-end; padding: 10px;"><span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;color:#4a4238;">Recharts island · token Atlas</span></div>
+<p style="margin: 10px 0 0; display: inline-block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #2c4630; border-bottom: 1px solid #2c4630;">Lihat sebagai tabel data ↓</p>
+</div>
+<p style="margin: 0 0 18px; font-size: 17px; line-height: 1.7;">{{ postSummary }}</p>
+<p style="margin: 0; font-size: 17px; line-height: 1.7; color: #4a4238;">Isi lembar ini dirender dari MDX atau dari island scrollytelling-nya. Prototipe ini fokus pada navigasi, filter, dan kerangka halaman — bukan menyalin seluruh badan tulisan.</p>
+</div>
+<div style="border-left: 1px solid #c9bfa6; padding-left: 22px; display: flex; flex-direction: column; gap: 24px;">
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 14px;">
+<p style="margin: 0 0 8px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Stamp lembar</p>
+<div style="display: flex; flex-direction: column; gap: 5px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px;">
+<span>{{ postCoords }}</span><span>{{ postDate }}</span><span>{{ postImpact }}</span>
+</div>
+</div>
+<div>
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Topik</p>
+<div style="display: flex; flex-wrap: wrap; gap: 5px;">
+<sc-for list="{{ postTopics }}" as="t" hint-placeholder-count="4">
+<div onClick="{{ t.open }}" style="display:inline-flex;white-space:nowrap;font-size:12.5px;padding:4px 8px;border:1px solid #8e836a;background:#f2ebda;cursor:pointer;">{{ t.name }}</div>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{ hasProject }}">
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 14px;">
+<p style="margin: 0 0 8px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Proyek</p>
+<div onClick="{{ openProject }}" style="display:flex;align-items:center;min-height:44px;padding:0 14px;background:#171512;color:#f2ebda;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">{{ projectLabel }} →</div>
+</div>
+</sc-if>
+<div>
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Plate terkait</p>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<sc-for list="{{ related }}" as="r" hint-placeholder-count="3">
+<div onClick="{{ r.open }}" style="border:1px solid #8e836a;background:#e8e0cb;padding:10px;cursor:pointer;">
+<p style="margin:0 0 3px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">{{ r.reason }}</p>
+<p style="margin:0;font-family:Archivo;font-stretch:108%;font-weight:600;font-size:14.5px;line-height:1.25;">{{ r.title }}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isProject }}">
+<div style="max-width: 1000px;">
+<p style="margin: 0 0 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">Project hub</p>
+<h1 style="margin: 0 0 16px; font-family: Archivo; font-stretch: 122%; font-weight: 800; font-size: 48px; line-height: 1.02;">{{ projectTitle }}</h1>
+<p style="margin: 0 0 24px; font-size: 18px; line-height: 1.6; color: #4a4238; max-width: 60ch;">{{ projectSummary }}</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px;">
+<a href="{{ projectRepo }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;padding:0 22px;background:#171512;color:#f2ebda;text-decoration:none;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;">Repository ↗</a>
+<div onClick="{{ openProjectPost }}" style="display:inline-flex;align-items:center;min-height:44px;padding:0 22px;border:1px solid #8e836a;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;">Baca case study</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+<sc-for list="{{ projectStats }}" as="s" hint-placeholder-count="3">
+<div style="border:1px solid #171512;background:#e8e0cb;padding:16px;">
+<p style="margin:0;font-family:Archivo;font-stretch:118%;font-weight:800;font-size:30px;line-height:1;">{{ s.value }}</p>
+<p style="margin:4px 0 0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">{{ s.label }}</p>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAbout }}">
+<div style="max-width: 1000px;">
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">Urban &amp; Regional Planner</p>
+<h1 style="margin: 0 0 16px; font-family: Archivo; font-stretch: 122%; font-weight: 800; font-size: 48px; line-height: 1.02;">Afreza Luthfi Hernanda</h1>
+<p style="margin: 0 0 28px; font-size: 19px; line-height: 1.55; max-width: 54ch;">Saya membaca wilayah lewat datanya — memetakan bagaimana industri, lingkungan, dan masyarakat bersaing atas tanah yang sama, agar rencana disusun di atas bukti, bukan asumsi.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 28px;">
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 16px;"><p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4a4238;">Pendidikan</p><p style="margin:6px 0 0;font-size:14.5px;line-height:1.5;">B.Eng. Urban &amp; Regional Planning · ITERA · 2020–2024</p></div>
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 16px;"><p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4a4238;">Lokasi</p><p style="margin:6px 0 0;font-size:14.5px;line-height:1.5;">Cikarang Selatan, Bekasi · 06°15′S 107°09′E</p></div>
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 16px;"><p style="margin:0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4a4238;">Dokumen resmi</p><p style="margin:6px 0 0;font-size:14.5px;line-height:1.5;">4 terbitan kementerian &amp; pemda</p></div>
+</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+<a href="mailto:afrezahernanda@gmail.com" style="display:inline-flex;align-items:center;min-height:44px;padding:0 20px;background:#171512;color:#f2ebda;text-decoration:none;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;">afrezahernanda@gmail.com</a>
+<a href="https://www.linkedin.com/in/afrezaluthfi" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;min-height:44px;padding:0 20px;border:1px solid #8e836a;color:#171512;text-decoration:none;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;">LinkedIn ↗</a>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const POSTS = [
+  { id: 'cikarang-industrial-settlement-pattern', title: "Industrial–Settlement Spatial Pattern & Association", summary: 'Deteksi tapak bangunan dari Google Open Building, lalu kernel-density dan nearest-neighbour untuk memetakan di mana pabrik dan hunian Cikarang bertabrakan.', type: 'research', date: '2024-08-20', coords: "06°15'S 107°09'E", tags: ['gis','google-earth-engine','python','urban-planning'], interactive: true, impact: '' },
+  { id: 'jabung-lampung-coastal-development', title: 'Jabung & Coastal Area Development Plan', summary: 'Analisis hierarki Skalogram di kawasan pesisir Lampung Timur — memilah 12 kecamatan jadi pusat pertumbuhan dan hinterland.', type: 'research', date: '2024-10-05', coords: "05°10'S 105°44'E", tags: ['gis','arcgis','coastal-planning','urban-planning'], interactive: true, impact: '12 kecamatan' },
+  { id: 'rpplh-south-papua', title: 'RPPLH South Papua', summary: 'RPPLH pertama Papua Selatan: inventarisasi kerentanan ekosistem dan pemetaan tanah adat di dalam jejak Food Estate.', type: 'research', date: '2024-04-15', coords: "08°28'S 140°24'E", tags: ['gis','google-earth-engine','environmental-planning'], interactive: true, impact: '471.000 dari 1,2 juta ha' },
+  { id: 'bontang-poverty-mapping', title: 'Poverty Characteristic Mapping — Kalimantan Timur', summary: 'Pemetaan hotspot dan profil 19 indikator dari data P3KE; Bontang satu-satunya dari sepuluh kabupaten/kota yang menyelesaikan dua jalur analisis.', type: 'research', date: '2023-07-10', coords: "00°08'N 117°29'E", tags: ['gis','arcgis','poverty-mapping'], interactive: true, impact: '19 indikator' },
+  { id: 'jabodetabek-connect', title: 'Jabodetabek-Connect', summary: 'Diagram oktilinear interaktif jaringan rel dan BRT yang beroperasi — digambar ulang dari peta PDF resmi.', type: 'project', date: '2026-07-16', coords: "06°12'S 106°49'E", tags: ['nextjs','typescript','d3','data-visualization','transportation'], interactive: false, impact: '128 stasiun · 13 jalur', project: 'jabodetabek-connect' },
+  { id: 'jakarta-transit-heritage-explorer', title: 'Jakarta Transit Heritage Explorer', summary: 'Pendamping jalan kaki berbasis GIS untuk kawasan pusaka Jakarta — mulai dari halte atau stasiun, bukan dari pencarian tujuan.', type: 'project', date: '2026-07-16', coords: "06°08'S 106°49'E", tags: ['nextjs','typescript','gis','maplibre','python'], interactive: false, impact: '3 node · rute 1.802 m', project: 'jakarta-transit-heritage-explorer' },
+  { id: 'cdmp-jabodetabek', title: 'CDMP-Jabodetabek', summary: 'Peta gelap dengan slider waktu: 35 tahun rel, tol, dan kota baru difilter berdasarkan tahun dibangun.', type: 'project', date: '2026-07-16', coords: "06°18'S 106°39'E", tags: ['nextjs','typescript','maplibre','gis','data-visualization'], interactive: false, impact: '14 proyek · 1989–2027', project: 'cdmp-jabodetabek' },
+  { id: 'building-knowledge-hub', title: 'Building knowledge-hub', summary: 'Mengapa portofolio lama diganti dengan knowledge hub yang content-first, dan bagaimana situs ini dibangun.', type: 'article', date: '2026-07-16', coords: '', tags: ['astro','tailwind','mdx'], interactive: false, impact: '' },
+  { id: 'tanggamus-pier', title: 'Pier at Dusk, Tanggamus', summary: 'Jetty panjang menjorok ke garis pantai Tanggamus, cahaya emas menembus awan badai.', type: 'photo', date: '2022-10-25', coords: "05°28'S 104°37'E", tags: ['photography','lampung','coastal'], interactive: false, impact: '' },
+  { id: 'tanggamus-boat', title: 'A Boat Anchored Off Tanggamus', summary: 'Perahu nelayan tradisional beristirahat di teluk turquoise yang tenang, dikelilingi bukit berhutan.', type: 'photo', date: '2022-10-25', coords: "05°28'S 104°37'E", tags: ['photography','lampung','coastal'], interactive: false, impact: '' },
+  { id: 'tanggamus-wave', title: 'Wave Break, Tanggamus Coast', summary: 'Gelombang menggulung ke pantai di dermaga yang sama, diambil rendah dan dekat saat pasang naik.', type: 'photo', date: '2022-10-25', coords: "05°28'S 104°37'E", tags: ['photography','lampung','coastal'], interactive: false, impact: '' },
+];
+
+const PROJECT_META = {
+  'jabodetabek-connect': { title: 'Jabodetabek-Connect', repo: 'https://github.com/Luthfi-Forma/Jabodetabek-Connect', stats: [['128','stasiun'],['13','jalur beroperasi'],['0°/45°/90°','geometri oktilinear']] },
+  'jakarta-transit-heritage-explorer': { title: 'Jakarta Transit Heritage Explorer', repo: 'https://github.com/Luthfi-Forma/Jakarta_Transit_Heritage_Explorer', stats: [['3','node diuji'],['1.802 m','rute Kota Tua'],['1,06–2,85×','rasio memutar']] },
+  'cdmp-jabodetabek': { title: 'CDMP-Jabodetabek', repo: 'https://github.com/Luthfi-Forma/CDMP-Jabodetabek', stats: [['14','proyek terkurasi'],['1989–2027','rentang tahun'],['4','kategori pertumbuhan']] },
+};
+
+const TYPE_LABEL = { research: 'Research', project: 'Project', article: 'Article', photo: 'Photo' };
+const SWATCH_BASE = { display: 'inline-block', width: '12px', height: '12px', flex: 'none', border: '1px solid #171512' };
+const SWATCH = {
+  research: { ...SWATCH_BASE, backgroundImage: 'repeating-linear-gradient(45deg,#2c4630 0 2px,transparent 2px 7px),repeating-linear-gradient(-45deg,#2c4630 0 2px,transparent 2px 7px)' },
+  project: { ...SWATCH_BASE, backgroundImage: 'repeating-linear-gradient(45deg,#2f5670 0 2px,transparent 2px 7px)' },
+  article: { ...SWATCH_BASE, backgroundImage: 'radial-gradient(#4a4238 1px, transparent 1.5px)', backgroundSize: '7px 7px' },
+  photo: { ...SWATCH_BASE, background: '#c9bfa6' },
+};
+const CHIP_OFF = { display: 'inline-flex', alignItems: 'baseline', gap: '5px', whiteSpace: 'nowrap', fontSize: '12.5px', padding: '3px 7px', border: '1px solid #8e836a', background: '#f2ebda', color: '#171512', cursor: 'pointer' };
+const CHIP_ON = { ...CHIP_OFF, border: '1px solid #171512', background: '#171512', color: '#f2ebda' };
+
+const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function fmt(iso) { const d = new Date(iso); return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`; }
+
+class Component extends DCLogic {
+  state = { screen: 'index', type: null, topic: null, postId: null, projectSlug: null, q: '' };
+
+  go(patch) { this.setState(patch); if (typeof window !== 'undefined') window.scrollTo(0, 0); }
+
+  allTopics() {
+    const counts = new Map();
+    POSTS.forEach((p) => p.tags.forEach((t) => counts.set(t, (counts.get(t) || 0) + 1)));
+    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }
+
+  plateFor(p, i) {
+    return {
+      ...p,
+      typeLabel: TYPE_LABEL[p.type],
+      swatch: SWATCH[p.type],
+      plateNo: String(i + 1).padStart(2, '0'),
+      year: new Date(p.date).getFullYear(),
+      dateLabel: fmt(p.date),
+      otherTags: p.tags.join(' · '),
+      open: () => this.go({ screen: 'post', postId: p.id }),
+    };
+  }
+
+  renderVals() {
+    const { screen, type, topic, postId, projectSlug, q } = this.state;
+    const query = q.trim().toLowerCase();
+    const sorted = [...POSTS].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const filtered = sorted.filter((p) => {
+      if (type && p.type !== type) return false;
+      if (!query) return true;
+      return p.title.toLowerCase().includes(query) || p.tags.some((t) => t.includes(query)) || p.summary.toLowerCase().includes(query);
+    });
+
+    const topics = this.allTopics().map(([name, count]) => ({
+      name, count,
+      style: topic === name ? CHIP_ON : CHIP_OFF,
+      open: () => this.go({ screen: 'topic', topic: name, type: null, q: '' }),
+    }));
+
+    const post = POSTS.find((p) => p.id === postId);
+    const related = post
+      ? sorted.filter((c) => c.id !== post.id)
+          .map((c) => ({ c, shared: c.tags.filter((t) => post.tags.includes(t)).length + (post.project && c.project === post.project ? 2 : 0) }))
+          .filter((x) => x.shared > 0).sort((a, b) => b.shared - a.shared).slice(0, 3)
+          .map(({ c, shared }) => ({ title: c.title, reason: `${TYPE_LABEL[c.type]} · +${shared} tag sama`, open: () => this.go({ screen: 'post', postId: c.id }) }))
+      : [];
+
+    const topicPosts = topic ? sorted.filter((p) => p.tags.includes(topic)) : [];
+    const neighbourCounts = new Map();
+    topicPosts.forEach((p) => p.tags.forEach((t) => { if (t !== topic) neighbourCounts.set(t, (neighbourCounts.get(t) || 0) + 1); }));
+
+    const meta = projectSlug ? PROJECT_META[projectSlug] : null;
+    const projectPost = projectSlug ? POSTS.find((p) => p.project === projectSlug) : null;
+
+    const crumbs = {
+      index: type || query ? `Sheet index · ${filtered.length} dari 11 plate${type ? ` · tipe: ${type}` : ''}${query ? ` · cari: “${q}”` : ''}` : 'Sheet index · 11 plates · 20 topics',
+      topics: 'Topics · 20 topik dari tags[]',
+      topic: `Topics / ${topic} · ${topicPosts.length} plate`,
+      projects: 'Projects · 3 hub',
+      project: meta ? `Projects / ${projectSlug}` : 'Projects',
+      post: post ? `Index / ${TYPE_LABEL[post.type]} / ${post.title}` : 'Index',
+      about: 'Dossier · Afreza Luthfi Hernanda',
+    };
+
+    return {
+      breadcrumb: crumbs[screen] || crumbs.index,
+      q,
+      onSearch: (e) => this.setState({ q: e.target.value, screen: 'index', topic: null }),
+      goIndex: () => this.go({ screen: 'index', type: null, topic: null, q: '' }),
+      goTopics: () => this.go({ screen: 'topics', topic: null }),
+      goProjects: () => this.go({ screen: 'projects' }),
+      goAbout: () => this.go({ screen: 'about' }),
+      setResearch: () => this.go({ screen: 'index', type: type === 'research' ? null : 'research', topic: null }),
+      setProject: () => this.go({ screen: 'index', type: type === 'project' ? null : 'project', topic: null }),
+      setArticle: () => this.go({ screen: 'index', type: type === 'article' ? null : 'article', topic: null }),
+      setPhoto: () => this.go({ screen: 'index', type: type === 'photo' ? null : 'photo', topic: null }),
+      clearAll: () => this.go({ screen: 'index', type: null, topic: null, q: '' }),
+
+      isIndex: screen === 'index', isTopic: screen === 'topic', isTopics: screen === 'topics',
+      isProjects: screen === 'projects', isProject: screen === 'project', isPost: screen === 'post', isAbout: screen === 'about',
+
+      plates: filtered.map((p, i) => this.plateFor(p, i)),
+      isEmpty: screen === 'index' && filtered.length === 0,
+      resultLine: type || query ? `Menampilkan ${filtered.length} dari 11 lembar` : '11 lembar · urutan terbaru',
+      topics,
+
+      topicName: topic || '',
+      topicMeta: topic ? `Topic · ${topicPosts.length} plate` : '',
+      topicDef: topic ? `Topik “${topic}” muncul di ${topicPosts.length} lembar.` : '',
+      topicPlates: topicPosts.map((p, i) => this.plateFor(p, i)),
+      neighbours: [...neighbourCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 6)
+        .map(([name, together]) => ({ name, together, open: () => this.go({ screen: 'topic', topic: name }) })),
+
+      projects: Object.entries(PROJECT_META).map(([slug, m]) => {
+        const pp = POSTS.find((p) => p.project === slug);
+        return { title: m.title, summary: pp ? pp.summary : '', impact: pp ? pp.impact : '', coords: pp ? pp.coords : '', open: () => this.go({ screen: 'project', projectSlug: slug }) };
+      }),
+
+      postTitle: post ? post.title : '', postSummary: post ? post.summary : '',
+      postTypeLabel: post ? TYPE_LABEL[post.type] : '', postSwatch: post ? SWATCH[post.type] : SWATCH.research,
+      postInteractive: !!(post && post.interactive),
+      postCoords: post && post.coords ? post.coords : '— tanpa koordinat',
+      postDate: post ? fmt(post.date) : '',
+      postImpact: post && post.impact ? post.impact : 'angka dampak: dari Anda',
+      postTopics: post ? post.tags.map((name) => ({ name, open: () => this.go({ screen: 'topic', topic: name }) })) : [],
+      related,
+      hasProject: !!(post && post.project),
+      projectLabel: post && post.project ? PROJECT_META[post.project].title : '',
+      openProject: () => post && post.project && this.go({ screen: 'project', projectSlug: post.project }),
+
+      projectTitle: meta ? meta.title : '',
+      projectSummary: projectPost ? projectPost.summary : '',
+      projectRepo: meta ? meta.repo : '#',
+      projectStats: meta ? meta.stats.map(([value, label]) => ({ value, label })) : [],
+      openProjectPost: () => projectPost && this.go({ screen: 'post', postId: projectPost.id }),
+    };
+  }
+}
+</script>
+</body>
+</html>

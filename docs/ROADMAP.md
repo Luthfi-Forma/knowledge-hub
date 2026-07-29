@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-29
+- Updated: 2026-07-29 (M6/M7 ditambahkan)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -13,6 +13,8 @@
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics | done |
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
 | M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
+| M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | planned |
+| M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | planned |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -26,12 +28,16 @@ user — lihat T-20/T-21 di TASK.md Backlog.
 
 ## Current focus
 
-M1–M5 selesai (M5 dengan satu pengecualian tercatat, lihat catatan tabel
-milestone). Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai
-dari Backlog (T-20/T-21/T-36) atau permintaan baru, termasuk kandidat M6
-yang digerbangi selama M5 (lihat "Digerbangi, bukan dibunuh" di bawah).
+**M6 — Atlas.** M1–M5 selesai (M5 dengan satu pengecualian tercatat, lihat
+catatan tabel milestone). M6 mengerjakan perombakan visual "Atlas" dari
+handoff Claude Design yang di-versi di `docs/design/atlas/` — arah dan
+konsekuensinya diputuskan di
+[ADR-004](decisions/ADR-004-atlas-single-identity.md). Task aktif dimulai
+dari T-45 di TASK.md.
 
-Rencana M5 lengkap (arah visual, skor juri, daftar yang dibunuh):
+Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
+`C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
+Rencana M5 (arah visual, skor juri, daftar yang dibunuh):
 `C:\Users\Luthfi\.claude\plans\c-users-luthfi-desktop-knowledge-hub-m5-squishy-gadget.md`.
 
 ## Phase detail
@@ -114,6 +120,49 @@ kedua **Immersive Mode** dirancang dari nol dengan konsep *seri lembar peta*
   (bukan file `MOTION.md` baru). Baseline Lighthouse tetap terbuka (T-36,
   lihat catatan di tabel milestone atas).
 
+### M6 — Atlas (satu identitas)
+
+Dipicu handoff eksternal dari **Claude Design** (`docs/design/atlas/`, README-nya
+spesifikasi high-fidelity; 5 file `.dc.html` adalah design reference, bukan kode
+produksi). Arah: melebur Reading + Immersive jadi satu identitas dengan mengangkat
+bahasa kartografis DATUM ke latar kertas terang, dan menaikkan **topik** jadi warga
+kelas satu karena audiens utama situs adalah komunitas GIS. Keputusan +
+konsekuensinya: [ADR-004](decisions/ADR-004-atlas-single-identity.md).
+
+- **S1 — Fondasi** (T-45–T-49). Bundel handoff masuk repo; ADR-004; bongkar
+  dual-mode (`data-mode`, seam, toggle, `mode-toggle.ts`); token Atlas 9 warna
+  dengan pembagian peran (`--color-accent` yang mengerjakan 6 tugas dipecah jadi
+  research/project/flag) — `--color-chart-1/2` **dipertahankan sebagai alias**
+  supaya invarian "nol edit React" ADR-003 #5 tetap berlaku; Bodoni+Karla dilepas,
+  Archivo mengerjakan display *dan* body, IBM Plex Mono di-self-host untuk notasi;
+  radius nol di seluruh sistem.
+- **S2 — Komponen** (T-50–T-52). `Plate` (lead/standard/compact) menggantikan
+  PostCard+PostListItem; `LegendRail` 224px + `TopicChip`; collar 2 baris dengan
+  breadcrumb notasi, skip-link, satu bahasa kontrol 4 tingkat, footer 4 kolom.
+- **S3 — IA** (T-53–T-58). `lib/topics.ts` (co-occurrence, bukan daftar manual) +
+  koleksi `topics`; `/tags/**` → `/topics/**` dan `/explore` → `/` lewat 308 di
+  `vercel.json` baru; Sheet Index; halaman topik; rail marginalia di post; sisa route.
+- **S4 — A11y & search** (T-59–T-60). Satu-satunya kerja sisi React: tabel data
+  alternatif tiap chart + `useReducedMotion()` di 4 modul. Pagefind di-restyle ke
+  token Atlas → menutup DEBT #1.
+- **S5 — Penutupan** (T-61–T-62). OG image ikut Atlas (palet + typeface, 3 TTF
+  Bodoni/Karla dihapus); 14 item verification checklist handoff; remeasure berat
+  transfer; dokumentasi.
+
+**Sengaja mati di M6** (bukan regresi tak sengaja — lihat ADR-004 Consequences):
+registration seam (T-42, M5) dan carousel drag Featured Projects (T-24, M4).
+
+### M7 — Atlas (lapisan editorial)
+
+Dipisah dari M6 atas keputusan user (2026-07-29): M6 membangun struktur dengan
+graceful empty state, M7 mengisinya. Ketiganya hanya bisa ditulis pemilik situs,
+bukan diturunkan dari kode.
+
+- 20 definisi topik 1 kalimat → `src/content/topics/*.md`.
+- 3–5 cross-link inline per post di body MDX — hari ini **nol** di seluruh repo,
+  sehingga rail marginalia M6 lahir kosong.
+- Angka `impact` untuk sebagian post → tampil di stamp lembar.
+
 ## Icebox
 
 - GitHub API enrichment (stars, last commit, activity feed).
@@ -135,8 +184,10 @@ kedua **Immersive Mode** dirancang dari nol dengan konsep *seri lembar peta*
   satu-tipe-konten di PROJECT_BRIEF).
 - Route Notes / Journal / Book Reviews — 0 post masing-masing; T-22 sudah
   melebur `journal` → `article` persis karena alasan ini.
-- Restrukturisasi IA 10 route — memindahkan URL yang sudah terindeks dan
-  memutus satu sitasi eksternal nyata ke post Cikarang.
+- ~~Restrukturisasi IA 10 route~~ — **dihidupkan kembali di M6 dengan alasan baru**
+  (ADR-004 #5). Alasan pembunuhnya dulu adalah sitasi eksternal nyata ke post
+  Cikarang; Atlas tidak memindahkan `/posts/[slug]` sama sekali — yang pindah hanya
+  route indeks (`/explore`, `/tags/*`), ditangani redirect 308 di `vercel.json`.
 - Metadata `difficulty`, Learning Path, GitHub auto-sync (non-goal tertulis
   di brief yang sudah Approved).
 
@@ -146,3 +197,8 @@ kedua **Immersive Mode** dirancang dari nol dengan konsep *seri lembar peta*
   asli, satu file untuk dihapus) — gerbang: **≥ 20 post dan ≥ 15 cross-link
   inline antar-post**. Hari ini nol cross-link ada di seluruh body MDX, dan
   relasi `project` menyumbang nol edge karena tiap slug hanya dipakai 1 post.
+  **M7 (T-64) menggerakkan setengah gerbang ini** — 3–5 cross-link × 11 post
+  melewati ambang 15; sisa gerbangnya (≥20 post) tetap butuh konten baru. Selain
+  itu M6 sudah membangun lapisan relasi yang sebenarnya dibutuhkan graph:
+  `lib/topics.ts` menghitung co-occurrence topik, yang menyumbang edge nyata
+  tanpa bergantung pada `project`.

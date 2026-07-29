@@ -1,7 +1,14 @@
 # ADR-003: Mekanisme dual-mode (Reading/Immersive) via token remap, bukan island atau route kedua
 
-Status: Accepted
+Status: Superseded by [ADR-004](ADR-004-atlas-single-identity.md) (2026-07-29)
 Date: 2026-07-28
+
+> **Catatan supersede.** Keputusan **#3, #4, dan #5** (dual-mode sebagai preferensi
+> tersimpan client via `data-mode`) dihentikan oleh ADR-004 — situs kembali ke satu
+> identitas visual, "Atlas". Keputusan **#1 (Tier-0 platform feature) dan #2 (klausa 4
+> ADR-002 = larangan hidrasi framework, bukan larangan byte; satu script vanilla Tier-1
+> ≤2KB gzip boleh di layout global)** **tetap berlaku** dan dibawa apa adanya ke ADR-004.
+> Bagian Decision di bawah tidak diedit — ia mencatat apa yang benar saat itu.
 
 <!-- Status lifecycle: Proposed → Accepted → (Superseded by ADR-NNN).
      Never edit an Accepted ADR's Decision section — supersede it.

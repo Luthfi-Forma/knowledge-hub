@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;0,800;1,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+doc-page:not(:defined) { visibility: hidden; }
+body { background: #e7e0cf; }
+a { color: #38523a; }
+a:hover { color: #18140f; }
+.kh-callout, .kh-finding { break-inside: avoid; orphans: 3; widows: 3; }
+</style>
+<script src="./doc-page.js"></script>
+</helmet>
+
+<doc-page margin="0.8in">
+<div style="font-family: Karla, ui-sans-serif, system-ui, sans-serif; font-size: 15px; line-height: 1.62; color: #18140f;">
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-bottom: 10px; border-bottom: 1px solid #ddd3bc; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6152;">
+<span>Visual Audit — knowledge-hub</span>
+<span>Lanjutan dari Product Discovery · 29 Juli 2026</span>
+</div>
+
+<h1 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 800; font-size: 40px; line-height: 1.08; margin: 26px 0 12px;">Visual Audit: tujuh lapisan yang membuat situs ini terasa rata</h1>
+
+<p style="font-family: 'Bodoni Moda', Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.45; color: #6b6152; max-width: 54ch; margin: 0 0 22px;">Setiap temuan di bawah adalah nilai yang benar-benar ada di kode (<code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;font-style:normal;">global.css</code>, utility Tailwind per komponen) — bukan kesan. Diakhiri dengan implikasi untuk peleburan dua mode.</p>
+
+<div class="kh-callout" style="border: 1px solid #ddd3bc; background: #efe8d5; padding: 16px 18px; margin: 0 0 26px;">
+<p style="margin: 0 0 8px; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6152; font-weight: 600;">Arah yang sudah diputuskan (input Anda)</p>
+<ol style="margin: 0; padding-left: 20px; font-size: 14px;">
+<li style="margin-bottom: 4px;"><strong>Komunitas GIS menang</strong> — kedalaman &amp; penemuan topik jadi kriteria utama; recruiter dilayani sebagai efek samping dari kedalaman yang terlihat.</li>
+<li style="margin-bottom: 4px;"><strong>Dua mode dilebur</strong> menjadi satu identitas premium tunggal — bukan dark mode, bukan toggle.</li>
+<li style="margin-bottom: 4px;"><strong>Homepage boleh berhenti jadi blog home</strong> dan menjadi ruang masuk bernavigasi.</li>
+<li><strong>Konten baru boleh diminta</strong> — cover, angka dampak, cross-link.</li>
+</ol>
+</div>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">1 · Tipografi</h2>
+
+<p style="margin: 0 0 10px;"><strong>Yang ada.</strong> Reading Mode: Bodoni Moda (400, 800, italic 500) untuk display <em>dan</em> untuk seluruh body prosa post (<code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">.prose-content { font-family: var(--font-display) }</code>), Karla (400/500/600) untuk UI, dan mono sistem untuk notasi. Immersive: satu Archivo variable untuk dua peran lewat sumbu <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">wdth</code>.</p>
+
+<table style="width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 13.5px;">
+<thead><tr style="background: #efe8d5;">
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Peran</th>
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Ukuran nyata</th>
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Catatan</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Hero h1</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">36 → 60px, weight 800</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Satu-satunya momen tipografi di situs</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">h1 halaman indeks (Explore, Tags, Photography)</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">24px</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Hanya 4px lebih besar dari judul section</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Judul section (<code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">SectionHeading</code>)</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">20px + underline 1px</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Nilai tunggal, dipakai di 6 tempat berbeda</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Judul post di daftar/kartu</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">18px, weight 400</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Lebih kecil dari judul section di atasnya</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Ringkasan, body About, meta</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">14px</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Ukuran UI dipakai untuk teks yang harus dibaca</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Prosa post</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">15px Bodoni Moda</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Didone kontras tinggi pada ukuran kecil</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Eyebrow, nav, footer, chip</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">12px uppercase, tracking .08em</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Semua label memakai satu resep yang sama</td></tr>
+</tbody>
+</table>
+
+<p style="margin: 0 0 10px;"><strong>Masalah.</strong> (a) Skala punya <em>lubang</em>: melompat 60 → 24 → 20 → 18, lalu semua sisanya menumpuk di 14–15px. Tidak ada tingkat menengah untuk “ini penting”. (b) Judul konten (18px) lebih kecil dari label struktur (20px) — hierarki terbalik. (c) Bodoni Moda memikul dua beban yang saling bertentangan: display 60px dan prosa 15px; pada 15px, hairline Didone-nya menipis dan kehilangan warna teks. (d) Sembilan dari sepuluh kelas teks berukuran 12–15px, jadi 90% halaman berada dalam satu bidang tipografi yang sama. (e) Reset <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">h1,h2,h3 { font-weight: 400 }</code> berarti bobot harus di-opt-in per elemen — dan sebagian besar judul tidak melakukannya, jadi kontras bobot nyaris tak ada di luar hero.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">2 · Penggunaan warna</h2>
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 14px;">
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #f5efe1;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#F5EFE1 paper</p></div>
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #efe8d5;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#EFE8D5 raised</p></div>
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #ddd3bc;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#DDD3BC line</p></div>
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #18140f;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#18140F ink</p></div>
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #6b6152;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#6B6152 ink-muted</p></div>
+<div style="border: 1px solid #ddd3bc;"><div style="height: 34px; background: #38523a;"></div><p style="margin:0;padding:6px 8px;font-size:11.5px;font-family:ui-monospace,Menlo,Consolas,monospace;color:#6b6152;">#38523A accent</p></div>
+</div>
+
+<p style="margin: 0 0 10px;"><strong>Yang ada.</strong> Enam token + dua seri chart. Palet krem-editorialnya <em>bagus</em> dan bukan generik — ini kekuatan yang harus dipertahankan.</p>
+
+<p style="margin: 0 0 10px;"><strong>Masalah.</strong> (a) Satu hijau memikul enam pekerjaan sekaligus: eyebrow, tautan, border tag, hover, drop cap, dan titik timeline — sehingga aksen berhenti berarti “penting” dan berubah jadi tekstur. (b) Kontras bukan masalahnya: <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">accent</code> di atas kertas krem <strong>7,5:1</strong> dan <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">ink-muted</code> <strong>5,3:1</strong> — keduanya lulus AA. (Angka 4,18:1 di komentar <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">global.css</code> dihitung terhadap kertas <em>Immersive</em>, bukan Reading.) Yang bermasalah adalah <em>ketiadaan tingkatan</em>: karena satu aksen memikul semua peran, tidak ada cara menaikkan atau menurunkan penekanan tanpa mengubah makna. (c) Hanya ada satu tingkat elevasi (<code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">paper-raised</code>, selisih 4% dari paper) dan nol shadow, jadi tidak ada cara memberi tahu “yang ini menonjol”. (d) Tidak ada warna semantik (baru, unggulan, interaktif, tipe konten) — padahal Immersive sudah membuktikan bahwa kode visual per tipe bisa dilakukan tanpa token baru. (e) Warna tidak pernah dipakai untuk mengelompokkan: seluruh 11 post tampil dalam warna yang identik.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">3 · Whitespace</h2>
+
+<p style="margin: 0 0 10px;"><strong>Yang ada.</strong> Gutter horizontal <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">px-5</code> (20px) — sama di ponsel dan di desktop. Section home <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">py-8</code> (32px), hero <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">py-14/20</code> (56/80px), section About <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">py-16/pb-16</code> (64px), baris daftar <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">py-4</code> (16px), jarak kartu <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">gap-4</code> (16px).</p>
+
+<p style="margin: 0 0 10px;"><strong>Masalah.</strong> (a) Dua skala vertikal yang tidak berhubungan hidup bersamaan: home memakai 32px, About memakai 64px untuk pemisahan yang setara — halaman terasa berasal dari dua situs. (b) 32px antar-section terlalu rapat untuk menandai pergantian topik, terutama karena setiap batas juga sudah punya <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">border-b</code>; garis menggantikan ruang, dan hasilnya padat tapi tidak berhierarki. (c) Whitespace tidak pernah dipakai secara <em>ekspresif</em> — tidak ada satu pun blok yang diberi ruang berlebih untuk menyatakan kepentingan. (d) Gutter 20px tetap di layar lebar membuat kolom 800px tampak seperti dokumen ponsel yang diperbesar. (e) Padding dalam-komponen tidak berskala: kartu About <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">p-5</code>, TOC <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">px-5 py-4</code>, EmptyState <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">px-6 py-8</code>, plate DATUM ~11px — empat densitas untuk objek sekelas.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">4 · Layout</h2>
+
+<p style="margin: 0 0 10px;"><strong>Yang ada.</strong> Satu kanvas untuk sepuluh route: <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">max-w-(--container-content)</code> = 800px, terpusat. Satu-satunya lebar kedua, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">--container-prose</code> (672px), hanya aktif untuk <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">type: article</code> — 1 dari 11 post. Grid nyata hanya ada di Photography (2/3/4 kolom) dan project hub (2 kolom).</p>
+
+<p style="margin: 0 0 10px;"><strong>Masalah.</strong> (a) Tidak ada full-bleed di mana pun; situs tentang <em>peta dan wilayah</em> tidak pernah membiarkan satu gambar pun bernapas melebihi 800px. (b) Perataan tidak konsisten: hero dan 404 terpusat, semua yang lain rata kiri — tanpa alasan struktural. (c) TOC adalah kotak chip horizontal di dalam alur, bukan penunjuk posisi; pada post panjang pembaca kehilangan orientasi (tak ada progress, tak ada TOC melekat). (d) Ruang layar lebar terbuang total: di 1440px, ~44% viewport kosong tanpa tugas — padahal di situlah indeks, legenda, atau filter topik seharusnya hidup (kebutuhan audiens GIS). (e) Mobile: nav membungkus jadi dua baris alih-alih punya pola menu; header sticky memakan tinggi tanpa memberi konteks halaman.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">5 · Ritme visual</h2>
+
+<p style="margin: 0 0 10px;">Ritme homepage, dibaca dari kode, adalah: <em>hero (border-b) → section 32px (border-b) → section 32px (border-b) → section</em>. Setiap batas identik; setiap judul section identik (20px + underline, muncul 3× dalam satu layar-gulir); setiap isi adalah teks di dalam garis rambut. <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">FeaturedProjects</code> menyatakan <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">bg-paper</code> secara eksplisit — tetapi itu warna latar body yang sama, jadi <strong>pergantian latar yang diniatkan tidak pernah terjadi</strong>. Hasilnya kurva perhatian yang datar: satu puncak di hero, lalu garis lurus sampai footer.</p>
+
+<p style="margin: 0 0 10px;">Yang hilang secara spesifik: tidak ada perubahan <em>densitas</em> (padat → lapang → padat), tidak ada perubahan <em>orientasi</em> (vertikal → horizontal), tidak ada perubahan <em>skala media</em> (satu gambar besar di antara blok teks), dan tidak ada momen kedua setelah hero. Carousel sebetulnya <em>adalah</em> pergantian orientasi — tapi ia dibungkus dalam section berukuran sama seperti daftar teks di bawahnya, jadi kekuatannya hilang.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">6 · Konsistensi komponen</h2>
+
+<table style="width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 13.5px;">
+<thead><tr style="background: #efe8d5;">
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Objek</th>
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Berapa perlakuan berbeda</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Post dalam daftar</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>2</strong> — <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">PostCard</code> (bergambar) vs <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">PostListItem</code> (teks), pemilihannya tidak berpola: related pakai teks, project hub pakai kartu</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Tag</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>2</strong> — detail post 12px/px-2.5 tanpa radius; <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">/tags</code> 14px/px-3 py-1.5; chip keahlian About punya gaya ketiga</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Tombol / kontrol</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>4</strong> — CTA solid <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">bg-ink rounded-sm</code>, panah carousel 36px kotak, toggle mode uppercase berbingkai, pill TypeFilter</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Radius</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>2 tak berpola</strong> — <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">rounded-sm</code> pada gambar/CTA/kartu About/EmptyState; sudut tajam pada TOC, tag, plate DATUM, panah</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Judul halaman</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>3</strong> — 24px (indeks), 30/36px (post &amp; project), 36/60px (hero)</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Kode tipe konten</td><td style="padding:7px 9px;border:1px solid #ddd3bc;"><strong>2 sistem terpisah</strong> — kata dalam eyebrow (Reading) vs hatch kartografis (Immersive); tak pernah dipertemukan</td></tr>
+</tbody>
+</table>
+
+<p style="margin: 0 0 10px;">Yang sudah konsisten dan patut dipertahankan: cincin <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">focus-visible</code> identik di setiap kontrol, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">min-h-11</code> (44px) di setiap target sentuh, format eyebrow <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">tanggal · Tipe</code>, dan pemakaian token warna 100% (nol hex literal di modul scrollytelling — itulah sebabnya peleburan mode bisa murah).</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">7 · Aksesibilitas</h2>
+
+<p style="margin: 0 0 8px;"><strong>Sudah baik:</strong> target 44px konsisten; <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">focus-visible</code> menyeluruh; jaring <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">prefers-reduced-motion</code> global termasuk pseudo-element view-transition; dua animasi <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">repeat: Infinity</code> sudah dihapus (WCAG 2.2.2); <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">aria-label</code> pada nav, carousel, dan seam; <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">aria-current</code> pada filter tipe; disclosure timeline memakai <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">&lt;details&gt;</code> native; kontras dihitung dan didokumentasikan untuk kedua palet — dan memang lulus AA di keduanya; satu h1 per halaman.</p>
+
+<table style="width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 13.5px;">
+<thead><tr style="background: #efe8d5;">
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Celah</th>
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Kriteria</th>
+<th style="text-align:left;padding:7px 9px;border:1px solid #ddd3bc;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b6152;">Tingkat</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Batas kontrol interaktif memakai <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">line</code> #DDD3BC — hanya 1,5:1 terhadap kertas</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">1.4.11 Non-text Contrast</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Gagal AA</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Tidak ada skip-link ke konten utama</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">2.4.1 Bypass Blocks</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Gagal A</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Nav utama tanpa <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">aria-current</code> — halaman aktif tak dapat dikenali</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">2.4.8 / praktik baik</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Lemah</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Seam mengubah seluruh identitas halaman dari satu tekan panah, tanpa <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">aria-valuetext</code> atau pengumuman</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">3.2.2 On Input</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Berisiko</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">4 modul scrollytelling belum menghormati <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">useReducedMotion()</code> (motion via JS lolos dari jaring CSS)</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">2.3.3 Animation from Interactions</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Gagal AAA / risiko nyata</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Chart Recharts tanpa alternatif teks/tabel data</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">1.1.1 Non-text Content</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Gagal A</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">UI Pagefind memakai CSS default — tak diuji keyboard/kontras dalam palet situs</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">1.4.3 / 2.1.1</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Tak diketahui</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Kartu tanpa href memakai <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">aria-disabled</code> pada <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">&lt;a&gt;</code> tanpa <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">href</code></td><td style="padding:7px 9px;border:1px solid #ddd3bc;">4.1.2 Name, Role, Value</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Lemah</td></tr>
+<tr><td style="padding:7px 9px;border:1px solid #ddd3bc;">Teks 14px sebagai ukuran body dominan</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Praktik baik keterbacaan</td><td style="padding:7px 9px;border:1px solid #ddd3bc;">Lemah</td></tr>
+</tbody>
+</table>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">Implikasi untuk peleburan dua mode</h2>
+
+<p style="margin: 0 0 10px;">Peleburan bukan “pilih salah satu palet”. Audit ini menunjukkan bahwa kedua mode memecahkan masalah yang <em>berbeda</em>, dan identitas tunggal yang premium perlu mengambil dari keduanya:</p>
+
+<div class="kh-finding" style="border-left: 3px solid #38523a; padding: 2px 0 2px 14px; margin: 0 0 12px;">
+<p style="margin: 0 0 4px; font-weight: 700;">Dipertahankan dari Reading</p>
+<p style="margin: 0;">Palet krem-editorial (unik, hangat, bukan tema AI generik), Bodoni Moda sebagai display, dan halaman baca yang hierarkinya sudah benar — termasuk drop cap dan pull-quote.</p>
+</div>
+<div class="kh-finding" style="border-left: 3px solid #38523a; padding: 2px 0 2px 14px; margin: 0 0 12px;">
+<p style="margin: 0 0 4px; font-weight: 700;">Diambil dari DATUM</p>
+<p style="margin: 0;">Bahasa kartografis: hatch per tipe konten, plate berkoordinat, graticule sebagai struktur, mono untuk notasi, dan “legenda adalah filter” — ini justru <em>mekanisme penemuan topik</em> yang dibutuhkan audiens GIS, bukan sekadar dekorasi gelap.</p>
+</div>
+<div class="kh-finding" style="border-left: 3px solid #38523a; padding: 2px 0 2px 14px; margin: 0 0 14px;">
+<p style="margin: 0 0 4px; font-weight: 700;">Dibuang</p>
+<p style="margin: 0;">Toggle mode dan registration seam (beban kognitif dan aksesibilitas untuk pilihan yang tak diminta pengunjung), palet near-black sebagai identitas terpisah, dan duplikasi dua pohon DOM per halaman.</p>
+</div>
+
+<p style="margin: 0 0 10px;"><strong>Konsekuensi teknis yang menguntungkan:</strong> karena seluruh situs — termasuk 4 modul scrollytelling — 100% memakai <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">var(--color-*)</code> tanpa satu hex literal, mengganti nilai token satu kali akan membawa seluruh situs ke identitas baru tanpa menyentuh React. Peleburan justru <em>menghapus</em> kode: blok remap, ModeController, seam, dan pasangan <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;">[data-mode-view]</code>.</p>
+
+<h2 style="font-family: 'Bodoni Moda', Georgia, serif; font-weight: 700; font-size: 24px; margin: 30px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #ddd3bc;">Konten yang perlu Anda siapkan</h2>
+
+<p style="margin: 0 0 8px;">Perbaikan hierarki dan ritme butuh materi, bukan hanya layout. Prioritas dari yang paling menentukan:</p>
+<ol style="margin: 0 0 10px; padding-left: 22px;">
+<li style="margin-bottom: 5px;"><strong>Cover untuk 8 post non-project</strong> — idealnya peta/output GIS asli (bukan foto stok), karena inilah yang mengubah Explore dari daftar teks jadi permukaan visual.</li>
+<li style="margin-bottom: 5px;"><strong>Satu angka dampak per post</strong> (mis. “128 stasiun”, “7 kecamatan”, “14.000 rumah tangga”) — bahan untuk tipografi berskala dan bukti kedalaman.</li>
+<li style="margin-bottom: 5px;"><strong>3–5 cross-link inline per post</strong> antar riset/proyek yang berkaitan — tanpa ini, klaim “ecosystem” tetap kosong dan knowledge graph tak punya sisi.</li>
+<li style="margin-bottom: 5px;"><strong>Definisi 1 kalimat untuk ±8 topik utama</strong> (RTRW, RPPLH, P3KE, gravity analysis, dsb.) — mengubah halaman tag dari daftar jadi entri ensiklopedis; ini pintu utama audiens GIS.</li>
+<li><strong>Satu foto lapangan beresolusi tinggi</strong> untuk momen full-bleed, plus CV PDF jika ingin jalur recruiter tetap terlayani.</li>
+</ol>
+
+<p style="margin: 16px 0 0; font-size: 12px; color: #6b6152;">Sumber nilai: <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">src/styles/global.css</code>, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">src/layouts/BaseLayout.astro</code>, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">src/components/**</code>, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">src/pages/**</code>, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">docs/memory/DEBT.md</code>, <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">docs/memory/STATE.md</code> — repo <code style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;">Luthfi-Forma/knowledge-hub@main</code>.</p>
+
+</div>
+</doc-page>
+</x-dc>
+</body>
+</html>

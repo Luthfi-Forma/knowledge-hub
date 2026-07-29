@@ -5,8 +5,8 @@
 
 - Updated: 2026-07-29
 - Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). Tidak ada task aktif di
-  TASK.md Now.
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" dibuka** — perencanaan
+  selesai, T-45/T-46 sudah dikerjakan, kode dimulai dari T-47.
 
 ## Current status
 
@@ -48,6 +48,48 @@ RSS + robots.txt, Vercel Web Analytics.
 2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli (bukan sesi ini), atau berikan API key PSI. Lihat
    "Blockers" di bawah.
+
+## Sesi ini (M6 dibuka — perencanaan Atlas, 2026-07-29)
+
+User berkonsultasi dengan **Claude Design** di luar sesi ini dan membawa
+handoff lengkap bernama **"Atlas"** (zip di root repo → sekarang di-versi di
+`docs/design/atlas/`). Arahnya: **melebur dua identitas M5 jadi satu** —
+bahasa kartografis DATUM diangkat ke latar kertas terang — dan menaikkan
+**topik** jadi warga kelas satu karena audiens utama situs adalah komunitas
+GIS. Rail legenda permanen mengisi ~44% viewport yang hari ini kosong.
+
+Yang dikerjakan sesi ini adalah **persiapan, bukan kode Atlas**:
+
+- **T-45**: bundel handoff dipindah dari zip di root ke `docs/design/atlas/`
+  (8 file), pointer ditambah di `CLAUDE.md`.
+- **T-46**: **ADR-004** ditulis — ADR-003 jadi Superseded, tapi hanya
+  keputusan #3–#5-nya; **#1 (Tier-0) dan #2 (Tier-1 ≤2KB di layout global)
+  tetap berlaku** dan masih dipakai Atlas untuk drawer rail, filter legenda,
+  search.
+- ROADMAP (M6 + M7), TASK.md (T-45 s/d T-65 dalam 5 seksi), CLAUDE.md.
+
+**Tiga keputusan user (2026-07-29)** yang membentuk rencana:
+1. Dual-mode dihapus **total** — bukan diarsipkan, bukan jadi identitas ketiga.
+2. **M6 = struktur** dengan graceful empty state; konten editorial (20 definisi
+   topik, cross-link inline, angka `impact`) dipisah jadi **M7**.
+3. OG image ikut identitas Atlas (palet + typeface), bukan dibiarkan jadi utang
+   visual yang terlihat publik.
+
+**Satu koreksi nyata terhadap handoff, ditemukan dari repo bukan dari dokumen.**
+Handoff menyatakan *"nama token tidak berubah dari `global.css` — hanya
+nilainya"*. Tidak akurat: repo punya `--color-accent`, `--color-chart-1`,
+`--color-chart-2`; palet Atlas tidak memuat ketiganya. Empat modul
+scrollytelling menunjuk `var(--color-chart-1/2)` lewat konstanta lokal, jadi
+klaim **"nol edit React"** hanya bertahan kalau kedua token itu dipertahankan
+sebagai **alias** ke `--color-research`/`--color-project` — sudah masuk T-48.
+`--color-accent` tidak bisa dialias; ia dipakai lewat utility Tailwind di
+banyak `.astro` dan harus diganti per-callsite.
+
+Dua konsekuensi yang handoff tidak sebut, sekarang tercatat di ADR-004:
+`src/lib/og-image.ts` menghardcode palet lama sebagai hex + membaca 3 TTF
+Bodoni/Karla (tidak ikut remap token, ditangani T-61), dan mempensiunkan
+`FeaturedProjects` **mematikan carousel drag T-24** — satu dari dua fitur
+unggulan M4.
 
 ## Last session (M5 — DATUM, 2026-07-28 s/d 2026-07-29)
 
@@ -112,20 +154,23 @@ di `docs/TASK.md` (Done); rasionale arsitektur di ADR-003 dan
 
 ## Next steps
 
-1. Tidak ada task M5 aktif — tunggu arahan user untuk M6 atau permintaan
-   baru.
-2. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+1. **Mulai T-47** — bongkar mekanisme dual-mode. Ini task pertama yang
+   menyentuh kode Atlas, dan gate-nya keras:
+   `grep -rn "data-mode\|mode-toggle\|RegistrationSeam" src/` harus nol.
+   Lalu berurut T-48 → T-62; tiap seksi (S1–S5) harus `npm run build` hijau
+   sebelum lanjut.
+2. Verifikasi visual M6 memakai `astro preview`, **bukan** dev server — dev
+   server Vite pernah memberi sinyal font palsu di T-41. Pola yang terbukti
+   di M5: reload sungguhan, bukan mutasi-lalu-baca.
+3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-3. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog, menunggu
+   Kalau ini akhirnya jalan, jalankan **sebelum** T-47 supaya ada baseline
+   pra-Atlas untuk dibandingkan.
+4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog, menunggu
    keputusan user kapan pun.
-4. Kandidat M6 yang digerbangi (bukan dibunuh) selama brainstorming M5 —
-   lihat `docs/ROADMAP.md` "Digerbangi, bukan dibunuh": knowledge graph
-   SVG statis, digerbangi pada ≥20 post dan ≥15 cross-link inline
-   (hari ini nol cross-link ada di seluruh body MDX).
-5. Font Spectral (dari usulan tipografi Immersive awal) sengaja belum
-   di-self-host — baru relevan kalau ada prosa panjang sungguhan di
-   Immersive Mode (mis. kalau /posts/[slug] dapat komposisi Immersive
-   sendiri di masa depan).
+5. Font Spectral (dari usulan tipografi Immersive awal) **tidak lagi
+   relevan** — Atlas memutuskan satu keluarga (Archivo) mengerjakan display
+   dan body lewat sumbu `wdth`, plus IBM Plex Mono untuk notasi.
 
 ## Blockers
 

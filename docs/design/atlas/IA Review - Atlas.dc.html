@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+body { background: #ded6c2; margin: 0; }
+a { color: #2c4630; }
+a:hover { color: #171512; }
+</style>
+</helmet>
+
+<div style="max-width: 1240px; margin: 0 auto; background: #f2ebda; border-left: 1px solid #8e836a; border-right: 1px solid #8e836a; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; color: #171512;">
+
+<div style="display: flex; justify-content: space-between; gap: 24px; white-space: nowrap; padding: 12px 48px; border-bottom: 1px solid #171512; background: #e8e0cb; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">
+<span>Information Architecture Review — Atlas</span>
+<span>Tahap c · Audiens utama: komunitas GIS</span>
+</div>
+
+<div style="padding: 48px; display: flex; flex-direction: column; gap: 72px;">
+
+<section>
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">Premis</p>
+<h1 style="margin: 0 0 16px; font-family: Archivo; font-stretch: 125%; font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: .004em; max-width: 24ch;">Empat item nav, nol orphan</h1>
+<p style="margin: 0 0 12px; font-size: 17px; line-height: 1.62; max-width: 72ch;">Model konten Anda tiga-dimensi: <strong>tipe × topik × proyek</strong>. Navigasi hari ini hanya menawarkan tipe, sehingga dua dimensi lain jadi orphan. Karena audiens utama sekarang komunitas GIS, <strong>topik dinaikkan menjadi warga kelas satu</strong> — dan homepage berhenti jadi ringkasan blog, ia menjadi indeks itu sendiri.</p>
+<p style="margin: 0; font-size: 17px; line-height: 1.62; max-width: 72ch;">Konsekuensi terbesar: <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">/</code> dan <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">/explore</code> hari ini adalah dua halaman yang menampilkan hal yang sama dengan dua cara berbeda. Keduanya dilebur.</p>
+</section>
+
+<section>
+<p style="margin: 0 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">01 · Peta situs</p>
+<h2 style="margin: 0 0 24px; font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 40px; line-height: 1.05;">Sebelum → sesudah</h2>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+
+<div style="border: 1px solid #8e836a; background: #e8e0cb;">
+<p style="margin: 0; padding: 10px 14px; border-bottom: 1px solid #8e836a; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Hari ini — 4 item nav, 4 route orphan</p>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/ <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#4a4238;">hero · carousel 4 · latest 5 · contact</span></div>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/explore <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">daftar teks</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/photography <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">3 foto</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/about</div>
+<div style="border: 1px dashed #8e836a; background: #e8e0cb; padding: 8px 11px; font-size: 14px; color: #4a4238;">/#contact <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;">anchor</span></div>
+</div>
+<p style="margin: 6px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #a8481f;">Tak tertaut dari nav mana pun</p>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+<div style="border: 1px dashed #a8481f; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/tags</div>
+<div style="border: 1px dashed #a8481f; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/tags/[tag]</div>
+<div style="border: 1px dashed #a8481f; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/projects</div>
+<div style="border: 1px dashed #a8481f; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/projects/[name]</div>
+</div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/posts/[slug] <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">satu-satunya jalan ke tag</span></div>
+<div style="border: 1px dashed #8e836a; padding: 8px 11px; font-size: 13.5px; color: #4a4238;">+ toggle mode &amp; seam: 2 kontrol, 2 pohon DOM per halaman</div>
+</div>
+</div>
+
+<div style="border: 1px solid #171512; background: #f2ebda;">
+<p style="margin: 0; padding: 10px 14px; border-bottom: 1px solid #171512; background: #e8e0cb; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #4a4238;">Atlas — 4 item nav, semua terjangkau</p>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 8px;">
+<div style="border: 1px solid #171512; background: #e8e0cb; padding: 10px 12px;">
+<p style="margin: 0 0 3px; font-size: 15px; font-weight: 600;">/ — Sheet Index</p>
+<p style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; line-height: 1.5; color: #4a4238;">11 plate + rail legenda (tipe &amp; topik) + search. Menggantikan home <em>dan</em> /explore.</p>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/topics <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2c4630;">naik ke nav</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/projects <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#2c4630;">naik ke nav</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/topics/[topic] <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">+ definisi</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/projects/[name]</div>
+</div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/about <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">dossier + kontak nyata</span></div>
+<div style="border: 1px solid #171512; background: #f2ebda; padding: 8px 11px; font-size: 14px;">/posts/[slug] <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">prose 680 + rail marginalia</span></div>
+<p style="margin: 6px 0 0; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">Sekunder — footer &amp; rail, bukan nav utama</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+<div style="border: 1px solid #8e836a; background: #e8e0cb; padding: 8px 11px; font-size: 14px;">/explore/[type] <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">= index terfilter</span></div>
+<div style="border: 1px solid #8e836a; background: #e8e0cb; padding: 8px 11px; font-size: 14px;">/photography <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4a4238;">3 item</span></div>
+</div>
+<div style="border: 1px dashed #8e836a; padding: 8px 11px; font-size: 13.5px; color: #4a4238;">Dihapus: toggle, seam, <code style="font-family:'IBM Plex Mono',monospace;font-size:.9em;">[data-mode-view]</code>, /tags (→ redirect), /#contact di nav</div>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<p style="margin: 0 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">02 · Kedalaman klik</p>
+<h2 style="margin: 0 0 20px; font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 40px; line-height: 1.05;">Apa yang benar-benar berubah untuk pengunjung</h2>
+<table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+<thead><tr style="background: #e8e0cb;">
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Tugas</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Hari ini</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Atlas</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Mekanisme</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Menemukan semua karya bertopik <em>google-earth-engine</em></td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#a8481f;">4+ klik, harus lewat sebuah post</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">1 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;">Chip topik di rail, terlihat di setiap halaman</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Melihat hanya riset</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#4a4238;">2 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">1 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;">Legenda tipe = filter</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Post → repo/demo</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#4a4238;">1–2 klik ✓</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">1 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;">Blok proyek dipromosikan di rail post, bukan baris meta 14px</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Tahu bahwa 4 riset itu narasi interaktif</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#a8481f;">tidak pernah tahu</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">0 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;">Flag <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#a8481f;border:1px solid #a8481f;padding:0 4px;white-space:nowrap;">INTERACTIVE</span> di plate</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Memahami istilah RPPLH / P3KE / Skalogram</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#a8481f;">tidak tersedia</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">1 klik</td><td style="padding:9px 11px;border:1px solid #8e836a;">Halaman topik berdefinisi (konten dari Anda)</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;">Memilih identitas visual</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#4a4238;">2 kontrol tersembunyi</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;color:#2c4630;">dihapus</td><td style="padding:9px 11px;border:1px solid #8e836a;">Satu identitas; beban keputusan dikembalikan ke desain</td></tr>
+</tbody>
+</table>
+</section>
+
+<section>
+<p style="margin: 0 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">03 · Nav &amp; wayfinding</p>
+<h2 style="margin: 0 0 20px; font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 40px; line-height: 1.05;">Header sebagai collar lembar</h2>
+
+<div style="border: 1px solid #171512; background: #f2ebda; margin-bottom: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 20px; border-bottom: 1px solid #171512;">
+<span style="font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 17px; white-space: nowrap;">Afreza L. Hernanda</span>
+<div style="display: flex; align-items: center; gap: 4px;">
+<a href="#03" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#171512;border-bottom:2px solid #2c4630;white-space:nowrap;">Index</a>
+<a href="#03" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;">Topics</a>
+<a href="#03" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;">Projects</a>
+<a href="#03" style="display:inline-flex;align-items:center;min-height:44px;padding:0 12px;text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;white-space:nowrap;">About</a>
+<span style="display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-left:8px;padding:0 12px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4a4238;white-space:nowrap;">⌕ Search <span style="border:1px solid #c9bfa6;padding:0 4px;font-size:10.5px;">/</span></span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 20px; white-space: nowrap; padding: 7px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">
+<span>Sheet index · 11 plates · filter: research</span>
+<span>WGS84 · Compiled 2026</span>
+</div>
+</div>
+<ul style="margin: 0; padding-left: 18px; font-size: 15px; line-height: 1.6;">
+<li style="margin-bottom: 5px;"><strong>Empat item, semuanya halaman nyata.</strong> "Contact" keluar dari nav (ia hanya anchor) dan menjadi blok nyata di About + footer.</li>
+<li style="margin-bottom: 5px;"><strong>Photography turun ke sekunder.</strong> 3 item tidak layak sejajar dengan seluruh arsip; ia tetap hidup lewat kolom Photo di index dan tautan footer — memperbaiki temuan "bobot nav ≠ bobot konten".</li>
+<li style="margin-bottom: 5px;"><strong>Baris collar kedua adalah breadcrumb.</strong> Ia menyatakan posisi dalam notasi lembar ("Sheet index · filter: research") — menggantikan kebutuhan breadcrumb konvensional dan mengisi celah <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">aria-current</code> secara visual sekaligus semantik.</li>
+<li style="margin-bottom: 5px;"><strong>Search jadi kontrol permanen</strong> (tombol + pintasan <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">/</code>) bukan widget yang hanya ada di satu halaman; Pagefind di-restyle ke token Atlas.</li>
+<li><strong>Skip-link</strong> ke <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">#main</code> ditambahkan sebagai elemen pertama.</li>
+</ul>
+</section>
+
+<section>
+<p style="margin: 0 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">04 · Jaringan &amp; jalan buntu</p>
+<h2 style="margin: 0 0 20px; font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 40px; line-height: 1.05;">Setiap halaman punya langkah berikutnya</h2>
+<table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+<thead><tr style="background: #e8e0cb;">
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Halaman</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Jalan buntu hari ini</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Langkah berikutnya di Atlas</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">/posts/[slug]</td><td style="padding:9px 11px;border:1px solid #8e836a;">Related posts tampil identik dengan feed, jadi tak terbaca sebagai rekomendasi</td><td style="padding:9px 11px;border:1px solid #8e836a;">Rail marginalia: topik post, blok proyek (repo/demo), cross-link inline, lalu 3 plate terkait bergaya <em>berbeda</em> dari index</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">/topics/[topic]</td><td style="padding:9px 11px;border:1px solid #8e836a;">Daftar judul, lalu selesai</td><td style="padding:9px 11px;border:1px solid #8e836a;">Definisi 1 kalimat → plate → <em>topik bertetangga</em> (dihitung dari tag yang muncul bersama)</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">/projects/[name]</td><td style="padding:9px 11px;border:1px solid #8e836a;">Judul + 2 tautan + kartu; tanpa cerita</td><td style="padding:9px 11px;border:1px solid #8e836a;">Repo/demo sebagai kontrol primer + urutan post proyek sebagai kronologi + topik proyek</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">footer (semua halaman)</td><td style="padding:9px 11px;border:1px solid #8e836a;">Copyright + RSS saja</td><td style="padding:9px 11px;border:1px solid #8e836a;">Empat kolom: index per tipe · 6 topik teratas · proyek · kontak &amp; RSS</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">404</td><td style="padding:9px 11px;border:1px solid #8e836a;">Tombol "Back to home"</td><td style="padding:9px 11px;border:1px solid #8e836a;">Sheet index mini: 4 legenda tipe + search</td></tr>
+</tbody>
+</table>
+<p style="margin: 14px 0 0; font-size: 15px; line-height: 1.6; max-width: 74ch;"><strong>Prasyarat editorial:</strong> hari ini ada <em>nol</em> cross-link inline di seluruh body MDX, jadi rail marginalia lahir kosong. Tanpa 3–5 tautan silang per post dan definisi topik dari Anda, lapisan "jaringan" ini tetap struktur tanpa isi — dan knowledge graph yang digerbangi di roadmap tetap tak punya sisi untuk digambar.</p>
+</section>
+
+<section>
+<p style="margin: 0 0 4px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #2c4630;">05 · Dampak ke repo</p>
+<h2 style="margin: 0 0 20px; font-family: Archivo; font-stretch: 118%; font-weight: 700; font-size: 40px; line-height: 1.05;">Yang dihapus lebih banyak dari yang ditambah</h2>
+<table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+<thead><tr style="background: #e8e0cb;">
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Aksi</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">File</th>
+<th style="text-align:left;padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#4a4238;">Catatan</th>
+</tr></thead>
+<tbody>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;color:#a8481f;font-weight:600;">Hapus</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">components/home/RegistrationSeam.astro · lib/mode-toggle.ts · tombol di Header.astro · script pra-paint di BaseLayout.astro · blok <code>:root[data-mode='immersive']</code> + aturan <code>[data-mode-view]</code> di global.css</td><td style="padding:9px 11px;border:1px solid #8e836a;">Satu identitas ⇒ ADR-003 ditutup sebagai <em>superseded</em>, bukan dilanggar</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;color:#2c4630;font-weight:600;">Promosi</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">components/home/ImmersiveIndex.astro → components/index/SheetIndex.astro</td><td style="padding:9px 11px;border:1px solid #8e836a;">Sudah menurunkan posisi dari <code>type</code> + <code>date</code>; kini jadi indeks tunggal + rail</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;color:#2c4630;font-weight:600;">Promosi</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">components/about/ImmersiveDossier.astro → components/about/Dossier.astro</td><td style="padding:9px 11px;border:1px solid #8e836a;">Menjadi satu-satunya komposisi About</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-weight:600;">Ganti nama</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">pages/tags/** → pages/topics/**</td><td style="padding:9px 11px;border:1px solid #8e836a;">Redirect <code>/tags/:tag → /topics/:tag</code> di <code>vercel.json</code>; tautan di [slug].astro diperbarui</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-weight:600;">Gabung</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">pages/index.astro + pages/explore/index.astro</td><td style="padding:9px 11px;border:1px solid #8e836a;">/explore → redirect ke /. Hero · FeaturedProjects · LatestPosts · PostListItem dipensiunkan</td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;color:#2c4630;font-weight:600;">Baru</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">components/Plate.astro · LegendRail.astro · TopicChip.astro · Footer.astro (perluasan) · lib/topics.ts</td><td style="padding:9px 11px;border:1px solid #8e836a;">Satu wadah menggantikan PostCard + PostListItem; <code>lib/topics.ts</code> menghitung topik bertetangga dari <code>tags[]</code></td></tr>
+<tr><td style="padding:9px 11px;border:1px solid #8e836a;font-weight:600;">Schema</td><td style="padding:9px 11px;border:1px solid #8e836a;font-family:'IBM Plex Mono',monospace;">content.config.ts · content/topics/ (koleksi baru)</td><td style="padding:9px 11px;border:1px solid #8e836a;">Definisi topik sebagai koleksi tervalidasi + field opsional <code>impact</code> pada post untuk angka dampak</td></tr>
+</tbody>
+</table>
+<p style="margin: 14px 0 0; font-size: 15px; line-height: 1.6; max-width: 74ch;">Semua nama token warna dipertahankan, jadi 4 modul scrollytelling dan seluruh chart Recharts ikut pindah identitas <strong>tanpa satu edit React</strong>. Yang perlu disentuh di sisi React hanyalah penambahan <code style="font-family:'IBM Plex Mono',monospace;font-size:.88em;">useReducedMotion()</code> dan tabel data alternatif per chart — dua celah aksesibilitas nyata yang sudah berdiri sebelum redesign ini.</p>
+</section>
+
+<div style="display: flex; justify-content: space-between; gap: 24px; white-space: nowrap; padding-top: 16px; border-top: 1px solid #171512; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #4a4238;">
+<span>Berikutnya · d · High Fidelity Design</span>
+<span>Index · Topic · Post · Project · About</span>
+</div>
+
+</div>
+</div>
+</x-dc>
+</body>
+</html>

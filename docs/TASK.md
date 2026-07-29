@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-07-29
+- Updated: 2026-07-29 (M6/M7 dibuka)
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).
@@ -10,9 +10,50 @@
 
 ## Now
 
-Tidak ada. **M5 selesai** (satu pengecualian: T-36, lihat Backlog) — lihat
-`docs/memory/STATE.md` untuk snapshot lengkap. Sesi berikutnya mulai dari
-Backlog atau permintaan baru.
+**M6 — Atlas.** Spesifikasi: `docs/design/atlas/README.md`. Keputusan:
+[ADR-004](decisions/ADR-004-atlas-single-identity.md). Slicing lengkap +
+koreksi terhadap handoff:
+`C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
+Kerjakan berurut S1 → S5; tiap seksi harus `npm run build` hijau sebelum lanjut.
+
+### S1 — Fondasi
+
+T-45 dan T-46 sudah selesai (lihat Done) — sesi berikutnya mulai dari T-47.
+
+- [ ] T-47: bongkar mekanisme dual-mode — hapus `RegistrationSeam.astro`, `lib/mode-toggle.ts`, tombol toggle + script di `Header.astro`, script pra-paint di `BaseLayout.astro`, blok `:root[data-mode='immersive']` + aturan `[data-mode-view]` di `global.css`; lepas wrapper `[data-mode-view]` di `index.astro`/`explore/index.astro`/`about.astro` beserta `data-pagefind-ignore` yang menyertainya. Gate: `grep -rn "data-mode\|mode-toggle\|RegistrationSeam" src/` nol hasil (M6)
+- [ ] T-48: token Atlas di `@theme` — 9 warna per tabel handoff + `--color-line-strong` baru (batas kontrol, 3,2:1 menggantikan `--color-line` 1,5:1); **`--color-chart-1`/`--color-chart-2` dipertahankan sebagai alias** ke research/project (ini yang menjaga nol edit React — handoff keliru mengklaim nama token tidak berubah); `--color-accent` dihapus, tiap callsite utility diganti ke `--color-research`; 4 lebar (FIELD/SHELL 1240/RAIL 224/PROSE 680) menggantikan `--container-content`/`--container-prose`; skala spasi 4–72 + modul graticule 44px; **radius nol** di seluruh `src/` (M6)
+- [ ] T-49: tipografi — hapus 3 `<link>` Google Fonts (Bodoni Moda + Karla) di `BaseLayout.astro`; self-host IBM Plex Mono woff2 dengan pola `@font-face` yang sama seperti Archivo; `--font-display`/`--font-body` → Archivo, `--font-mono` → IBM Plex Mono; terapkan 7 tingkat skala (Sheet title 64 → Notation 12); perbaiki `posts/[slug].astro` yang bypass `--font-mono` (M6)
+
+### S2 — Komponen inti
+
+- [ ] T-50: `components/Plate.astro` — satu wadah 3 ukuran (lead/standard/compact), anatomi selalu sama (notasi tipe + nomor plate → judul → ringkasan → stamp koordinat); post tanpa cover pakai anatomi identik minus kolom gambar; hatch per tipe sebagai `repeating-linear-gradient` (nol file gambar). Pensiunkan `PostCard.astro` + `PostListItem.astro` + `RelatedPosts.astro` (M6)
+- [ ] T-51: `LegendRail.astro` + `TopicChip.astro` — rail 224px permanen di ≥1024px, drawer via tombol *Legend* di bawahnya (Tier-1 vanilla, ADR-003 #2 masih berlaku); legenda tipe dapat diklik untuk memfilter; chip satu bentuk dua state, target sentuh 44px lewat area klik bukan padding visual. Menggantikan 3 gaya tag yang ada (M6)
+- [ ] T-52: chrome — `Header.astro` jadi collar 2 baris (wordmark + 4 nav + search; baris 2 breadcrumb notasi turunan state filter); **skip-link ke `#main` sebagai elemen pertama `<body>`** (kegagalan WCAG 2.4.1 hari ini); `aria-current="page"`; satu bahasa kontrol 4 tingkat menggantikan 4 bahasa tombol, semua `min-height: 44px` + ring fokus `2px solid var(--color-research)` offset 2px; `Footer.astro` jadi 4 kolom (M6)
+
+### S3 — IA & route
+
+- [ ] T-53: `lib/topics.ts` — `topicCounts(posts)` dan `neighbours(topic, posts, limit=6)` dari co-occurrence `tags[]`, tanpa daftar manual; pakai ulang `getPublishedPosts()`/`POST_TYPES` dari `lib/posts.ts`. Tambah koleksi `topics` + field opsional `impact` di `content.config.ts`. **M6 hanya schema + loader** — isinya M7, sampai itu empty state yang anggun bukan placeholder publik (M6)
+- [ ] T-54: rename route + redirect — `pages/tags/**` → `pages/topics/**` beserta tiap tautannya; `explore/index.astro` dilebur ke `/`; **`vercel.json` baru** (belum ada di repo) dengan 308: `/explore → /`, `/tags → /topics`, `/tags/:tag → /topics/:tag`. `/posts/[slug]` **tidak** berubah — ini yang menjaga sitasi eksternal ke post Cikarang (M6)
+- [ ] T-55: `/` jadi Sheet Index — promosikan `home/ImmersiveIndex.astro` → `index/SheetIndex.astro` (sudah menurunkan penempatan dari `type`+`date`, tinggal ganti kolom-per-tipe jadi grid plate + rail); filter tipe **tercermin di URL** supaya bisa dibagikan & tetap SSG, breadcrumb collar ikut berubah. Pensiunkan `Hero`, `FeaturedProjects` (carousel drag T-24 ikut mati — disengaja, ADR-004), `LatestPosts`, `explore/PostList`, `explore/TypeFilter`, `SectionHeading`. `/explore/[type]` tetap ada sebagai route sekunder (M6)
+- [ ] T-56: `/topics` (indeks 20 topik, naik ke nav) + `/topics/[topic]` (notasi hitungan → h1 → definisi atau empty state → grid plate → topik bertetangga dari `neighbours()`) (M6)
+- [ ] T-57: `/posts/[slug]` + rail marginalia — prose 680px/68ch; rail berisi stamp lembar (koordinat, tanggal, plate, slot `impact`) → blok proyek (repo/demo naik jadi kontrol, dari baris meta 14px) → slot cross-link (kosong sampai M7: sembunyikan bloknya, jangan tampilkan placeholder) → 3 plate terkait **bergaya berbeda dari index** supaya terbaca sebagai rekomendasi; `TableOfContents.astro` diselaraskan (M6)
+- [ ] T-58: sisa route — `/projects/[name]` (repo/demo sebagai kontrol primer/secondary + kronologi + topik proyek); `/about` promosikan `about/ImmersiveDossier.astro` → `about/Dossier.astro` sebagai satu-satunya komposisi + blok kontak nyata (`Contact.astro` dilebur, `/#contact` keluar dari nav); `/photography` grid plate compact; `404` sheet index mini (M6)
+
+### S4 — Aksesibilitas & search
+
+- [ ] T-59: satu-satunya kerja sisi React — (a) `useReducedMotion()` di 4 modul `lib/scrollytelling/*.tsx` (hari ini hanya shell `islands/Scrollytelling.tsx` yang memanggilnya, gap yang sudah diakui di `global.css` dan RULES.md); (b) **tabel data alternatif tiap chart Recharts** (kegagalan WCAG 1.1.1 hari ini); verifikasi ulang keempat modul tetap nol hex literal setelah T-48 (M6)
+- [ ] T-60: restyle Pagefind ke token Atlas (override `--pagefind-ui-*`), search dibuka dari collar atau pintasan `/`, ditutup `Esc` → **tutup DEBT #1** (isi kolom "Closed by", baris tetap — file append-only) (M6)
+
+### S5 — Aset & penutupan
+
+- [ ] T-61: OG image ikut Atlas — ganti 5 hex literal palet lama di `lib/og-image.ts`, tukar TTF yang dibaca ke Archivo + IBM Plex Mono, hapus `lib/og-fonts/bodoni-800.ttf` + `karla-400.ttf` + `karla-600.ttf`; verifikasi lewat `/og/default.png` + satu `/og/[slug].png` di build production (M6)
+- [ ] T-62: tutup M6 — jalankan 14 item verification checklist handoff satu per satu; remeasure berat transfer 4 halaman (pola T-44) ke `docs/TESTING.md`; perbarui ROADMAP/STATE/CHANGELOG/DEBT/LESSONS + RULES.md (durasi motion **120ms hover / 200ms layout / maks 300ms** menggantikan konvensi 300/220ms M5) (M6)
+
+### M7 — lapisan editorial (setelah M6)
+
+- [ ] T-63: tulis 20 definisi topik 1 kalimat → `src/content/topics/*.md` (M7)
+- [ ] T-64: 3–5 cross-link inline per post di body MDX — hari ini **nol** di seluruh repo; mengisi rail marginalia T-57 sekaligus melewati setengah gerbang knowledge graph (M7)
+- [ ] T-65: angka `impact` untuk sebagian post → tampil di stamp lembar (M7)
 
 ## Backlog
 
@@ -22,6 +63,8 @@ Backlog atau permintaan baru.
 
 ## Done
 
+- [x] T-45: pindahkan bundel handoff Claude Design ke `docs/design/atlas/` — 8 file diekstrak dari zip di root repo, `support.js` sengaja ditaruh satu folder dengan 5 `.dc.html` supaya file design reference bisa dibuka langsung di browser tanpa server; zip dihapus dari root; pointer ditambah di `CLAUDE.md` "Documentation map". `README.md` di dalam bundel adalah spesifikasi high-fidelity lengkap (token, komponen, IA, 14 item verification checklist); `.dc.html` adalah design reference, **bukan kode produksi untuk disalin** (M6) — 2026-07-29
+- [x] T-46: ADR-004 — satu identitas Atlas menggantikan dual-mode. ADR-003 ditandai Superseded lewat catatan di header, bagian Decision-nya tidak diedit (ADR-process OS); yang mati hanya keputusan #3–#5 (dual-mode sebagai preferensi client via `data-mode`), sedangkan **#1 (Tier-0 platform feature) dan #2 (klausa 4 ADR-002 = larangan hidrasi framework, satu script vanilla Tier-1 ≤2KB boleh di layout global) tetap berlaku** dan dibawa apa adanya — Atlas masih memakainya untuk drawer rail, filter legenda, dan search. Tiga konsekuensi negatif dicatat eksplisit supaya tidak hilang dalam diff besar: registration seam T-42 mati, carousel drag T-24 mati (konsekuensi tidak langsung dari mempensiunkan `FeaturedProjects`), URL indeks pindah. Satu alternatif baru dicatat untuk masa depan: `data-mode` sebagai dark mode biasa — ditolak sekarang karena menurunkan 9 token berperan ketat ke varian gelap adalah keputusan desain tersendiri, tapi jadi lebih murah setelah Atlas karena tinggal satu pohon DOM (M6) — 2026-07-29
 - [x] T-01: init proyek Astro + Tailwind + MDX, struktur folder content collection `posts` (M1) — 2026-07-16
 - [x] T-02: definisikan schema frontmatter zod + 1 post contoh yang lolos validasi; buktikan build gagal pada frontmatter invalid (M1) — 2026-07-16
 - [x] T-03: buat layout dasar + halaman Home (Hero, Featured, Latest, Contact) dan Explore sederhana (M1) — 2026-07-16
