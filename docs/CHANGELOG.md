@@ -14,6 +14,38 @@ the project starts tagging releases.
 
 ### Added
 
+- **Immersive Mode** — a second, self-hosted visual identity ("DATUM")
+  alongside the existing cream-paper "Reading Mode," switchable via a
+  persistent header toggle or a draggable registration seam on the
+  homepage. Near-black palette (`#05090C`), a self-hosted variable Archivo
+  typeface (width + weight axes), and a distinct composition on Home
+  (`ImmersiveIndex.astro` — a survey-sheet index of all posts organized by
+  type, each with a real-world coordinate), `/explore` (reuses the same
+  index), and `/about` (`ImmersiveDossier.astro`). Every other page
+  automatically inherits the Immersive color/font palette without a
+  bespoke composition. Both identities ship in the same static HTML —
+  ADR-003 remaps the same 8 color tokens under `:root[data-mode=
+  'immersive']` rather than adding a second island or route, so Reading
+  Mode pays zero extra bytes for Immersive Mode's existence.
+- Registration seam: a draggable handle on the homepage that peels back
+  Reading Mode to reveal Immersive Mode underneath in real time
+  (`clip-path`, pointer events, full keyboard support via arrows/Home/
+  End), snapping to whichever mode has the majority on release.
+- Cross-document view transitions (`@view-transition { navigation: auto }`)
+  — same-origin page navigations crossfade instead of hard-cutting, pure
+  CSS with no client-side router.
+- `repo:`/`demo:` frontmatter on all three `type: project` posts, using
+  real GitHub URLs, plus generated editorial cover art for each (hand-
+  authored SVG rasterized at build time — same tooling as the OG image
+  generator) — each cover encodes a real fact from its post rather than
+  being decorative or a screenshot.
+- Optional `coordinates` field on the content schema (a real-world DMS
+  string, display-only) — filled for 10 of 11 posts.
+- Motion rules consolidated into `docs/RULES.md` (T-44): reduced-motion
+  handling, animation-loop restrictions, focus/keyboard requirements for
+  interactive controls, and the "first-paint-correct values belong in
+  CSS, not script" pattern that recurred throughout M5.
+
 - Project scaffolded from Claude Engineering OS (2026-07-16).
 - Astro 7 + Tailwind CSS v4 + MDX site: content collection `posts` with a
   zod-validated schema (T-01, T-02).
@@ -105,6 +137,16 @@ the project starts tagging releases.
 - Featured Projects on Home is now a drag/swipe carousel (`scroll-snap` +
   vanilla-JS click-drag and prev/next buttons), per ADR-002 tier 1 — works
   as a plain scrollable row with zero JS (T-24).
+- ADR-002 clause 4 clarified (ADR-003, T-37): the global-layout island ban
+  applies to framework hydration, not to every byte of JavaScript — a
+  single Tier-1 vanilla script (the mode toggle) is now explicitly
+  permitted there, budgeted at ≤2KB gzip.
+- All 4 scrollytelling data modules: chart labels, captions, and citation
+  locators translated from Indonesian to English (T-34) — the scope turned
+  out far larger than the handful of strings originally flagged, though
+  established domain loanwords already used in the surrounding English
+  prose (RTRW, Skalogram, kecamatan, IPD/IDM, P3KE, AMDAL) were
+  deliberately kept as-is.
 
 ### Removed
 
@@ -118,3 +160,24 @@ the project starts tagging releases.
   "CDMP-Jabodetabek") instead of naively title-casing the URL slug.
 - Mobile header nav overflow at 375px, exposed by adding the fourth
   "Photography" link (T-19).
+- The brief's success criterion — a post reaching its project's repo/demo
+  in ≤2 clicks — was broken at every hop: the site's one `repo:` link
+  pointed at the wrong GitHub org (404), the three project posts had
+  neither `repo:` nor `demo:` set, and "Project: X" on the post page
+  rendered as plain text instead of a link to the project hub. All fixed
+  (T-31, T-32).
+- `public/portrait.png` was a 982KB raw PNG serving a 128px avatar on
+  `/about`; moved to `astro:assets` (T-35), −98.8% file size.
+- Two `repeat: Infinity` animations in the Cikarang scrollytelling charts
+  — a WCAG 2.2.2 (Level A) pause-control failure — now play a finite
+  number of times (T-35).
+- `--font-mono` was referenced 8 times across the scrollytelling shell but
+  never declared, silently falling back to Tailwind's default stack;
+  now explicit (T-35).
+- A keyboard user could never focus the registration seam's grip to begin
+  a drag — it was `display:none` until a drag was already in progress,
+  and a hidden element can't receive focus. Found via testing; the grip
+  is now always rendered and focusable (T-42).
+- The registration seam's grip sat half off-screen at its 0%/100% resting
+  positions on narrow viewports; clamped to stay fully on-screen at every
+  width (T-42).

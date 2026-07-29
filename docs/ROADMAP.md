@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-18
+- Updated: 2026-07-29
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -12,21 +12,26 @@
 | M2 | Explore & keterhubungan | Filter tag, related posts, project hub pages, Pagefind search; konten + foto portfolio lama termigrasi | done |
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics | done |
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
-| M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; baseline Lighthouse tercatat | in progress |
+| M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
+
+\* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
+terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
+macet di polling, API PSI kena rate-limit dari dua jalur berbeda, dicoba
+dua kali di sesi yang berbeda), dan user secara eksplisit menunda ini
+(2026-07-28). Pengganti sementara (berat transfer produksi nyata via
+`curl`, bukan skor Lighthouse resmi) tercatat di `docs/TESTING.md`.
 
 Custom domain dan arsip repo lama (awalnya bagian M3) ditunda eksplisit oleh
 user — lihat T-20/T-21 di TASK.md Backlog.
 
 ## Current focus
 
-**M5 — DATUM.** Dipicu dokumen visi "Knowledge Hub 2.0" milik user, lalu
-dipersempit lewat brainstorming 14 agent (2 workflow). Tujuan yang menentukan
-arah: user menyatakan target 12 bulannya adalah **situsnya sendiri sebagai
-bukti kemampuan teknis** — pengunjung harus terkesan pada cara situs dibuat,
-bukan hanya isinya. Itu sebabnya identitas kedua dibangun, bukan sekadar
-konten ditambah.
+M1–M5 selesai (M5 dengan satu pengecualian tercatat, lihat catatan tabel
+milestone). Tidak ada task aktif di TASK.md Now — sesi berikutnya mulai
+dari Backlog (T-20/T-21/T-36) atau permintaan baru, termasuk kandidat M6
+yang digerbangi selama M5 (lihat "Digerbangi, bukan dibunuh" di bawah).
 
-Rencana lengkap (arah visual, skor juri, daftar yang dibunuh):
+Rencana M5 lengkap (arah visual, skor juri, daftar yang dibunuh):
 `C:\Users\Luthfi\.claude\plans\c-users-luthfi-desktop-knowledge-hub-m5-squishy-gadget.md`.
 
 ## Phase detail
@@ -81,18 +86,33 @@ kedua **Immersive Mode** dirancang dari nol dengan konsep *seri lembar peta*
 
 - **S1 — Etalase.** Kriteria sukses brief (`post → project hub → repo/demo`
   dalam ≤ 2 klik) hari ini putus di setiap sambungan; ini diperbaiki lebih
-  dulu karena murah dan terverifikasi lewat baca diff.
+  dulu karena murah dan terverifikasi lewat baca diff. Termasuk cover art
+  project (SVG editorial digenerate, bukan screenshot, atas arahan user).
 - **S2 — Fondasi dual-mode.** ADR-003, blok remap token di `@layer base`,
   `ModeController` Tier-1 pra-paint. Kunci arsitekturnya: **remap 8 token
   yang sudah ada, bukan bikin token paralel** — terverifikasi 0 hex literal
   dan 72 `var(--color-*)` di 4 modul scrollytelling, sehingga seluruh situs
   ikut berganti identitas tanpa edit React.
-- **S3 — Identitas DATUM** di homepage (collar, graticule, plate, legenda
-  sebagai filter). Tipografi Immersive ditetapkan di sini.
+- **S3 — Identitas DATUM** di homepage (`ImmersiveIndex.astro`): collar
+  bar atas/bawah (disederhanakan dari frame 4-sisi *fixed* di brainstorming
+  awal — tick lintang & crosshair SVG dilewati, tidak memetakan apa pun
+  nyata), field graticule CSS murni, plate berkoordinat asli (field
+  `coordinates` baru di schema, diisi 10/11 post), legenda kolom sekaligus
+  filter ke `/explore/[type]`. Tipografi Immersive: satu keluarga variable
+  font self-hosted, Archivo (sumbu `wdth`+`wght`) — disederhanakan dari
+  usulan awal 3-keluarga (Archivo Expanded/Spectral/Spline Sans Mono);
+  Spectral ditahan sampai ada prosa panjang sungguhan di Immersive.
 - **S4 — Registration seam.** Wipe `clip-path` di bawah jari pengunjung,
-  pointer + keyboard, tanpa `rAF`, tanpa clone DOM.
-- **S5 — Perluasan + pengukuran.** `/explore` + `/about`, layout mobile
-  untuk collar, ukur ulang Lighthouse, aturan motion ke `docs/RULES.md`.
+  pointer + keyboard, tanpa `rAF`, tanpa clone DOM — menyeret dua tree
+  `[data-mode-view]` yang sudah ada dari S3. Plus `@view-transition
+  { navigation: auto }` CSS murni untuk crossfade antar halaman.
+- **S5 — Perluasan + pengukuran.** `/explore` (pakai ulang `ImmersiveIndex`)
+  + `/about` (komposisi baru, `ImmersiveDossier.astro`, bahasa visual sama
+  tanpa hatch). Kekhawatiran layout mobile collar di deskripsi task asli
+  ternyata sudah tidak berlaku — collar S3 sudah versi sederhana, cukup
+  dicek ulang di 375px. Aturan motion dikonsolidasi ke `docs/RULES.md`
+  (bukan file `MOTION.md` baru). Baseline Lighthouse tetap terbuka (T-36,
+  lihat catatan di tabel milestone atas).
 
 ## Icebox
 

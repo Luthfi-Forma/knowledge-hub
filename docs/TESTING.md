@@ -115,6 +115,49 @@ UI in a real browser, or `npx lighthouse` if Node + Chrome are available
 locally) for the four audit categories (Performance, Accessibility, Best
 Practices, SEO) plus Core Web Vitals (LCP, CLS, TBT) on both routes above.
 
+## Post-M5 remeasurement (T-44, 2026-07-29)
+
+Retried the PageSpeed Insights API before writing this off again — still
+**HTTP 429** (keyless quota), same as T-36. T-36 stays genuinely open;
+this is not a new attempt superseding it, just confirmation the blocker
+hasn't cleared on its own. Re-ran the same `curl`-based weight measurement
+from T-36 against the now-deployed M5 build, across every route M5 touched:
+
+| Route | HTML | TTFB |
+|---|---|---|
+| `/` | 30.4 KB | 0.12 s |
+| `/explore` | 25.5 KB | 0.44 s |
+| `/about` | 42.7 KB | 0.36 s |
+| `/posts/rpplh-south-papua` | 37.7 KB | 0.49 s |
+
+HTML grew on every route — expected, since each now ships **both**
+Reading and Immersive markup in one document (ADR-003's chosen tradeoff:
+paid in HTML bytes to every visitor, avoided paying in a second island, a
+second route tree, or a runtime fetch). The homepage's own HTML roughly
+doubled (17.7 KB → 30.4 KB) primarily from the DATUM index's 11 plates.
+
+**The number that actually matters — does Reading Mode pay any JS/font
+cost for Immersive Mode existing — checked directly:**
+
+- Homepage JS: `Header.astro` script (397 B br) + `RegistrationSeam`
+  script (615 B br) ≈ **1.0 KB br total**, comfortably under ADR-003's 2
+  KB budget for the Tier-1 mode mechanism.
+- `archivo-variable-latin.woff2` (T-41's self-hosted Immersive typeface):
+  **zero occurrences** in the default-mode homepage HTML — confirms the
+  lazy `@font-face` behavior verified in T-41 still holds against the real
+  deployment, not just the local preview.
+- Scrollytelling bundle (`/posts/rpplh-south-papua`, the heaviest route
+  type): **219,838 bytes br (~215 KB)** total across `client.js` +
+  `mode-toggle.js` + `react-dom.js` + `PieChart.js` + `Scrollytelling.js` +
+  the header script — versus **~220 KB** measured in T-36, before any M5
+  dual-mode code existed. The entire S1–S5 addition (ADR-003 mechanism,
+  DATUM composition, Archivo font, registration seam, view transitions)
+  added under 1 KB to this page's JS weight.
+
+This is still not a Lighthouse score — no CWV timing, no accessibility or
+SEO audit categories — see T-36 in `docs/TASK.md` Backlog for what's still
+needed and from whom.
+
 ## Known gaps
 
 - No automated unit/integration/e2e test suite. Coverage today comes from

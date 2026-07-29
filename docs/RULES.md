@@ -1,6 +1,6 @@
 # Project Rules — knowledge-hub
 
-- Updated: 2026-07-22
+- Updated: 2026-07-29
 
 This project follows Claude Engineering OS standards by default (see
 `CLAUDE.md`, "Standards in force"). **This file records only the deltas** —
@@ -40,3 +40,64 @@ harvest-lessons candidate rather than patched silently mid-migration.
   atau `status` selain `draft` (lihat content model di `docs/ARCHITECTURE.md`).
 - Aturan *content-first*: tiap milestone wajib menambah konten nyata, bukan
   hanya fitur.
+
+## Motion rules (M5, T-44)
+
+Dikonsolidasi dari pola yang benar-benar dipakai selama M5 — bukan sistem
+token baru, murni penulisan ulang apa yang sudah terbukti bekerja supaya
+kerja berikutnya (termasuk perluasan Immersive di M6+) mengikuti pola yang
+sama, bukan menemukan ulang.
+
+- **Satu sumber kebenaran untuk CSS, satu untuk JS — jangan campur.**
+  Motion berbasis CSS (semua `transition`/`animation` di `.astro` dan
+  `global.css`) otomatis dinetralkan oleh net global di `global.css`
+  (`@media (prefers-reduced-motion: reduce)`, sengaja *unlayered* +
+  `!important` supaya menang atas segala `@layer` dan `<style>` scoped).
+  Motion berbasis JS (React `motion/react` di island scrollytelling) **tidak**
+  tersentuh net itu — wajib panggil `useReducedMotion()` sendiri. Jangan
+  buat mekanisme reduced-motion kedua di scoped `<style>` manapun; jika
+  butuh pengecualian, tambah selector ke net yang sudah ada.
+- **Pseudo-element non-standar butuh entry sendiri di net reduced-motion.**
+  `*::before`/`*::after` tidak mencakup `::view-transition-*` — keduanya
+  pseudo-element berbeda yang dibuat browser untuk View Transitions.
+  Ditemukan lewat T-42; entry terpisah sudah ada di `global.css`. Pola ini
+  berlaku untuk pseudo-element non-standar apa pun ke depannya (cek
+  eksplisit, jangan asumsi wildcard menjangkau semuanya).
+- **Nol animasi berulang tanpa kontrol jeda.** `repeat: Infinity`/`loop`
+  dilarang — ditemukan sebagai pelanggaran WCAG 2.2.2 Level A nyata di T-35
+  (dua chart scrollytelling), diperbaiki jadi hitungan putaran terbatas.
+  Kalau ide desainnya memang butuh gerak ambien terus-menerus, itu tandanya
+  idenya salah untuk situs ini, bukan tandanya perlu tombol jeda.
+- **Kontrol interaktif harus fokusabel di keadaan istirahat, bukan cuma
+  saat sedang dipakai.** Ditemukan sebagai bug aksesibilitas nyata di T-42:
+  grip registration seam awalnya `display:none` sampai drag dimulai — user
+  keyboard tak pernah bisa fokus untuk *memulai* drag (masalah ayam-telur).
+  Elemen `tabindex="0"`/`role` interaktif apa pun harus selalu ada di DOM
+  dan fokusabel; sembunyikan cuma bagian dekoratifnya (garis panduan, dll),
+  bukan kontrolnya.
+- **Posisi/nilai awal yang harus benar di first paint ditulis di CSS, bukan
+  diserahkan ke script yang jalan setelah paint.** Pola yang sudah terbukti
+  di seluruh dual-mode: warna/tipografi Immersive (`:root[data-mode=
+  'immersive']` di `@layer base`) dan posisi awal grip seam
+  (`:root[data-mode='immersive'] .seam-stage { --seam: 100% }`) — keduanya
+  sengaja diset lewat selector CSS yang match sebelum browser pernah
+  mengecat frame pertama, bukan lewat `<script>` yang memperbaikinya
+  belakangan. Ini bukan cuma soal linimasa render: script yang jalan
+  setelah elemen ter-render lalu memutasi custom property CSS-nya juga
+  ternyata tidak reliably ter-verifikasi di tooling browser sesi Claude Code
+  ini (lihat `docs/memory/LESSONS.md`, entri T-39 dan T-42) — jadi menaruh
+  nilai awal di CSS sekaligus menghindari kelas bug ini dan mempercepat
+  first paint di browser sungguhan.
+- **Durasi yang sudah dipakai** (bukan token formal, konvensi longgar untuk
+  konsistensi): 300ms `ease` untuk pergantian warna/latar mode (transisi
+  di `body`); 220ms `ease` untuk settle registration seam (`clip-path` dan
+  posisi grip). Keduanya "snappy", bukan lambat/dramatis — cocok dengan
+  identitas situs yang restrained. Pakai kisaran ini untuk transisi baru
+  kecuali ada alasan spesifik untuk berbeda; jangan bikin sistem token
+  durasi formal untuk ini kecuali kebutuhannya benar-benar tumbuh melampaui
+  segelintir kasus ad-hoc yang ada sekarang.
+- **Island (React/framework apa pun) tidak pernah di layout global** — ini
+  aturan ADR-002/ADR-003, bukan aturan motion baru, tapi motion-nya sendiri
+  jadi konsekuensi langsung: transisi mode dan seam dikerjakan Tier-1
+  vanilla (CSS + `pointerdown`/`pointermove`/`keydown`), bukan React,
+  persis supaya tidak melanggar aturan itu.

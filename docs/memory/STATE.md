@@ -3,114 +3,142 @@
 <!-- SNAPSHOT file: overwrite it, do not append. Updated at every session close
      by /project-status, grounded in git log — not recall. -->
 
-- Updated: 2026-07-22
-- Milestone: M1–M4 selesai (see docs/ROADMAP.md). Tidak ada task aktif di TASK.md Now.
+- Updated: 2026-07-29
+- Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
+  Lighthouse, lihat "Blockers" di bawah). Tidak ada task aktif di
+  TASK.md Now.
 
 ## Current status
 
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. Situs punya
-11 post nyata, Home (dengan carousel drag di Featured Projects), Explore
-(filter + search Pagefind), detail post (+TOC, reading time, related posts,
-OG image per post — semua diskip untuk post scrollytelling), halaman tag,
-project hub, About dengan timeline interaktif, `/photography`, 404 custom,
-sitemap + RSS + robots.txt, Vercel Web Analytics. Identitas visual final
-(kertas krem `#F5EFE1`, ink `#18140F`, aksen hijau `#38523A`, Bodoni Moda +
-Karla) diterapkan penuh.
+(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. 11 post
+nyata. Situs sekarang punya **dua identitas visual penuh**, dipilih
+pengunjung lewat toggle persisten di Header atau registration seam yang
+bisa diseret di homepage:
 
-**Baru (M4, sesi ini):** situs sekarang punya interaktivitas client-side
-per ADR-002 (two-tier: vanilla script vs. React island), dengan 4 dari 4
-post `type: research` sudah jadi scrollytelling — narasi MDX statis
-digantikan total (bukan ditambah) oleh React island: hero besar, kolom teks
-+ viz sticky yang berganti mengikuti scroll, panel Sources, chart bersumber
-jelas. Situs tetap zero-JS SSG di luar route-route ini; bundle React
-(~700KB) terverifikasi hanya ter-load di 4 halaman post itu.
+- **Reading Mode** (default) — identitas krem final M3: kertas krem
+  `#F5EFE1`, ink `#18140F`, aksen hijau `#38523A`, Bodoni Moda + Karla.
+  Tidak diubah sedikit pun selama M5.
+- **Immersive Mode** ("DATUM") — identitas kedua dari nol: hampir-hitam
+  `#05090C`, teks bone `#DBE2DE`, aksen hijau cerah `#5A8D5D`, tipografi
+  Archivo (variable font, sumbu `wdth`+`wght`, self-hosted). Homepage,
+  `/explore`, dan `/about` masing-masing punya komposisi Immersive sendiri
+  (DATUM index berkolom-per-tipe, atau dossier untuk About); halaman lain
+  otomatis ikut berganti palet/font lewat remap token tanpa komposisi
+  bespoke.
 
-**Aksi tersisa untuk user (bukan kode):** aktifkan Web Analytics manual di
-dashboard Vercel (belum berubah dari sesi lalu — toggle akun, tidak bisa
-disentuh dari kode).
+Mekanisme dual-mode (ADR-003): remap 8 custom property CSS yang sama di
+`:root[data-mode='immersive']`, **bukan** island kedua atau route
+terpisah — nol fetch runtime, nol duplikasi build, nol duplikasi indeks
+Pagefind. Terverifikasi: klausa 4 ADR-002 ("tidak pernah island di layout
+global") tetap utuh — toggle dan seam keduanya Tier-1 vanilla, bukan React.
 
-## Last session
+Situs juga tetap punya semua fitur M1–M4: carousel drag Featured Projects,
+Explore (filter + search Pagefind), detail post (+TOC, related posts, OG
+image — diskip untuk 4 post scrollytelling), halaman tag, project hub
+(sekarang dengan repo/demo link nyata + cover art digenerate — lihat di
+bawah), About dengan timeline interaktif, `/photography`, 404, sitemap +
+RSS + robots.txt, Vercel Web Analytics.
 
-**2026-07-22**: Migrasi ke Claude Engineering OS v1.1 (ADR-006 di repo OS).
-`.claude/settings.json` menambahkan 2 hook non-blocking:
-`commit_message_gate` + `code_quality_reminder`. `data_validation_check`
-dan `perf_reminder` **sengaja tidak dipasang** — project ini tidak punya
-data JSON/GeoJSON sama sekali dan tidak ada komponen map/render (ini blog
-konten, bukan aplikasi peta). Gap diketahui: `code_quality_reminder`
-hanya cover `.ts/.tsx/.js/.jsx/.py`, **tidak** `.astro`/`.mdx` — padahal
-mayoritas source project ini (27 `.astro` + 11 `.mdx` vs 7 `.ts` + 5
-`.tsx`). Dicatat di `docs/RULES.md` sebagai kandidat harvest-lessons
-(perbaikan level-OS, bukan tambal per-project). Diuji dengan payload
-nyata: nudge muncul di file `.tsx` scrollytelling, diam di `.astro`.
-Tidak ada perubahan konten/fitur.
+**Aksi tersisa untuk user (bukan kode):**
+1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
+   M3 — toggle akun, tidak bisa disentuh dari kode).
+2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
+   browser asli (bukan sesi ini), atau berikan API key PSI. Lihat
+   "Blockers" di bawah.
 
-**2026-07-21** (dua sesi berurutan, di-summarize bersama):
+## Last session (M5 — DATUM, 2026-07-28 s/d 2026-07-29)
 
-Sesi 1 — T-22 s/d T-25: T-22 lebur `type: journal` ke `article` (cuma 1
-post terpengaruh). T-23 polish baca ala Medium (drop cap, pull-quote,
-measure 42rem) khusus `type: article`. T-24 carousel drag di Featured
-Projects — vanilla `<script>` + `scroll-snap`, tier 1 ADR-002, zero
-framework. T-25 (+ ADR-002 tertulis dulu): island React pertama situs —
-`@astrojs/react` + `motion` + `recharts`, shell reusable
-`src/islands/Scrollytelling.tsx` (sticky viz swap via
-`IntersectionObserver`, Sources panel, keyboard nav, dock mobile), pilot di
-`cikarang-industrial-settlement-pattern` — waktu itu masih **append**
-(narasi lama + island keduanya render).
+Dipicu dokumen visi "Knowledge Hub 2.0" milik user. Brainstorming 14 agent
+(2 workflow) menemukan situs gagal memenuhi kriteria suksesnya sendiri
+(`post → project hub → repo/demo` ≤ 2 klik, putus di setiap sambungan) —
+diperbaiki lebih dulu (S1) sebelum kerja visual apa pun. Tujuan yang
+menentukan seluruh arah: user menyatakan target 12 bulannya adalah
+**situsnya sendiri sebagai bukti kemampuan teknis** — itu sebabnya
+identitas kedua dibangun, bukan sekadar konten ditambah.
 
-Sesi 2 (setelah user lihat hasil live di Vercel) — T-27 s/d T-30: user minta
-full-replace, bukan append. T-27 restrukturisasi `[slug].astro`: skip
-`<h1>`/dek/cover/TOC/body MDX untuk post scrollytelling, meta row tanpa
-"min read", generalisasi gating (`isScrollytelling` + branch `post.id`
-eksplisit per post — pola mekanis 1 import + 1 blok untuk post berikutnya).
-User lalu kirim 3 dokumen sumber (PDF) untuk 3 post research lain, dengan
-instruksi: Bontang dibahas lebih luas (bagian kajian se-provinsi Kaltim).
-**T-28** (`bontang-poverty-mapping`): dokumen ternyata laporan progres
-per-Juni-2023 — hanya Bontang yang 100% tuntas dari 10 kab/kota; post
-dibingkai ulang: konteks provinsi (~238rb individu P3KE) → kenapa Bontang
-satu-satunya yang tuntas → close-up 1 kelurahan (590 KK, angka nyata,
-**tanpa** data individu/NIK/nama) → status rollout 9 kab/kota lain.
-**T-29** (`jabung-lampung-coastal-development`): koreksi faktual — post lama
-klaim "gravity model", tapi kata itu **tidak muncul sama sekali** di
-laporan 93 halaman; metode asli Analisis Skalogram (12 kecamatan → hierarki
-1/2/3) + SWOT → zonasi Agropolitan/Minapolitan. **T-30**
-(`rpplh-south-papua`): data jauh lebih kaya dari post lama — Food Estate 1,2
-juta ha/6 distrik vs. 471.026 ha ruang budaya adat (7 kategori), skor jasa
-lingkungan (74,63% pangan kelas-4, 67,88% kehati kelas-5 — tanah yang sama),
-status desa (89% tertinggal), temuan lapangan (200 ekskavator, 135/140km
-jalan tanpa AMDAL).
+**S1 — Etalase** (T-31–T-35): `repo:`/`demo:` nyata di 3 post project +
+perbaikan org repo salah; `Project: X` jadi link nyata; cover art project
+**digenerate** (SVG editorial + `@resvg/resvg-js`, bukan screenshot — atas
+arahan eksplisit user, masing-masing mengkodekan fakta nyata dari post-nya
+seperti "13 lines · 128 stations"); portrait.png dipindah ke `astro:assets`
+(−98,8% ukuran); dua animasi `repeat: Infinity` dihapus (kegagalan WCAG
+2.2.2); net `prefers-reduced-motion` global ditambah; terjemahan penuh
+label/caption chart Indonesia→English di 4 modul scrollytelling (lingkupnya
+jauh lebih luas dari perkiraan awal — lihat LESSONS.md).
 
-**Gotcha teknis penting (lihat LESSONS.md untuk detail):** (1) `layout`
-adalah kata kunci reserved Astro MDX (bukan `presentation`); (2) `client:*`
-butuh import statis di JSX, bukan lookup map runtime; (3) `pdftoppm`
-(dipakai Read tool untuk PDF) tidak terpasang di environment ini —
-workaround: `pdftotext` + render halaman via Python `fitz` (PyMuPDF); (4)
-tool browser sesi ini tidak bisa menjalankan `IntersectionObserver`,
-`requestAnimationFrame`, ATAU `ResizeObserver` (chart recharts perlu ini
-untuk ukur ukuran container) — verifikasi visual scrollytelling selalu
-lewat trik sementara `client:load` + override `useState(ids[N])` di
-`Scrollytelling.tsx`, diverifikasi via `svgCount`/`textContent`, lalu
-di-revert bersih sebelum commit (dicek via `git diff` kosong).
+**S2 — Fondasi dual-mode** (T-37–T-39): ADR-003 memperjelas klausa 4
+ADR-002 sebagai larangan hidrasi framework, bukan larangan byte; blok
+remap 8 token warna yang sudah ada di `@layer base` (bukan token
+paralel — terverifikasi 0 hex literal & 72 `var(--color-*)` di 4 modul
+scrollytelling, jadi seluruh situs ikut berganti tanpa edit React);
+`ModeController` Tier-1 (script pra-paint + tombol toggle, ~325 byte gzip).
 
-Semua 9 commit sesi ini bersih ter-push ke `main`. Detail lengkap tiap task
-ada di `docs/memory/LESSONS.md`; rasionale arsitektur di ARCHITECTURE.md
-bagian "Scrollytelling" dan "Interactivity".
+**S3 — Identitas DATUM** (T-40–T-41): `ImmersiveIndex.astro` — homepage
+jadi indeks lembar survei bergraticule, plate berkoordinat asli (field
+`coordinates` baru di schema, diisi 10/11 post dari koordinat desimal
+nyata), kolom-per-tipe dengan legenda-sebagai-filter. Tipografi Archivo
+(variable font self-hosted, disederhanakan dari usulan awal 3-keluarga
+jadi 1 — sumbu lebarnya sendiri sudah jadi "payload kartografis").
+
+**S4 — Registration seam** (T-42): grip yang bisa diseret untuk mengupas
+Reading dan mengungkap Immersive di bawahnya (`clip-path`, tanpa clone
+DOM, tanpa `rAF`), plus `@view-transition { navigation: auto }` CSS murni
+untuk crossfade antar halaman. Dua bug aksesibilitas/mobile nyata
+ditemukan lewat pengujian dan diperbaiki (grip tak fokusabel saat
+istirahat; grip terpotong di layar sempit).
+
+**S5 — Perluasan + penutupan** (T-43–T-44): Immersive diperluas ke
+`/explore` (pakai ulang `ImmersiveIndex`) dan `/about` (komposisi baru,
+`ImmersiveDossier.astro`). Aturan motion dikonsolidasi ke `docs/RULES.md`.
+T-36 (baseline Lighthouse) dicoba ulang, tetap terblokir tooling — lihat
+Blockers.
+
+**Pola verifikasi berulang sepanjang M5** (detail lengkap di
+`docs/memory/LESSONS.md`): browser tool sesi ini tidak reliably
+me-repaint elemen yang sudah dirender setelah custom property CSS-nya
+dimutasi via JS pasca-paint (ditemukan 2x, di `background-color` T-39 dan
+di `clip-path`/`left` berbasis `clamp()` T-42) — pola verifikasi yang
+terbukti andal: reload sungguhan dengan state (`localStorage`) diisi
+lebih dulu, bukan mutasi-lalu-baca. Solusinya juga sekaligus jadi kode
+yang lebih baik: nilai yang harus benar di first paint ditulis di CSS
+lewat selector `:root[data-mode='immersive']`, bukan diserahkan ke script.
+
+Semua 7 commit M5 bersih ter-push ke `main`. Detail lengkap tiap task ada
+di `docs/TASK.md` (Done); rasionale arsitektur di ADR-003 dan
+`docs/RULES.md` "Motion rules".
 
 ## Next steps
 
-1. Tidak ada task aktif — tunggu arahan user.
-2. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog, menunggu
+1. Tidak ada task M5 aktif — tunggu arahan user untuk M6 atau permintaan
+   baru.
+2. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+   menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
+3. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog, menunggu
    keputusan user kapan pun.
-3. Scrollytelling bisa diperluas ke post research baru di masa depan
-   (pola sudah mekanis — lihat ARCHITECTURE.md "Adding a new scrollytelling
-   post") — tidak ada task terjadwal, murni jika user punya dokumen baru.
+4. Kandidat M6 yang digerbangi (bukan dibunuh) selama brainstorming M5 —
+   lihat `docs/ROADMAP.md` "Digerbangi, bukan dibunuh": knowledge graph
+   SVG statis, digerbangi pada ≥20 post dan ≥15 cross-link inline
+   (hari ini nol cross-link ada di seluruh body MDX).
+5. Font Spectral (dari usulan tipografi Immersive awal) sengaja belum
+   di-self-host — baru relevan kalau ada prosa panjang sungguhan di
+   Immersive Mode (mis. kalau /posts/[slug] dapat komposisi Immersive
+   sendiri di masa depan).
 
 ## Blockers
 
-None.
+**T-36 (baseline Lighthouse resmi)** — dicoba 2x di sesi berbeda (2026-07-28
+dan 2026-07-29) lewat 3 jalur (PSI web UI, PSI API via WebFetch, PSI API
+via `curl`): UI macet di polling, API konsisten 429 (keyless quota) di
+kedua percobaan. Bukan sesuatu yang bisa diperbaiki dari sisi kode —
+perlu user menjalankan PageSpeed Insights dari browser sungguhan, atau
+memberi API key PSI. Data pengganti (berat transfer produksi nyata,
+diukur ulang setelah M5 selesai) ada di `docs/TESTING.md` — mengonfirmasi
+mekanisme dual-mode menambah <1KB JS ke halaman scrollytelling terberat.
 
 ## Open questions
 
-None — lihat "Open questions" di docs/ARCHITECTURE.md untuk yang arsitektural.
+None — lihat "Open questions" di docs/ARCHITECTURE.md untuk yang
+arsitektural.
