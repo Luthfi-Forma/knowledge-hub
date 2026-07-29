@@ -1,0 +1,281 @@
+---
+// DATUM Immersive treatment for /about (M5/T-43) — reuses the same visual
+// vocabulary ImmersiveIndex.astro established (collar top/bottom, hairline
+// borders, mono labels, var(--color-*) tokens only) applied to About's
+// existing data instead of the post index. No hatch patterns here — those
+// encode post `type`, a taxonomy that doesn't exist for expertise/
+// experience/documents, so plates use a plain hairline treatment instead.
+interface ExpertiseArea {
+  title: string;
+  description: string;
+  chips: string[];
+}
+interface DocumentEntry {
+  title: string;
+  org: string;
+}
+interface ExperienceEntry {
+  role: string;
+  org: string;
+  dates: string;
+  description?: string;
+}
+interface OrgEntry {
+  role: string;
+  org: string;
+  dates: string;
+}
+
+interface Props {
+  coordinates: string;
+  degree: string;
+  expertise: ExpertiseArea[];
+  documents: DocumentEntry[];
+  experience: ExperienceEntry[];
+  organizations: OrgEntry[];
+}
+
+const { coordinates, degree, expertise, documents, experience, organizations } = Astro.props;
+const compiledYear = new Date().getFullYear();
+---
+
+<section class="dossier" aria-label="About, immersive presentation">
+  <div class="dossier-collar-top">
+    <span>Afreza L. Hernanda — Field Dossier</span>
+    <span>{coordinates}</span>
+  </div>
+
+  <div class="dossier-body">
+    <section class="dossier-section">
+      <h2 class="dossier-heading">Expertise</h2>
+      <div class="dossier-plate-grid">
+        {
+          expertise.map((area) => (
+            <div class="dossier-plate">
+              <p class="dossier-plate-title">{area.title}</p>
+              <p class="dossier-plate-desc">{area.description}</p>
+              <ul class="dossier-chip-list">
+                {area.chips.map((chip) => (
+                  <li class="dossier-chip">{chip}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="dossier-section">
+      <h2 class="dossier-heading">Experience</h2>
+      <ol class="dossier-ledger">
+        {
+          experience.map((xp) => (
+            <li class="dossier-ledger-row">
+              <span class="dossier-ledger-date">{xp.dates}</span>
+              <span class="dossier-ledger-body">
+                <span class="dossier-ledger-role">{xp.role}</span>
+                <span class="dossier-ledger-org">{xp.org}</span>
+                {xp.description && <span class="dossier-ledger-desc">{xp.description}</span>}
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="dossier-section">
+      <h2 class="dossier-heading">Organizations</h2>
+      <ol class="dossier-ledger">
+        {
+          organizations.map((org) => (
+            <li class="dossier-ledger-row">
+              <span class="dossier-ledger-date">{org.dates}</span>
+              <span class="dossier-ledger-body">
+                <span class="dossier-ledger-role">{org.role}</span>
+                <span class="dossier-ledger-org">{org.org}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="dossier-section">
+      <h2 class="dossier-heading">Cited documents</h2>
+      <ul class="dossier-citations">
+        {
+          documents.map((doc) => (
+            <li class="dossier-citation">
+              <span class="dossier-citation-title">{doc.title}</span>
+              <span class="dossier-citation-org">{doc.org}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div class="dossier-collar-bottom">
+    <span>{degree}</span>
+    <span>Compiled {compiledYear}</span>
+  </div>
+</section>
+
+<style>
+  .dossier {
+    border: 1px solid var(--color-line);
+    color: var(--color-ink);
+  }
+
+  .dossier-collar-top,
+  .dossier-collar-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .dossier-collar-top {
+    border-bottom: 1px solid var(--color-line);
+  }
+  .dossier-collar-bottom {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .dossier-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem 1.25rem;
+  }
+  .dossier-heading {
+    margin-bottom: 0.75rem;
+    font-family: var(--font-body);
+    font-stretch: 118%;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  .dossier-plate-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dossier-plate {
+    border: 1px solid var(--color-line);
+    background-color: var(--color-paper-raised);
+    padding: 0.85rem 1rem;
+    transition: border-color 200ms ease;
+  }
+  .dossier-plate:hover {
+    border-color: var(--color-accent);
+  }
+  .dossier-plate-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .dossier-plate-desc {
+    margin-top: 0.35rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+  .dossier-chip-list {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .dossier-chip {
+    border: 1px solid var(--color-line);
+    padding: 0.15rem 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-ink-muted);
+  }
+
+  .dossier-ledger {
+    display: flex;
+    flex-direction: column;
+  }
+  .dossier-ledger-row {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0.75rem;
+    border-top: 1px solid var(--color-line);
+    padding: 0.7rem 0;
+  }
+  .dossier-ledger-row:first-child {
+    border-top: none;
+  }
+  .dossier-ledger-date {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-muted);
+  }
+  .dossier-ledger-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .dossier-ledger-role {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .dossier-ledger-org {
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+  .dossier-ledger-desc {
+    margin-top: 0.35rem;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+
+  .dossier-citations {
+    display: flex;
+    flex-direction: column;
+  }
+  .dossier-citation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    border-top: 1px solid var(--color-line);
+    padding: 0.6rem 0;
+    font-size: 0.8125rem;
+  }
+  .dossier-citation:first-child {
+    border-top: none;
+  }
+  .dossier-citation-title {
+    color: var(--color-ink);
+  }
+  .dossier-citation-org {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--color-ink-muted);
+  }
+
+  @media (max-width: 30rem) {
+    .dossier-plate-grid {
+      grid-template-columns: 1fr;
+    }
+    .dossier-ledger-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+  }
+</style>

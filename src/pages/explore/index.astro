@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TypeFilter from '../../components/explore/TypeFilter.astro';
 import PostList from '../../components/explore/PostList.astro';
+import ImmersiveIndex from '../../components/home/ImmersiveIndex.astro';
 import { getPublishedPosts } from '../../lib/posts';
 
 const posts = await getPublishedPosts();
@@ -9,12 +10,28 @@ const posts = await getPublishedPosts();
 
 <BaseLayout title="Explore — Afreza Hernanda">
   <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
-  <section class="mx-auto max-w-(--container-content) px-5 py-8">
-    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Explore</h1>
-    <div id="search" class="mb-6"></div>
-    <TypeFilter active="all" />
-    <PostList posts={posts} emptyMessage="Nothing published yet." />
-  </section>
+  <div data-mode-view="reading">
+    <section class="mx-auto max-w-(--container-content) px-5 py-8">
+      <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Explore</h1>
+      <div id="search" class="mb-6"></div>
+      <TypeFilter active="all" />
+      <PostList posts={posts} emptyMessage="Nothing published yet." />
+    </section>
+  </div>
+  {
+    /*
+      Immersive Explore reuses the exact same DATUM index the homepage
+      built (M5/T-40) — /explore already means "all posts, browsable",
+      which is what ImmersiveIndex already renders. No separate Pagefind
+      search UI here: the column headers already double as a filter
+      (linking to /explore/[type]), matching DATUM's "legend is the
+      filter" design rather than bolting an unstyled Pagefind widget
+      (docs/memory/DEBT.md #1) into DATUM's precise chrome.
+    */
+  }
+  <div data-mode-view="immersive" class="mx-auto max-w-(--container-content) px-5 py-8" data-pagefind-ignore>
+    <ImmersiveIndex posts={posts} />
+  </div>
 </BaseLayout>
 
 <script>
