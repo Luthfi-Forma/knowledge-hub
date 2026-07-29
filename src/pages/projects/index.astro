@@ -13,7 +13,7 @@ const projects = await Promise.all(
 ---
 
 <BaseLayout title="Projects — Afreza Hernanda">
-  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
     <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Projects</h1>
     {
       projects.length === 0 ? (
@@ -24,7 +24,7 @@ const projects = await Promise.all(
             <li>
               <a
                 href={`/projects/${project.slug}`}
-                class="flex min-h-11 items-center justify-between gap-4 py-3 text-ink hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                class="flex min-h-11 items-center justify-between gap-4 py-3 text-ink hover:text-research focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
               >
                 <span class="font-display text-lg">{project.title}</span>
                 <span class="text-sm text-ink-muted">{project.count} {project.count === 1 ? 'post' : 'posts'}</span>

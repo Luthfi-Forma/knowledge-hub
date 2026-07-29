@@ -434,7 +434,7 @@ export default function CikarangIndustrialSettlementScrollytelling() {
       eyebrow="A data-driven reading of the published paper"
       title={
         <>
-          Two land uses, <em className="text-accent not-italic">one corridor</em>.
+          Two land uses, <em className="text-research not-italic">one corridor</em>.
         </>
       }
       dek="How Cikarang added 687 hectares of factory and 623 hectares of home in seven years — mapped, counted, and re-told from the published paper."
@@ -443,7 +443,7 @@ export default function CikarangIndustrialSettlementScrollytelling() {
       viz={viz}
       sourceCitation={
         <>
-          <div className="text-xs tracking-[0.25em] text-accent uppercase">Paper</div>
+          <div className="text-xs tracking-[0.25em] text-research uppercase">Paper</div>
           <p className="mt-2 text-ink">Rahman, Y. &amp; Hernanda, A. L. (2025).</p>
           <p className="italic">
             Spatial Analysis of Industrial and Residential Growth Patterns in Cikarang, Bekasi (2016 – 2023).

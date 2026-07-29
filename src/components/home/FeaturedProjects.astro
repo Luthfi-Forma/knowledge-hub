@@ -12,7 +12,7 @@ const { posts } = Astro.props;
 ---
 
 <section class="border-b border-line bg-paper py-8">
-  <div class="mx-auto max-w-(--container-content) px-5">
+  <div class="mx-auto max-w-(--container-shell) px-5">
     <SectionHeading title="Featured projects" href="/explore/project" />
     {
       posts.length === 0 ? (
@@ -36,7 +36,7 @@ const { posts } = Astro.props;
                 type="button"
                 data-carousel-prev
                 aria-label="Previous project"
-                class="flex h-9 w-9 items-center justify-center border border-line text-ink-muted hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-30"
+                class="flex h-9 w-9 items-center justify-center border border-line text-ink-muted hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research disabled:pointer-events-none disabled:opacity-30"
               >
                 ←
               </button>
@@ -44,7 +44,7 @@ const { posts } = Astro.props;
                 type="button"
                 data-carousel-next
                 aria-label="Next project"
-                class="flex h-9 w-9 items-center justify-center border border-line text-ink-muted hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-30"
+                class="flex h-9 w-9 items-center justify-center border border-line text-ink-muted hover:border-ink hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research disabled:pointer-events-none disabled:opacity-30"
               >
                 →
               </button>

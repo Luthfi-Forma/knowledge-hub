@@ -15,16 +15,16 @@ const { title, cover } = post.data;
   cover && (
     <a
       href={href}
-      class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
     >
       <Image
         src={cover}
         alt={title}
-        class="aspect-square w-full rounded-sm object-cover"
+        class="aspect-square w-full object-cover"
         widths={[300, 600]}
         sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 47vw"
       />
-      <p class="mt-2 text-sm text-ink group-hover:text-accent">{title}</p>
+      <p class="mt-2 text-sm text-ink group-hover:text-research">{title}</p>
     </a>
   )
 }

@@ -413,7 +413,7 @@ export default function BontangPovertyMappingScrollytelling() {
       eyebrow="A data-driven reading of Bappeda Kaltim's poverty mapping study"
       title={
         <>
-          Ten regions, <em className="text-accent not-italic">one method</em> — proven in Bontang first.
+          Ten regions, <em className="text-research not-italic">one method</em> — proven in Bontang first.
         </>
       }
       dek="How a province-wide poverty mapping initiative in Kalimantan Timur turned raw P3KE household records into hotspot maps and characteristic profiles, with Bontang as the first city to see it through."
@@ -422,7 +422,7 @@ export default function BontangPovertyMappingScrollytelling() {
       viz={viz}
       sourceCitation={
         <>
-          <div className="text-xs tracking-[0.25em] text-accent uppercase">Source</div>
+          <div className="text-xs tracking-[0.25em] text-research uppercase">Source</div>
           <p className="mt-2 text-ink">Regional Development Planning Agency (Bappeda), Kalimantan Timur Province.</p>
           <p className="italic">Kajian Pemetaan Karakteristik Masyarakat Miskin Provinsi Kalimantan Timur.</p>
           <p className="mt-1 text-xs">Presentation deck, 12 June 2023. Data source: P3KE (Kemenko PMK).</p>

@@ -8,14 +8,14 @@ interface Props {
 const { message, ctaHref, ctaLabel } = Astro.props;
 ---
 
-<div class="rounded-sm border border-dashed border-line bg-paper-raised px-6 py-8 text-center text-sm text-ink-muted">
+<div class="border border-dashed border-line bg-paper-raised px-6 py-8 text-center text-sm text-ink-muted">
   <p>
     {message}
     {
       ctaHref && ctaLabel && (
         <>
           {' '}
-          <a href={ctaHref} class="text-accent hover:underline">
+          <a href={ctaHref} class="text-research hover:underline">
             {ctaLabel}
           </a>
         </>

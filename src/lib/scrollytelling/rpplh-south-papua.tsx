@@ -367,7 +367,7 @@ export default function RpplhSouthPapuaScrollytelling() {
       eyebrow="A data-driven reading of South Papua's draft RPPLH"
       title={
         <>
-          One landscape, <em className="text-accent not-italic">two claims</em> on the same ground.
+          One landscape, <em className="text-research not-italic">two claims</em> on the same ground.
         </>
       }
       dek="How South Papua's first Environmental Protection and Management Plan measured what a 1.2-million-hectare Food Estate program would actually displace — ecologically and culturally — before the land was fully converted."
@@ -376,7 +376,7 @@ export default function RpplhSouthPapuaScrollytelling() {
       viz={viz}
       sourceCitation={
         <>
-          <div className="text-xs tracking-[0.25em] text-accent uppercase">Source</div>
+          <div className="text-xs tracking-[0.25em] text-research uppercase">Source</div>
           <p className="mt-2 text-ink">Government of South Papua Province.</p>
           <p className="italic">Draft Materi Teknis Rencana Perlindungan dan Pengelolaan Lingkungan Hidup (RPPLH) Provinsi Papua Selatan.</p>
           <p className="mt-1 text-xs">Merauke, August 2024. Ecosystem data: KLHK (2022); cultural space: WWF; village status: IDM (2018).</p>

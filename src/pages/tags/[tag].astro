@@ -17,7 +17,7 @@ const posts = await getPostsByTag(tag);
 ---
 
 <BaseLayout title={`#${tag} — Afreza Hernanda`} description={`Posts tagged ${tag}.`}>
-  <section class="mx-auto max-w-(--container-content) px-5 py-8">
+  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
     <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">#{tag}</h1>
     {
       posts.length === 0 ? (

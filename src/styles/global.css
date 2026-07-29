@@ -31,42 +31,67 @@
 }
 
 /*
- * Final design tokens (M3, T-14). Cream paper + high-contrast Didone serif,
- * mockup-first process against a client-supplied reference (editorial travel
- * blog) — see docs/ARCHITECTURE.md "Visual identity" for the rationale.
- * Replaces the M1 provisional zinc/Plus Jakarta Sans tokens.
+ * Atlas design tokens (M6, T-48; supersedes M3/T-14's cream Reading Mode
+ * tokens and M5/T-38's Immersive Mode remap — see ADR-004). One identity
+ * now, so roles are divided by job rather than reused across several
+ * unrelated ones: the old --color-accent colored links, focus rings, and
+ * a chart series all at once — split here into --color-research
+ * (research-type code, link color, focus ring) and --color-project
+ * (project-type code, chart series 2), with --color-flag reserved for
+ * interactive-only markers, never decoration. --color-line-strong is new:
+ * interactive control borders (input/button/tab/chip) need ≥3:1 contrast
+ * per WCAG's non-text guidance, which --color-line (1.5:1, decorative
+ * graticule/divider use only) doesn't meet. Values and roles are taken
+ * verbatim from docs/design/atlas/README.md "Design Tokens" — that file
+ * is the source of truth for any future value change, not this comment.
  */
 @theme {
-  --color-ink: #18140f;
-  --color-ink-muted: #6b6152;
-  --color-paper: #f5efe1;
-  --color-paper-raised: #efe8d5;
-  --color-line: #ddd3bc;
-  --color-accent: #38523a;
+  --color-paper: #f2ebda;
+  --color-paper-raised: #e8e0cb;
+  --color-line: #c9bfa6;
+  --color-line-strong: #8e836a;
+  --color-ink: #171512;
+  --color-ink-muted: #4a4238;
+  --color-research: #2c4630;
+  --color-project: #2f5670;
+  --color-flag: #a8481f;
 
   --font-display: "Bodoni Moda", Georgia, serif;
   --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
   /*
-   * `font-mono` is used 8x across the scrollytelling shell and data modules
-   * (coordinates, figure numbers, tabular stats) but was never declared here,
-   * so it silently resolved to Tailwind's built-in default. Declaring it makes
-   * the fallback explicit and — more importantly — makes it a token the
-   * Immersive-mode remap (T-38) can swap along with the other two families.
-   * Deliberately a system stack: zero bytes, no new webfont request.
+   * `font-mono` is used across the scrollytelling shell and data modules
+   * (coordinates, figure numbers, tabular stats). T-49 remaps this and
+   * the two families above to Atlas's single Archivo + self-hosted IBM
+   * Plex Mono typography system — all three current values are M3-era
+   * placeholders due to be replaced in that task, not this one.
    */
   --font-mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
 
-  --container-content: 50rem;
-  --container-prose: 42rem;
+  /*
+   * Four widths replace the single 800px column used everywhere before
+   * Atlas (docs/design/atlas/README.md "Ruang & layout"). FIELD (full-bleed:
+   * graticule, plates, photo backdrops) has no token of its own — it's
+   * simply the absence of a max-width. RAIL has no page-level caller yet
+   * (LegendRail lands in T-51); declared here so its value lives in one
+   * place alongside the other three from the start.
+   */
+  --container-shell: 1240px;
+  --container-rail: 224px;
+  --container-prose: 680px;
 
   /*
-   * Two-series data-viz palette (T-25, scrollytelling charts). --color-chart-1
-   * reuses the site accent; --color-chart-2 is a new slate-blue — NOT
-   * terracotta/orange, which T-14 already flagged as a generic-AI cliché
-   * paired with cream paper + serif.
+   * Two-series data-viz palette (T-25, scrollytelling charts), kept as
+   * ALIASES rather than retired outright — this is what lets the four
+   * scrollytelling modules (0 hex literals, every color a
+   * var(--color-chart-*) reference) inherit Atlas's palette with zero
+   * React edits, exactly as it did for M5's Immersive remap (ADR-003 #5,
+   * carried into ADR-004). The handoff's own token table already
+   * anticipates this pairing: --color-project's stated role includes
+   * "chart series 2", so chart-2 maps to project (both blue), leaving
+   * chart-1 (the old accent green) to map to research (also green).
    */
-  --color-chart-1: var(--color-accent);
-  --color-chart-2: #3a5568;
+  --color-chart-1: var(--color-research);
+  --color-chart-2: var(--color-project);
 }
 
 /*
@@ -83,8 +108,10 @@
     color: var(--color-ink);
     font-family: var(--font-body);
     line-height: 1.6;
-    /* So the Immersive-mode toggle (T-39) reads as a deliberate swap, not a
-       flicker — zeroed by the prefers-reduced-motion net below regardless. */
+    /* 300ms ceiling per RULES.md "Motion rules" — any future state change
+       that recolors the page (there is none today) reads as a deliberate
+       swap, not a flicker. Zeroed by the prefers-reduced-motion net below
+       regardless. */
     transition:
       background-color 300ms ease,
       color 300ms ease;
@@ -106,10 +133,10 @@
   /*
    * M5's Immersive Mode remap (a second palette + Archivo typography
    * scoped to a runtime attribute on <html>) and the show/hide rules that
-   * switched between two parallel markup trees have been removed here
-   * (T-47, ADR-004) — the site now has a single visual identity ("Atlas")
-   * rather than two selected at runtime. T-48 replaces the tokens above
-   * with Atlas's palette; T-49 wires Archivo/IBM Plex Mono into
+   * switched between two parallel markup trees were removed here (T-47,
+   * ADR-004) — the site now has a single visual identity ("Atlas") rather
+   * than two selected at runtime. T-48 replaced the tokens above with
+   * Atlas's palette; T-49 wires Archivo/IBM Plex Mono into
    * --font-display/--font-body/--font-mono site-wide.
    */
 }

@@ -14,24 +14,24 @@ const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 ---
 
 <article class="group">
-  <a href={href ?? undefined} aria-disabled={href ? undefined : 'true'} class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+  <a href={href ?? undefined} aria-disabled={href ? undefined : 'true'} class="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research">
     {
       cover ? (
         <Image
           src={cover}
           alt=""
-          class="aspect-4/3 w-full rounded-sm object-cover"
+          class="aspect-4/3 w-full object-cover"
           widths={[400, 800]}
           sizes="(min-width: 768px) 388px, 100vw"
         />
       ) : (
-        <div class="flex aspect-4/3 w-full items-center justify-center rounded-sm bg-paper-raised text-xs text-ink-muted">
+        <div class="flex aspect-4/3 w-full items-center justify-center bg-paper-raised text-xs text-ink-muted">
           {typeLabel}
         </div>
       )
     }
-    <p class="mt-3 text-xs tracking-wide text-accent uppercase">{formattedDate} · {typeLabel}</p>
-    <h3 class="mt-1.5 text-lg leading-snug text-ink group-hover:text-accent">{title}</h3>
+    <p class="mt-3 text-xs tracking-wide text-research uppercase">{formattedDate} · {typeLabel}</p>
+    <h3 class="mt-1.5 text-lg leading-snug text-ink group-hover:text-research">{title}</h3>
     <p class="mt-1.5 text-sm leading-normal text-ink-muted">{summary}</p>
   </a>
 </article>

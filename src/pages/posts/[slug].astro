@@ -42,8 +42,8 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
 ---
 
 <BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
-  <article class="mx-auto max-w-(--container-content) px-5 py-10">
-    <p class="mb-2.5 text-xs font-medium tracking-wide text-accent uppercase">
+  <article class="mx-auto max-w-(--container-shell) px-5 py-10">
+    <p class="mb-2.5 text-xs font-medium tracking-wide text-research uppercase">
       {isScrollytelling ? `${typeLabel} · ${formattedDate}` : `${typeLabel} · ${readingMinutes} min read · ${formattedDate}`}
     </p>
     {!isScrollytelling && (
@@ -59,7 +59,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
           <Image
             src={cover}
             alt={title}
-            class="mb-8 max-h-[75vh] w-full rounded-sm object-contain"
+            class="mb-8 max-h-[75vh] w-full object-contain"
             widths={[600, 1200]}
             sizes="(min-width: 800px) 800px, 100vw"
           />
@@ -67,7 +67,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
           <Image
             src={cover}
             alt=""
-            class="mb-8 aspect-video w-full rounded-sm object-cover"
+            class="mb-8 aspect-video w-full object-cover"
             widths={[600, 1200]}
             sizes="(min-width: 800px) 800px, 100vw"
           />
@@ -80,18 +80,18 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
           {project && (
             <span class="text-ink-muted">
               Project:{' '}
-              <a href={`/projects/${project}`} class="text-accent hover:underline">
+              <a href={`/projects/${project}`} class="text-research hover:underline">
                 {getProjectTitle(project)}
               </a>
             </span>
           )}
           {repo && (
-            <a href={repo} target="_blank" rel="noopener" class="text-accent hover:underline">
+            <a href={repo} target="_blank" rel="noopener" class="text-research hover:underline">
               Repository ↗
             </a>
           )}
           {demo && (
-            <a href={demo} target="_blank" rel="noopener" class="text-accent hover:underline">
+            <a href={demo} target="_blank" rel="noopener" class="text-research hover:underline">
               Live demo ↗
             </a>
           )}
@@ -126,7 +126,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
           {tags.map((tag) => (
             <a
               href={`/tags/${tag}`}
-              class="inline-flex min-h-11 items-center border border-accent px-2.5 py-1 text-xs text-accent hover:bg-accent hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              class="inline-flex min-h-11 items-center border border-research px-2.5 py-1 text-xs text-research hover:bg-research hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
             >
               {tag}
             </a>
@@ -162,7 +162,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     font-weight: 800;
   }
   .prose-content :global(a) {
-    color: var(--color-accent);
+    color: var(--color-research);
     text-decoration: underline;
   }
   .prose-content :global(ul),
@@ -180,7 +180,6 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     margin-bottom: 0.375em;
   }
   .prose-content :global(code) {
-    border-radius: 0.15em;
     background-color: var(--color-paper-raised);
     padding: 0.15em 0.4em;
     font-family: ui-monospace, "IBM Plex Mono", monospace;
@@ -189,7 +188,6 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
   .prose-content :global(pre) {
     margin-bottom: 1.25em;
     overflow-x: auto;
-    border-radius: 0.2em;
     background-color: var(--color-paper-raised);
     padding: 1em;
   }
@@ -198,7 +196,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     padding: 0;
   }
   .prose-content :global(blockquote) {
-    border-left: 2px solid var(--color-accent);
+    border-left: 2px solid var(--color-research);
     padding-left: 1em;
     color: var(--color-ink-muted);
     font-style: italic;
@@ -222,7 +220,7 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     font-weight: 800;
     font-size: 3.4em;
     line-height: 0.8;
-    color: var(--color-accent);
+    color: var(--color-research);
   }
   .prose-article :global(blockquote) {
     margin: 2em 0;

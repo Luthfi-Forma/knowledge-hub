@@ -12,7 +12,7 @@ const { posts } = Astro.props;
 ---
 
 <section class="border-b border-line py-8">
-  <div class="mx-auto max-w-(--container-content) px-5">
+  <div class="mx-auto max-w-(--container-shell) px-5">
     <SectionHeading title="Latest posts" href="/explore" />
     {
       posts.length === 0 ? (

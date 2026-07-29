@@ -105,16 +105,16 @@ const organizations = [
 ---
 
 <BaseLayout title="About — Afreza Hernanda" description="About Afreza Luthfi Hernanda, Urban & Regional Planner — background, expertise, and experience.">
-  <section class="mx-auto max-w-(--container-content) px-5 py-16">
+  <section class="mx-auto max-w-(--container-shell) px-5 py-16">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
       <Image
         src={portrait}
         alt="Portrait of Afreza Luthfi Hernanda"
         width={320}
-        class="h-32 w-32 shrink-0 rounded-sm object-cover sm:h-40 sm:w-40"
+        class="h-32 w-32 shrink-0 object-cover sm:h-40 sm:w-40"
       />
       <div>
-        <p class="mb-2 text-xs font-medium tracking-wide text-accent uppercase">Urban &amp; Regional Planner</p>
+        <p class="mb-2 text-xs font-medium tracking-wide text-research uppercase">Urban &amp; Regional Planner</p>
         <h1 class="font-display mb-3 text-3xl font-extrabold text-ink sm:text-4xl">Afreza Luthfi Hernanda</h1>
         <p class="max-w-[48ch] text-sm leading-relaxed text-ink-muted">
           I read regions through their data — mapping how industry, environment, and communities
@@ -137,7 +137,7 @@ const organizations = [
     </div>
   </section>
 
-  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+  <section class="mx-auto max-w-(--container-shell) px-5 pb-16">
     <SectionHeading title="Background" />
     <dl class="grid gap-6 sm:grid-cols-3">
       <div>
@@ -165,12 +165,12 @@ const organizations = [
     </dl>
   </section>
 
-  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+  <section class="mx-auto max-w-(--container-shell) px-5 pb-16">
     <SectionHeading title="Expertise" />
     <div class="grid gap-6 sm:grid-cols-2">
       {
         expertise.map((area) => (
-          <div class="rounded-sm border border-line p-5">
+          <div class="border border-line p-5">
             <h3 class="text-lg text-ink">{area.title}</h3>
             <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{area.description}</p>
             <ul class="mt-3 flex flex-wrap gap-1.5">
@@ -186,7 +186,7 @@ const organizations = [
     </div>
   </section>
 
-  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+  <section class="mx-auto max-w-(--container-shell) px-5 pb-16">
     <SectionHeading title="Official Documents" />
     <p class="mb-4 max-w-[62ch] text-sm leading-relaxed text-ink-muted">
       Technical documents and studies I contributed to that were published by government agencies
@@ -195,7 +195,7 @@ const organizations = [
     <ul class="space-y-3">
       {
         documents.map((doc) => (
-          <li class="rounded-sm border border-line px-4 py-3">
+          <li class="border border-line px-4 py-3">
             <p class="text-sm font-semibold text-ink">{doc.title}</p>
             <p class="mt-0.5 text-xs text-ink-muted">{doc.org}</p>
           </li>
@@ -204,7 +204,7 @@ const organizations = [
     </ul>
   </section>
 
-  <section class="mx-auto max-w-(--container-content) px-5 pb-16">
+  <section class="mx-auto max-w-(--container-shell) px-5 pb-16">
     <SectionHeading title="Experience" />
     <p class="mb-5 text-xs text-ink-muted">Roles with a description can be expanded for detail.</p>
     <ol class="relative ml-1 border-l border-line">
@@ -212,13 +212,13 @@ const organizations = [
         experience.map((xp) =>
           xp.description ? (
             <li class="relative pb-7 pl-6 last:pb-0">
-              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true" />
+              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 bg-research" aria-hidden="true" />
               <details>
-                <summary class="flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4 gap-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                <summary class="flex cursor-pointer list-none flex-wrap items-baseline justify-between gap-x-4 gap-y-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research">
                   <span class="min-w-0">
                     <span class="font-display block text-lg text-ink">
                       {xp.role}
-                      <span class="timeline-marker ml-1.5 text-accent" aria-hidden="true">
+                      <span class="timeline-marker ml-1.5 text-research" aria-hidden="true">
                         +
                       </span>
                     </span>
@@ -231,7 +231,7 @@ const organizations = [
             </li>
           ) : (
             <li class="relative pb-7 pl-6 last:pb-0">
-              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 rounded-full border border-line bg-paper" aria-hidden="true" />
+              <span class="absolute top-1.5 -left-[5px] h-2.5 w-2.5 border border-line bg-paper" aria-hidden="true" />
               <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <span class="min-w-0">
                   <span class="font-display block text-lg text-ink">{xp.role}</span>
@@ -261,9 +261,9 @@ const organizations = [
     </ol>
   </section>
 
-  <section class="mx-auto max-w-(--container-content) px-5 pb-16 text-center">
+  <section class="mx-auto max-w-(--container-shell) px-5 pb-16 text-center">
     <p class="text-sm text-ink-muted">
-      Want to collaborate? Reach out via the <a href="/#contact" class="text-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">contact</a> section
+      Want to collaborate? Reach out via the <a href="/#contact" class="text-research hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research">contact</a> section
       on the homepage.
     </p>
   </section>

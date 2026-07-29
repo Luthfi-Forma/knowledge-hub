@@ -294,7 +294,7 @@ export default function JabungLampungCoastalDevelopmentScrollytelling() {
       eyebrow="A data-driven reading of Bappeda Lampung Timur's coastal area plan"
       title={
         <>
-          One coastline, <em className="text-accent not-italic">two centers</em> — sorted by the numbers.
+          One coastline, <em className="text-research not-italic">two centers</em> — sorted by the numbers.
         </>
       }
       dek="How a settlement-hierarchy analysis across twelve East Lampung sub-districts identified one main growth pole, four secondary centers, and the case for one Agropolitan and one Minapolitan zone."
@@ -303,7 +303,7 @@ export default function JabungLampungCoastalDevelopmentScrollytelling() {
       viz={viz}
       sourceCitation={
         <>
-          <div className="text-xs tracking-[0.25em] text-accent uppercase">Source</div>
+          <div className="text-xs tracking-[0.25em] text-research uppercase">Source</div>
           <p className="mt-2 text-ink">Regional Development Planning Agency (Bappeda), Lampung Timur Regency.</p>
           <p className="italic">Penyusunan Wilayah Jabung dan Kawasan Pesisir Kabupaten Lampung Timur.</p>
           <p className="mt-1 text-xs">Final Report, 2024.</p>

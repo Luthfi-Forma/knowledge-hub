@@ -68,9 +68,9 @@ function CitationBlock({ citations, sectionNumber }: { citations: Scrollytelling
   if (citations.length === 0) return null;
   return (
     <details className="group mt-8 border border-line bg-paper-raised/60 open:bg-paper-raised">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-xs tracking-[0.2em] text-ink-muted uppercase hover:text-accent">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-xs tracking-[0.2em] text-ink-muted uppercase hover:text-research">
         <span>
-          <span className="text-accent">§{sectionNumber}</span> · Sources for this claim
+          <span className="text-research">§{sectionNumber}</span> · Sources for this claim
         </span>
         <span className="font-mono text-[10px] normal-case tracking-normal opacity-60 group-open:hidden">show ↓</span>
         <span className="hidden font-mono text-[10px] normal-case tracking-normal opacity-60 group-open:inline">
@@ -79,7 +79,7 @@ function CitationBlock({ citations, sectionNumber }: { citations: Scrollytelling
       </summary>
       <ul className="space-y-3 px-4 pt-1 pb-4">
         {citations.map((c, i) => (
-          <li key={i} className="border-l-2 border-accent/50 pl-3 text-sm">
+          <li key={i} className="border-l-2 border-research/50 pl-3 text-sm">
             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
               <span className="font-medium text-ink">{c.label}</span>
               <span className="text-xs text-ink-muted">{c.where}</span>
@@ -130,7 +130,7 @@ function SourcesPanel({
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-4">
               <div>
-                <div className="text-xs tracking-[0.3em] text-accent uppercase">Sources</div>
+                <div className="text-xs tracking-[0.3em] text-research uppercase">Sources</div>
                 <div className="font-display mt-1 text-lg text-ink">Where every claim comes from</div>
               </div>
               <button
@@ -151,10 +151,10 @@ function SourcesPanel({
                   return (
                     <li
                       key={s.id}
-                      className={`border p-4 ${isActive ? 'border-accent bg-paper-raised' : 'border-line bg-paper-raised/40'}`}
+                      className={`border p-4 ${isActive ? 'border-research bg-paper-raised' : 'border-line bg-paper-raised/40'}`}
                     >
                       <div className="flex items-baseline gap-2">
-                        <span className="font-mono text-xs text-accent">§{String(i + 1).padStart(2, '0')}</span>
+                        <span className="font-mono text-xs text-research">§{String(i + 1).padStart(2, '0')}</span>
                         <span className="text-xs tracking-[0.2em] text-ink-muted uppercase">{s.kicker}</span>
                       </div>
                       <div className="font-display mt-1 text-base text-ink">{s.title}</div>
@@ -169,7 +169,7 @@ function SourcesPanel({
                       <div className="mt-3 text-xs tracking-[0.2em] text-ink-muted uppercase">Text citations</div>
                       <ul className="mt-1 space-y-2">
                         {s.citations.map((c, ci) => (
-                          <li key={ci} className="border-l-2 border-accent/40 pl-3 text-xs">
+                          <li key={ci} className="border-l-2 border-research/40 pl-3 text-xs">
                             <div className="text-ink">
                               {c.label} <span className="text-ink-muted">· {c.where}</span>
                             </div>
@@ -259,9 +259,9 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
       />
 
       {/* Hero — no horizontal padding/max-w of its own: the caller (post
-          detail page) already constrains width via its .max-w-(--container-content) */}
+          detail page) already constrains width via its .max-w-(--container-shell) */}
       <section className="flex flex-col items-center justify-center py-16 text-center">
-        <p className="mb-4 text-xs tracking-[0.35em] text-accent uppercase">{eyebrow}</p>
+        <p className="mb-4 text-xs tracking-[0.35em] text-research uppercase">{eyebrow}</p>
         <h2 className="font-display max-w-3xl text-4xl leading-[1.1] font-extrabold text-ink sm:text-5xl">{title}</h2>
         <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-muted">{dek}</p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs tracking-wide text-ink-muted uppercase">
@@ -269,7 +269,7 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
           <button
             type="button"
             onClick={() => setSourcesOpen(true)}
-            className="border border-line px-3 py-1.5 text-ink-muted hover:border-accent hover:text-accent"
+            className="border border-line px-3 py-1.5 text-ink-muted hover:border-research hover:text-research"
           >
             Sources
           </button>
@@ -284,7 +284,7 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
             {sections.map((s, i) => (
               <section key={s.id} id={`sec-${s.id}`} className="flex min-h-[70vh] flex-col justify-center py-14 first:pt-0">
                 <div className="mb-3 flex items-center gap-3">
-                  <span className="font-mono text-xs text-accent">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="font-mono text-xs text-research">{String(i + 1).padStart(2, '0')}</span>
                   <span className="text-xs tracking-[0.3em] text-ink-muted uppercase">{s.kicker}</span>
                 </div>
                 <h3 className="font-display text-2xl leading-[1.2] text-ink sm:text-3xl">{s.title}</h3>
@@ -300,7 +300,7 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
               <div className="relative h-[68vh] w-full overflow-hidden border border-line bg-paper-raised">
                 <div className="absolute inset-x-0 top-0 z-10 h-[2px] bg-line">
                   <motion.div
-                    className="h-full origin-left bg-accent"
+                    className="h-full origin-left bg-research"
                     animate={{ scaleX: (activeIndex + 1) / sections.length }}
                     transition={{ duration: reduceMotion ? 0 : 0.4 }}
                   />
@@ -324,7 +324,7 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
               {activeSection?.vizCitation && (
                 <div className="flex items-center justify-between gap-4 border border-line bg-paper-raised/60 px-4 py-2 text-xs">
                   <span className="flex items-center gap-2 text-ink-muted">
-                    <span className="font-mono text-[10px] tracking-widest text-accent uppercase">Drawn from</span>
+                    <span className="font-mono text-[10px] tracking-widest text-research uppercase">Drawn from</span>
                     <span className="text-ink">{activeSection.vizCitation.fig}</span>
                   </span>
                   <span className="truncate text-ink-muted">{activeSection.vizCitation.source}</span>
