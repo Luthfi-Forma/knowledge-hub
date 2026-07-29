@@ -4,6 +4,7 @@ import Hero from '../components/home/Hero.astro';
 import FeaturedProjects from '../components/home/FeaturedProjects.astro';
 import LatestPosts from '../components/home/LatestPosts.astro';
 import ImmersiveIndex from '../components/home/ImmersiveIndex.astro';
+import RegistrationSeam from '../components/home/RegistrationSeam.astro';
 import Contact from '../components/Contact.astro';
 import { getFeaturedProjects, getLatestPosts, getPublishedPosts } from '../lib/posts';
 
@@ -13,22 +14,17 @@ const allPosts = await getPublishedPosts();
 ---
 
 <BaseLayout title="Afreza Hernanda — knowledge-hub">
-  <div data-mode-view="reading">
-    <Hero />
-    <FeaturedProjects posts={featuredProjects} />
-    <LatestPosts posts={latestPosts} />
-  </div>
-  {
-    /*
-      data-pagefind-ignore: this view duplicates post titles the Reading
-      Mode markup above already carries (with fuller text — summaries,
-      not just title/coordinate/year). Pagefind indexes the whole <body>
-      regardless of CSS display:none, so without this both views' text
-      would be indexed side by side for no search benefit.
-    */
-  }
-  <div data-mode-view="immersive" class="mx-auto max-w-(--container-content) px-5 py-8" data-pagefind-ignore>
-    <ImmersiveIndex posts={allPosts} />
-  </div>
+  <RegistrationSeam>
+    <Fragment slot="reading">
+      <Hero />
+      <FeaturedProjects posts={featuredProjects} />
+      <LatestPosts posts={latestPosts} />
+    </Fragment>
+    <Fragment slot="immersive">
+      <div class="mx-auto max-w-(--container-content) px-5 py-8">
+        <ImmersiveIndex posts={allPosts} />
+      </div>
+    </Fragment>
+  </RegistrationSeam>
   <Contact />
 </BaseLayout>

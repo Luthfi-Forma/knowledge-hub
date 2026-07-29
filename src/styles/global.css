@@ -215,4 +215,36 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /*
+   * View Transition pseudo-elements (below) aren't matched by *::before/
+   * *::after — they're distinct pseudo-elements the browser generates for
+   * the cross-document navigation crossfade, so they need their own
+   * override here to actually respect reduced motion.
+   */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/*
+ * Cross-document View Transitions (M5/T-42) — a same-origin navigation
+ * (e.g. Home -> a post page) crossfades instead of hard-cutting. Pure CSS,
+ * zero JavaScript: the browser intercepts the old and new page's rendered
+ * pixels and animates between them itself. This is NOT Astro's
+ * <ClientRouter />, which was explicitly rejected for this project —
+ * ClientRouter turns navigation into client-side DOM swapping, which would
+ * break scripts that only run once on initial parse (the carousel init in
+ * FeaturedProjects.astro, the Pagefind injection in explore/index.astro).
+ * A real, full document navigation still happens here — every script,
+ * including the pre-paint mode-stamp in BaseLayout.astro, still runs
+ * exactly as it does today; only the visual transition between the two
+ * page snapshots changes. Unsupported browsers (Firefox, older Safari)
+ * silently ignore this at-rule and keep the instant navigation they
+ * already have — pure progressive enhancement, no fallback code needed.
+ */
+@view-transition {
+  navigation: auto;
 }

@@ -37,39 +37,26 @@ const navItems = [
 
 <script>
   // Tier-1 vanilla (ADR-002 clause 2 / ADR-003 clause 2) — no framework,
-  // no client:* directive. Toggles the `data-mode` attribute the pre-paint
-  // script in BaseLayout.astro already stamped on <html>, and persists the
-  // choice for that script to read on the next page load.
-  const KEY = 'kh-mode';
+  // no client:* directive. Mode logic itself lives in src/lib/mode-toggle.ts,
+  // shared with the registration seam (T-42) so the two controls can't
+  // drift out of sync.
+  import { getMode, setMode } from '../lib/mode-toggle';
+
   const toggle = document.getElementById('mode-toggle');
   const label = toggle?.querySelector('[data-mode-label]');
 
-  function currentMode(): 'reading' | 'immersive' {
-    return document.documentElement.dataset.mode === 'immersive' ? 'immersive' : 'reading';
-  }
-
   function syncUI() {
-    const mode = currentMode();
+    const mode = getMode();
     toggle?.setAttribute('aria-pressed', String(mode === 'immersive'));
     if (label) label.textContent = mode === 'immersive' ? 'Reading' : 'Immersive';
   }
 
   toggle?.addEventListener('click', () => {
-    const next = currentMode() === 'immersive' ? 'reading' : 'immersive';
-    if (next === 'immersive') {
-      document.documentElement.dataset.mode = 'immersive';
-    } else {
-      delete document.documentElement.dataset.mode;
-    }
-    try {
-      localStorage.setItem(KEY, next);
-    } catch (e) {
-      // localStorage unavailable (private mode, disabled storage, etc.) —
-      // the toggle still works for the current page view, it just won't
-      // persist across navigations.
-    }
-    syncUI();
+    setMode(getMode() === 'immersive' ? 'reading' : 'immersive');
   });
+  // Stay in sync if the mode changes from elsewhere (e.g. the homepage's
+  // registration seam) without a full page reload.
+  document.addEventListener('kh-mode-change', syncUI);
 
   syncUI();
 </script>

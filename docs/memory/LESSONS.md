@@ -427,3 +427,48 @@ used this exact pattern for years — so this is a tooling gap, not a defect
 in the toggle mechanism itself. Relevant for verifying any future
 Immersive-mode work (T-40 composition, T-42 registration seam) that
 involves toggling `data-mode` live rather than reloading with it pre-set.
+
+## 2026-07-28 — Same gap, different property: `left: clamp(..., var(--x), ...)` on a JS-mutated element also doesn't repaint in this tool
+
+Tags: #browser-verification #css
+
+Building T-42's registration seam grip hit the exact same class of bug as
+the entry above, on a different CSS property — worth recording separately
+because the fix generalizes into a real rule, not just a workaround for
+verification.
+
+Setup: `.seam-grip { left: clamp(1.375rem, var(--seam), calc(100% -
+1.375rem)); }`, with `--seam` set via `stage.style.setProperty('--seam',
+...)` inside a regular (non-`is:inline`) `<script>` that runs *after*
+first paint. On page load with the value already meant to be `100%`
+(persisted mode = immersive), the grip rendered at `left: 22px` — the
+clamp's MIN, as if `--seam` were still its `@property`-declared
+`initial-value: 0%`.
+
+Isolated with a fresh test element (`document.createElement('div')`,
+`--seam` set before ever assigning `left`): the identical clamp formula
+resolved correctly (353px, the MAX) immediately. So `clamp()` and the
+registered `@property` are both fine — the failure is specific to an
+**already-painted element whose custom property is mutated by JS after
+that first paint**, same root cause as the body-background finding above.
+
+**Fix (not just a test workaround — a real code fix):** stopped relying on
+the script to set the resting position at all. Added a plain CSS rule
+mirroring the already-proven-reliable color-remap pattern —
+`:root[data-mode='immersive'] .seam-stage { --seam: 100%; }` — so the
+correct value is present from the *first* paint via the pre-paint
+`data-mode` stamp, never mutated on an existing element for the resting
+state. Confirmed correct afterward via a genuine reload in this tool
+(`left: 331px` of 375px viewport, i.e. clamped to the right edge). The
+script's `setSeam()` call still runs on load and during drags/keyboard
+input, but no longer carries the only-path responsibility for the resting
+position.
+
+**Generalized rule for this project:** for anything that must be correct
+on first paint under `data-mode='immersive'` (not just something that
+merely CAN be toggled later), set it in CSS via the `:root[data-mode=...]`
+selector, not by having a `<script>` compute and apply it after the fact —
+even when the JS approach would be correct in a real browser. This
+sidesteps the tooling gap entirely rather than working around it per
+verification, and is arguably better practice regardless (one less thing
+depending on JS execution order).
