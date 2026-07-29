@@ -339,7 +339,7 @@ Tags: #astro
   like the old Content Collections API), with a `loader: glob({...})` and a
   `schema: ({ image }) => z.object({...})` callback.
 
-## 2026-07-28 — PageSpeed Insights is unreachable from this session by two independent paths
+## 2026-07-28 — PageSpeed Insights is unreachable from this session by two independent paths [harvested 2026-07-29]
 
 Tags: #browser-verification #tooling #performance
 
@@ -377,7 +377,7 @@ one. See `docs/TESTING.md` § "Measured baseline" for the actual numbers.
 browser (outside this session's tooling) or a PSI API key — this is a
 task-owner action item, not something to keep retrying unattended.
 
-## 2026-07-28 — Existing elements don't repaint after an in-page CSS custom-property attribute mutation in this session's browser tool
+## 2026-07-28 — Existing elements don't repaint after an in-page CSS custom-property attribute mutation in this session's browser tool [harvested 2026-07-29]
 
 Tags: #browser-verification #css #immersive-mode
 
@@ -428,7 +428,7 @@ in the toggle mechanism itself. Relevant for verifying any future
 Immersive-mode work (T-40 composition, T-42 registration seam) that
 involves toggling `data-mode` live rather than reloading with it pre-set.
 
-## 2026-07-28 — Same gap, different property: `left: clamp(..., var(--x), ...)` on a JS-mutated element also doesn't repaint in this tool
+## 2026-07-28 — Same gap, different property: `left: clamp(..., var(--x), ...)` on a JS-mutated element also doesn't repaint in this tool [harvested 2026-07-29]
 
 Tags: #browser-verification #css
 
