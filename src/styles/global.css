@@ -1,25 +1,22 @@
 @import "tailwindcss";
 
 /*
- * Archivo — self-hosted variable font (M5/T-41; carried forward into Atlas,
- * M6). A single TRUE variable font (wght 100–900, wdth 62–125%, latin
- * subset, ~88KB) — one file covers both the "display" and "body" role,
- * since the width axis IS the design device here (an expanded setting
- * reads as a survey-sheet title stamp; normal width reads as body copy),
- * not a decoration bolted onto two separate static cuts. Source: Google
- * Fonts "Archivo" (SIL Open Font License), fetched via the
- * fonts.googleapis.com css2 API's 2-axis range query and downloaded once
- * into public/fonts/archivo-variable-latin.woff2 — same self-hosting
- * pattern already used for src/lib/og-fonts/*.ttf, just served as a static
- * asset instead of read server-side. Not Fraunces/Playfair/Inter/Space
- * Grotesk — flagged in the M5 brainstorm as the generic-AI-portfolio
- * pairing this project's identity was chosen specifically to avoid (T-14).
- *
- * As of T-47 this face is declared but not yet wired into any token —
- * the M5 dual-mode mechanism that used to scope it to the (now removed)
- * mode-select attribute on <html> is gone (ADR-004). T-49 remaps
- * --font-display/--font-body to it site-wide as part of Atlas's single
- * typography system.
+ * Archivo — self-hosted variable font (M5/T-41, wired into every token in
+ * M6/T-49; carried forward into Atlas, ADR-004). A single TRUE variable
+ * font (wght 100–900, wdth 62–125%, latin subset, ~88KB) — one file covers
+ * both the "display" and "body" role, since the width axis IS the design
+ * device here (an expanded setting reads as a survey-sheet title stamp;
+ * normal width reads as body copy), not a decoration bolted onto two
+ * separate static cuts. Source: Google Fonts "Archivo" (SIL Open Font
+ * License), fetched via the fonts.googleapis.com css2 API's 2-axis range
+ * query and downloaded once into public/fonts/archivo-variable-latin.woff2
+ * — same self-hosting pattern already used for src/lib/og-fonts/*.ttf,
+ * just served as a static asset instead of read server-side. Not
+ * Fraunces/Playfair/Inter/Space Grotesk — flagged in the M5 brainstorm as
+ * the generic-AI-portfolio pairing this project's identity was chosen
+ * specifically to avoid (T-14). Below --font-display/--font-body remap to
+ * this face site-wide — no more Reading/Immersive split, one family for
+ * every page (T-49).
  */
 @font-face {
   font-family: "Archivo";
@@ -28,6 +25,26 @@
   font-stretch: 62% 125%;
   font-display: swap;
   src: url("/fonts/archivo-variable-latin.woff2") format("woff2");
+}
+
+/*
+ * IBM Plex Mono — self-hosted, regular weight only (M6/T-49). Atlas's
+ * notation role (coordinates, plate numbers, dates, units — "data that is
+ * actually measured", per docs/design/atlas/README.md) never needs a
+ * second weight or italic, so unlike Archivo this is a single static cut,
+ * not a variable font: ~14KB vs. Archivo's ~88KB. Same self-hosting
+ * pattern — fetched from the fonts.googleapis.com css2 API's `latin`
+ * subset (IBM Plex Mono has no combined latin+latin-ext file the way
+ * Archivo's request returned, so this is deliberately the narrower latin
+ * subset only) and downloaded once into
+ * public/fonts/ibm-plex-mono-400-latin.woff2.
+ */
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-mono-400-latin.woff2") format("woff2");
 }
 
 /*
@@ -56,16 +73,51 @@
   --color-project: #2f5670;
   --color-flag: #a8481f;
 
-  --font-display: "Bodoni Moda", Georgia, serif;
-  --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+  /*
+   * One family, two roles (M6/T-49) — Archivo's wdth axis IS the display/
+   * body distinction (see the @font-face comment above), so both tokens
+   * point at the same face rather than two separate cuts the way Bodoni
+   * Moda + Karla did. Bodoni Moda/Karla are fully retired: no <link>, no
+   * @font-face, zero requests — replacing them (not just recoloring
+   * headings) was the point of a single visual identity.
+   */
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Archivo", ui-sans-serif, system-ui, sans-serif;
   /*
    * `font-mono` is used across the scrollytelling shell and data modules
-   * (coordinates, figure numbers, tabular stats). T-49 remaps this and
-   * the two families above to Atlas's single Archivo + self-hosted IBM
-   * Plex Mono typography system — all three current values are M3-era
-   * placeholders due to be replaced in that task, not this one.
+   * (coordinates, figure numbers, tabular stats) — exactly Atlas's
+   * "notation" role, so IBM Plex Mono replaces the system-mono stack here.
+   * System fallbacks stay in the chain for the (rare) glyph IBM Plex Mono's
+   * latin-only subset doesn't cover.
    */
-  --font-mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+
+  /*
+   * Atlas's 7-tier type scale (docs/design/atlas/README.md "Typografi"),
+   * declared as paired Tailwind v4 theme tokens (--text-<name> +
+   * --text-<name>--line-height) so `text-sheet-title`, `text-page-title`,
+   * etc. bundle size and line-height in one utility class. Weight and
+   * Archivo's wdth axis are NOT part of this pairing — Tailwind has no
+   * paired token for font-stretch, and each tier's weight is already
+   * available as a standard utility (font-bold, font-extrabold, ...) — so
+   * components apply those two alongside the size utility explicitly.
+   * Declared here, ahead of any consumer: Sheet title (SheetIndex, T-55)
+   * and Plate lead/title (Plate.astro, T-50) don't exist yet, matching how
+   * T-48 declared --color-flag before any component rendered a flag.
+   */
+  --text-sheet-title: 4rem; /* 64px, w800, wdth 125%, ls .004em — 1x per page */
+  --text-sheet-title--line-height: 0.98;
+  --text-page-title: 2.5rem; /* 40px, w700, wdth 118% — h1 every route */
+  --text-page-title--line-height: 1.05;
+  --text-plate-lead: 1.5rem; /* 24px, w700, wdth 115% — Plate size=lead */
+  --text-plate-lead--line-height: 1.15;
+  --text-plate-title: 1.0625rem; /* 17px, w600, wdth 110% — Plate size=standard/compact */
+  --text-plate-title--line-height: 1.25;
+  --text-body: 1rem; /* 16px, w400 — post prose renders at 17px, see posts/[slug].astro */
+  --text-body--line-height: 1.65;
+  --text-meta: 0.875rem; /* 14px, w400, ink-muted — plate summaries, captions */
+  --text-meta--line-height: 1.55;
+  --text-notation: 0.75rem; /* 12px, IBM Plex Mono, ls .06em; labels uppercase ls .12em */
 
   /*
    * Four widths replace the single 800px column used everywhere before
@@ -118,10 +170,16 @@
   }
 
   /*
-   * Bodoni Moda is only loaded at 400/500(italic)/800 (see BaseLayout.astro)
-   * — reset the UA stylesheet's default bold (700) on headings so the
-   * browser never synthesizes a fake-bold weight for a high-contrast Didone
-   * serif. Callers opt back into weight explicitly (font-extrabold, etc).
+   * Reset the UA stylesheet's default bold (700) on headings — several
+   * components deliberately render their h2/h3 at regular weight for a
+   * lighter editorial look (Contact.astro, SectionHeading.astro,
+   * PostCard.astro's title) rather than always opting into a weight
+   * utility. Kept unchanged by the Bodoni Moda → Archivo swap (T-49):
+   * Archivo natively supports every weight in its variable range, so
+   * there's no fake-bold-synthesis risk this reset used to guard against
+   * — it's a design default now, not a font-loading workaround. Callers
+   * that want a heavier tier still opt in explicitly (font-extrabold, the
+   * --text-page-title/--text-sheet-title tiers above, etc).
    */
   h1,
   h2,
@@ -129,16 +187,6 @@
     font-family: var(--font-display);
     font-weight: 400;
   }
-
-  /*
-   * M5's Immersive Mode remap (a second palette + Archivo typography
-   * scoped to a runtime attribute on <html>) and the show/hide rules that
-   * switched between two parallel markup trees were removed here (T-47,
-   * ADR-004) — the site now has a single visual identity ("Atlas") rather
-   * than two selected at runtime. T-48 replaced the tokens above with
-   * Atlas's palette; T-49 wires Archivo/IBM Plex Mono into
-   * --font-display/--font-body/--font-mono site-wide.
-   */
 }
 
 /*
