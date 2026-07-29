@@ -1,0 +1,283 @@
+---
+// Plate — Atlas's single content container (M6/T-50), replacing the two
+// parallel card systems it audited away: PostCard.astro (image-led grid
+// card) and PostListItem.astro (text-row list item). Spec:
+// docs/design/atlas/README.md "Components > Plate" + "Legend swatch", with
+// pixel-exact reference in docs/design/atlas/Hi-Fi - Atlas Screens.dc.html.
+//
+// Anatomy is always the same regardless of size: notation row (hatch swatch
+// + "{Type} · Plate {NN}" + optional INTERACTIVE flag) → title → optional
+// summary → stamp (coordinates + date). Posts without a cover render the
+// identical anatomy minus the image column — never a placeholder hole —
+// achieved here by simply omitting the cover grid column rather than
+// swapping to a different layout.
+//
+// Not yet wired into any page: every current caller of PostCard/
+// PostListItem (Hero+FeaturedProjects+LatestPosts on `/`, PostList on
+// `/explore`, RelatedPosts on post detail, PostCard on `/projects/[name]`,
+// PostListItem on `/tags/[tag]`) is scheduled for its own rebuild in a later
+// M6 task (T-55/T-56/T-57/T-58) — migrating them here would be throwaway
+// work. The one exception, `/explore/[type]`, is migrated to Plate in this
+// same commit: no later task claims that route, and per the handoff's "one
+// container" principle it shouldn't keep using the retired card system for
+// the rest of M6 for no reason. PostCard/PostListItem/RelatedPosts stay in
+// the tree, still working, until each remaining caller is migrated.
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { TYPE_LABEL } from '../lib/posts';
+
+type PlateSize = 'lead' | 'standard' | 'compact';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  size: PlateSize;
+  /** 1-indexed position in whatever sequence the caller is rendering — not derived here, since plate numbering is a page-level layout decision (T-55+). */
+  plateNumber: number;
+  /** Cover thumbnail width in px, lead/standard only. Defaults to 300 (lead) / 104 (standard) per the handoff's own two lead-width contexts ("1fr 300px (Hi-Fi) / 1fr 148px (kompak)"); pass 148 for a lead squeezed into a narrower slot. */
+  coverWidth?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { post, size, plateNumber, coverWidth, headingLevel = 'h3' } = Astro.props;
+const { title, summary, cover, date, type, coordinates, presentation } = post.data;
+
+const href = `/posts/${post.id}`;
+const isInteractive = presentation === 'scrollytelling';
+// Compact is the "no image, ever" tier (matches the Hi-Fi compact row: even
+// the photo tile there — which always has a cover per schema — renders
+// text-only) — smallest anatomy, room for notation + title + stamp only.
+const showCover = size !== 'compact' && Boolean(cover);
+const showSummary = size !== 'compact';
+const resolvedCoverWidth = coverWidth ?? (size === 'lead' ? 300 : 104);
+
+const number = String(plateNumber).padStart(2, '0');
+const notationLabel = size === 'lead' ? `${TYPE_LABEL[type]} · Plate ${number}` : `${TYPE_LABEL[type]} · ${number}`;
+const formattedDate = date.toLocaleDateString('en-US', size === 'compact' ? { year: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' });
+
+const Heading = headingLevel;
+---
+
+<a
+  href={href}
+  class:list={['plate', `plate-${size}`, `plate-hatch-${type}`, showCover && 'plate-with-cover']}
+  style={showCover ? { '--plate-cover-width': `${resolvedCoverWidth}px` } : undefined}
+>
+  <div class="plate-body">
+    <p class="plate-notation">
+      <span class={`plate-swatch plate-hatch-${type}`} aria-hidden="true" />
+      <span>{notationLabel}</span>
+      {isInteractive && <span class="plate-flag">Interactive</span>}
+    </p>
+    <Heading class="plate-title">{title}</Heading>
+    {showSummary && <p class="plate-summary">{summary}</p>}
+    <p class="plate-stamp">
+      {coordinates && <span>{coordinates}</span>}
+      <span>{formattedDate}</span>
+    </p>
+  </div>
+  {
+    showCover && cover && (
+      <div class="plate-cover">
+        <Image src={cover} alt="" widths={[200, 400]} sizes={`${resolvedCoverWidth}px`} />
+      </div>
+    )
+  }
+</a>
+
+<style>
+  .plate {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: border-color 120ms ease;
+  }
+  .plate:hover,
+  .plate:focus-visible {
+    border-color: var(--color-research);
+  }
+  .plate:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  /* Low-opacity hatch overlay behind the content — same pattern as the
+     legend swatch, reused rather than a second decorative token set. */
+  .plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  .plate > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .plate-lead,
+  .plate-standard {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper);
+  }
+  .plate-compact {
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper-raised);
+    transition:
+      border-color 120ms ease,
+      background-color 120ms ease;
+  }
+  .plate-compact:hover,
+  .plate-compact:focus-visible {
+    background-color: var(--color-paper);
+  }
+
+  .plate-lead {
+    padding: 24px;
+  }
+  .plate-lead.plate-with-cover {
+    display: grid;
+    grid-template-columns: 1fr var(--plate-cover-width);
+    gap: 24px;
+    align-items: center;
+  }
+
+  .plate-standard {
+    padding: 16px;
+  }
+  .plate-standard.plate-with-cover {
+    display: grid;
+    grid-template-columns: 1fr var(--plate-cover-width);
+    gap: 16px;
+    align-items: center;
+  }
+
+  .plate-compact {
+    padding: 12px;
+  }
+
+  .plate-notation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .plate-compact .plate-notation {
+    font-size: 10.5px;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .plate-swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-ink);
+  }
+
+  .plate-flag {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-flag);
+    border: 1px solid var(--color-flag);
+    padding: 0 5px;
+    text-transform: uppercase;
+  }
+
+  .plate-title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+  .plate-lead .plate-title {
+    font-size: var(--text-plate-lead);
+    line-height: var(--text-plate-lead--line-height);
+    font-weight: 700;
+    font-stretch: 115%;
+  }
+  .plate-standard .plate-title {
+    font-size: var(--text-plate-title);
+    line-height: var(--text-plate-title--line-height);
+    font-weight: 600;
+    font-stretch: 110%;
+  }
+  .plate-compact .plate-title {
+    margin-bottom: 6px;
+    font-size: 15px;
+    line-height: 1.25;
+    font-weight: 600;
+    font-stretch: 108%;
+  }
+
+  .plate-summary {
+    margin: 0 0 12px;
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    color: var(--color-ink-muted);
+    max-width: 62ch;
+  }
+  .plate-standard .plate-summary {
+    max-width: 52ch;
+  }
+
+  .plate-stamp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ink-muted);
+  }
+  .plate-compact .plate-stamp {
+    gap: 12px;
+    font-size: 11px;
+  }
+
+  .plate-cover {
+    height: 100%;
+  }
+  .plate-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Hatch patterns — reused verbatim at two places: the small notation
+     swatch above, and this 10%-opacity full-plate overlay. Values are the
+     handoff's own (docs/design/atlas/README.md "Legend swatch"), not
+     re-derived from the color tokens, since the hatch geometry (gap/angle)
+     is itself part of the spec, not just the color. */
+  .plate-hatch-research.plate-swatch,
+  a.plate-hatch-research::before {
+    background-image:
+      repeating-linear-gradient(45deg, var(--color-research) 0 2px, transparent 2px 7px),
+      repeating-linear-gradient(-45deg, var(--color-research) 0 2px, transparent 2px 7px);
+  }
+  .plate-hatch-project.plate-swatch,
+  a.plate-hatch-project::before {
+    background-image: repeating-linear-gradient(45deg, var(--color-project) 0 2px, transparent 2px 7px);
+  }
+  .plate-hatch-article.plate-swatch,
+  a.plate-hatch-article::before {
+    background-image: radial-gradient(var(--color-ink-muted) 1px, transparent 1.5px);
+    background-size: 7px 7px;
+  }
+  .plate-hatch-photo.plate-swatch,
+  a.plate-hatch-photo::before {
+    background-color: var(--color-line);
+  }
+</style>

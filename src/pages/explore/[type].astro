@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TypeFilter from '../../components/explore/TypeFilter.astro';
-import PostList from '../../components/explore/PostList.astro';
-import { getPublishedPosts, POST_TYPES } from '../../lib/posts';
+import Plate from '../../components/Plate.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getPublishedPosts, POST_TYPES, TYPE_LABEL } from '../../lib/posts';
 
 export function getStaticPaths() {
   return POST_TYPES.map((type) => ({ params: { type } }));
@@ -10,13 +11,22 @@ export function getStaticPaths() {
 
 const { type } = Astro.params as { type: (typeof POST_TYPES)[number] };
 const posts = (await getPublishedPosts()).filter((post) => post.data.type === type);
-const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
 ---
 
-<BaseLayout title={`${typeLabel} — Explore — Afreza Hernanda`}>
+<BaseLayout title={`${TYPE_LABEL[type]} — Explore — Afreza Hernanda`}>
   <section class="mx-auto max-w-(--container-shell) px-5 py-8">
     <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Explore</h1>
     <TypeFilter active={type} />
-    <PostList posts={posts} emptyMessage={`No ${type} posts yet.`} />
+    {
+      posts.length === 0 ? (
+        <EmptyState message={`No ${TYPE_LABEL[type].toLowerCase()} posts yet.`} ctaHref="/explore" ctaLabel="Back to all" />
+      ) : (
+        <div class="grid gap-4 sm:grid-cols-2">
+          {posts.map((post, i) => (
+            <Plate post={post} size="standard" plateNumber={i + 1} headingLevel="h2" />
+          ))}
+        </div>
+      )
+    }
   </section>
 </BaseLayout>

@@ -3,6 +3,17 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 export const POST_TYPES = ['project', 'article', 'research', 'photo'] as const;
 export type PostType = (typeof POST_TYPES)[number];
 
+// Centralized so Plate.astro, LegendRail.astro, and every type-filtered page
+// share one label set instead of each re-deriving it (previously duplicated
+// via ad hoc `type.charAt(0).toUpperCase() + type.slice(1)` calls and a
+// separate copy in the retired ImmersiveIndex.astro).
+export const TYPE_LABEL: Record<PostType, string> = {
+  project: 'Project',
+  research: 'Research',
+  article: 'Article',
+  photo: 'Photo',
+};
+
 export async function getPublishedPosts(): Promise<CollectionEntry<'posts'>[]> {
   const posts = await getCollection('posts', ({ data }) => import.meta.env.DEV || !data.draft);
   return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
