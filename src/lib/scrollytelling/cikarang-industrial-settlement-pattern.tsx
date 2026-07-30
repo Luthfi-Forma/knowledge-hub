@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -73,8 +73,13 @@ const PHASES = [
 ];
 
 function AnimatedNumber({ value, decimals = 0, suffix = '' }: { value: number; decimals?: number; suffix?: string }) {
+  const reduceMotion = useReducedMotion() ?? false;
   const [display, setDisplay] = useState(value);
   useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(value);
+      return;
+    }
     const start = display;
     const startTime = performance.now();
     const dur = 800;
@@ -88,7 +93,7 @@ function AnimatedNumber({ value, decimals = 0, suffix = '' }: { value: number; d
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, reduceMotion]);
   return (
     <span className="tabular-nums">
       {display.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
@@ -120,6 +125,7 @@ const tooltipStyle = {
 };
 
 function VizIntro() {
+  const reduceMotion = useReducedMotion() ?? false;
   const tiles = Array.from({ length: 40 });
   const factory = new Set([9, 10, 11, 17, 18, 19, 25, 26]);
   const home = new Set([31, 32, 33, 38, 39]);
@@ -131,7 +137,7 @@ function VizIntro() {
             key={i}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.015, duration: 0.4 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.015, duration: reduceMotion ? 0 : 0.4 }}
             className="h-7 w-7"
             style={{
               background: factory.has(i) ? IND : home.has(i) ? RES : 'var(--color-line)',
@@ -147,6 +153,7 @@ function VizIntro() {
 }
 
 function VizProblem() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full items-center justify-center">
       <svg viewBox="0 0 400 320" className="h-full max-h-[380px] w-full max-w-[380px]">
@@ -156,24 +163,24 @@ function VizProblem() {
           cy="160"
           r="40"
           fill={IND}
-          animate={{ cx: [80, 105, 80] }}
+          animate={{ cx: reduceMotion ? 80 : [80, 105, 80] }}
           // Plays once (3s) instead of looping forever: WCAG 2.2.2 requires a
           // pause control for motion running past 5s, and this viz has none.
           // One converge-and-settle still reads as "these two land uses move
           // toward each other" — the loop added nothing but a violation.
-          transition={{ duration: 3, ease: 'easeInOut' }}
+          transition={{ duration: reduceMotion ? 0 : 3, ease: 'easeInOut' }}
         />
         <motion.circle
           cx="320"
           cy="160"
           r="40"
           fill={RES}
-          animate={{ cx: [320, 295, 320] }}
+          animate={{ cx: reduceMotion ? 320 : [320, 295, 320] }}
           // Plays once (3s) instead of looping forever: WCAG 2.2.2 requires a
           // pause control for motion running past 5s, and this viz has none.
           // One converge-and-settle still reads as "these two land uses move
           // toward each other" — the loop added nothing but a violation.
-          transition={{ duration: 3, ease: 'easeInOut' }}
+          transition={{ duration: reduceMotion ? 0 : 3, ease: 'easeInOut' }}
         />
         <text x="80" y="225" textAnchor="middle" fill={IND} fontSize="12" letterSpacing="2">
           INDUSTRY
@@ -190,6 +197,7 @@ function VizProblem() {
 }
 
 function VizFinding1() {
+  const reduceMotion = useReducedMotion() ?? false;
   const data = [
     { name: 'Industrial', 2016: TOTAL_LAND.industry[2016], 2023: TOTAL_LAND.industry[2023], fill: IND },
     { name: 'Residential', 2016: TOTAL_LAND.residential[2016], 2023: TOTAL_LAND.residential[2023], fill: RES },
@@ -197,14 +205,14 @@ function VizFinding1() {
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Hectares of land use, 2016 vs. 2023</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ left: 20, right: 40, top: 10, bottom: 10 }}>
             <XAxis type="number" stroke={MUTED} tick={{ fill: MUTED, fontSize: 11 }} />
             <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 13 }} width={90} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="2016" fill={MUTED} animationDuration={800} />
-            <Bar dataKey="2023" animationDuration={1000}>
+            <Bar dataKey="2016" fill={MUTED} animationDuration={800} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="2023" animationDuration={1000} isAnimationActive={!reduceMotion}>
               {data.map((d, i) => (
                 <Cell key={i} fill={d.fill} />
               ))}
@@ -212,6 +220,25 @@ function VizFinding1() {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Hectares of land use, 2016 vs. 2023</caption>
+        <thead>
+          <tr>
+            <th scope="col">Land use</th>
+            <th scope="col">2016 (ha)</th>
+            <th scope="col">2023 (ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d[2016].toLocaleString('en-US')}</td>
+              <td>{d[2023].toLocaleString('en-US')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-3 grid grid-cols-2 gap-4 border-t border-line pt-3 text-sm">
         <div>
           <div className="text-2xl font-semibold" style={{ color: IND }}>
@@ -231,10 +258,11 @@ function VizFinding1() {
 }
 
 function VizFinding2() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Hectares added per district, 2016 – 2023</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={DISTRICT_GROWTH} margin={{ left: 0, right: 20, top: 10, bottom: 40 }}>
             <XAxis
@@ -247,28 +275,56 @@ function VizFinding2() {
             />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 11 }} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="indDelta" name="Industry" fill={IND} animationDuration={900} />
-            <Bar dataKey="resDelta" name="Residential" fill={RES} animationDuration={900} />
+            <Bar dataKey="indDelta" name="Industry" fill={IND} animationDuration={900} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="resDelta" name="Residential" fill={RES} animationDuration={900} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Hectares added per district, 2016 – 2023</caption>
+        <thead>
+          <tr>
+            <th scope="col">District</th>
+            <th scope="col">Industry (ha)</th>
+            <th scope="col">Residential (ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DISTRICT_GROWTH.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.indDelta.toLocaleString('en-US')}</td>
+              <td>{d.resDelta.toLocaleString('en-US')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Legend />
     </div>
   );
 }
 
 function VizFinding3() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Hectares added per phase — watch the lines cross</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={PHASES} margin={{ left: 10, right: 30, top: 20, bottom: 20 }}>
             <CartesianGrid stroke="var(--color-line)" strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="phase" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 12 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 11 }} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Line type="monotone" dataKey="industry" stroke={IND} strokeWidth={3} dot={{ r: 6, fill: IND }} animationDuration={1200} />
+            <Line
+              type="monotone"
+              dataKey="industry"
+              stroke={IND}
+              strokeWidth={3}
+              dot={{ r: 6, fill: IND }}
+              animationDuration={1200}
+              isAnimationActive={!reduceMotion}
+            />
             <Line
               type="monotone"
               dataKey="residential"
@@ -276,16 +332,37 @@ function VizFinding3() {
               strokeWidth={3}
               dot={{ r: 6, fill: RES }}
               animationDuration={1200}
+              isAnimationActive={!reduceMotion}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Hectares added per phase</caption>
+        <thead>
+          <tr>
+            <th scope="col">Phase</th>
+            <th scope="col">Industry (ha)</th>
+            <th scope="col">Residential (ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PHASES.map((p) => (
+            <tr key={p.phase}>
+              <th scope="row">{p.phase}</th>
+              <td>{p.industry.toLocaleString('en-US')}</td>
+              <td>{p.residential.toLocaleString('en-US')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Legend />
     </div>
   );
 }
 
 function VizFinding4() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col justify-center gap-8 p-6">
       <div className="text-sm text-ink-muted">Growth 2016 → 2023 — land vs. buildings</div>
@@ -301,7 +378,7 @@ function VizFinding4() {
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${r.land}%` }}
-                  transition={{ duration: 1, ease: 'easeOut' }}
+                  transition={{ duration: reduceMotion ? 0 : 1, ease: 'easeOut' }}
                   className="h-full"
                   style={{ background: r.name === 'Industrial' ? IND : RES, opacity: 0.55 }}
                 />
@@ -316,7 +393,7 @@ function VizFinding4() {
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${r.buildings}%` }}
-                  transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
+                  transition={{ duration: reduceMotion ? 0 : 1.2, ease: 'easeOut', delay: reduceMotion ? 0 : 0.15 }}
                   className="h-full"
                   style={{ background: r.name === 'Industrial' ? IND : RES }}
                 />
@@ -339,21 +416,41 @@ function VizFinding4() {
 }
 
 function VizConclusion() {
+  const reduceMotion = useReducedMotion() ?? false;
   const data = LAND_BY_DISTRICT_2023.map((d) => ({ ...d, name: d.name.replace('Cikarang ', '') }));
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Land use footprint by district, 2023 (ha)</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ left: 0, right: 20, top: 10, bottom: 30 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 11 }} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="industry" stackId="a" fill={IND} animationDuration={900} />
-            <Bar dataKey="residential" stackId="a" fill={RES} animationDuration={900} />
+            <Bar dataKey="industry" stackId="a" fill={IND} animationDuration={900} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="residential" stackId="a" fill={RES} animationDuration={900} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Land use footprint by district, 2023</caption>
+        <thead>
+          <tr>
+            <th scope="col">District</th>
+            <th scope="col">Industry (ha)</th>
+            <th scope="col">Residential (ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.industry.toLocaleString('en-US')}</td>
+              <td>{d.residential.toLocaleString('en-US')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <Legend />
     </div>
   );

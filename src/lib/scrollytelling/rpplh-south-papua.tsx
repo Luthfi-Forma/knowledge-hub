@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, PieChart, Pie } from 'recharts';
 import Scrollytelling, { type ScrollytellingSection } from '../../islands/Scrollytelling';
 
@@ -57,8 +57,13 @@ const VILLAGE_STATUS = [
 ];
 
 function AnimatedNumber({ value, decimals = 0 }: { value: number; decimals?: number }) {
+  const reduceMotion = useReducedMotion() ?? false;
   const [display, setDisplay] = useState(0);
   useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(value);
+      return;
+    }
     const startTime = performance.now();
     const dur = 900;
     let raf = 0;
@@ -71,7 +76,7 @@ function AnimatedNumber({ value, decimals = 0 }: { value: number; decimals?: num
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, reduceMotion]);
   return (
     <span className="tabular-nums">
       {display.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
@@ -87,6 +92,7 @@ const tooltipStyle = {
 };
 
 function VizIntro() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
       <div className="text-4xl font-semibold" style={{ color: ACCENT }}>
@@ -99,7 +105,7 @@ function VizIntro() {
             key={d}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.08, duration: 0.4 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.08, duration: reduceMotion ? 0 : 0.4 }}
             className="flex h-14 w-24 items-center justify-center px-1 text-center text-[10px] text-ink-muted"
             style={{ background: 'var(--color-line)' }}
           >
@@ -113,6 +119,7 @@ function VizIntro() {
 }
 
 function VizProblem() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full items-center justify-center">
       <svg viewBox="0 0 400 300" className="h-full max-h-[340px] w-full max-w-[380px]">
@@ -124,7 +131,7 @@ function VizProblem() {
           opacity="0.55"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.55 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: reduceMotion ? 0 : 0.8 }}
         />
         <motion.circle
           cx="270"
@@ -134,7 +141,7 @@ function VizProblem() {
           opacity="0.55"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.55 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 0.2 }}
         />
         <text x="90" y="150" textAnchor="middle" fill="var(--color-ink)" fontSize="11" letterSpacing="1">
           Food
@@ -157,6 +164,7 @@ function VizProblem() {
 }
 
 function VizMethod() {
+  const reduceMotion = useReducedMotion() ?? false;
   const steps = ['Driver', 'Pressure', 'State', 'Impact', 'Response'];
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 p-6">
@@ -165,7 +173,7 @@ function VizMethod() {
           key={s}
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.12, duration: 0.4 }}
+          transition={{ delay: reduceMotion ? 0 : i * 0.12, duration: reduceMotion ? 0 : 0.4 }}
           className="flex w-full max-w-xs items-center gap-3"
         >
           <span className="font-mono text-xs" style={{ color: ACCENT }}>{String(i + 1).padStart(2, '0')}</span>
@@ -178,37 +186,76 @@ function VizMethod() {
 }
 
 function VizFinding1() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col gap-4 p-4">
       <div>
         <div className="mb-1.5 text-xs text-ink-muted">Jasa lingkungan penyedia pangan</div>
-        <ResponsiveContainer width="100%" height={90}>
-          <BarChart data={FOOD_SERVICE} layout="vertical" margin={{ left: 10, right: 20, top: 0, bottom: 0 }}>
-            <XAxis type="number" hide />
-            <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: MUTED, fontSize: 9 }} width={45} />
-            <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="value" animationDuration={800}>
-              {FOOD_SERVICE.map((d, i) => (
-                <Cell key={i} fill={i === 3 ? ACCENT : 'var(--color-line)'} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <div aria-hidden="true">
+          <ResponsiveContainer width="100%" height={90}>
+            <BarChart data={FOOD_SERVICE} layout="vertical" margin={{ left: 10, right: 20, top: 0, bottom: 0 }}>
+              <XAxis type="number" hide />
+              <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: MUTED, fontSize: 9 }} width={45} />
+              <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
+              <Bar dataKey="value" animationDuration={800} isAnimationActive={!reduceMotion}>
+                {FOOD_SERVICE.map((d, i) => (
+                  <Cell key={i} fill={i === 3 ? ACCENT : 'var(--color-line)'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <table className="sr-only">
+          <caption>Jasa lingkungan penyedia pangan, per kelas (ha)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Kelas</th>
+              <th scope="col">Luas (ha)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {FOOD_SERVICE.map((d) => (
+              <tr key={d.name}>
+                <th scope="row">{d.name}</th>
+                <td>{d.value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div>
         <div className="mb-1.5 text-xs text-ink-muted">Jasa lingkungan pendukung kehati &amp; habitat</div>
-        <ResponsiveContainer width="100%" height={90}>
-          <BarChart data={KEHATI_SERVICE} layout="vertical" margin={{ left: 10, right: 20, top: 0, bottom: 0 }}>
-            <XAxis type="number" hide />
-            <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: MUTED, fontSize: 9 }} width={45} />
-            <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="value" animationDuration={800}>
-              {KEHATI_SERVICE.map((d, i) => (
-                <Cell key={i} fill={i === 4 ? SECOND : 'var(--color-line)'} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <div aria-hidden="true">
+          <ResponsiveContainer width="100%" height={90}>
+            <BarChart data={KEHATI_SERVICE} layout="vertical" margin={{ left: 10, right: 20, top: 0, bottom: 0 }}>
+              <XAxis type="number" hide />
+              <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: MUTED, fontSize: 9 }} width={45} />
+              <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
+              <Bar dataKey="value" animationDuration={800} isAnimationActive={!reduceMotion}>
+                {KEHATI_SERVICE.map((d, i) => (
+                  <Cell key={i} fill={i === 4 ? SECOND : 'var(--color-line)'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <table className="sr-only">
+          <caption>Jasa lingkungan pendukung kehati dan habitat, per kelas (ha)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Kelas</th>
+              <th scope="col">Luas (ha)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {KEHATI_SERVICE.map((d) => (
+              <tr key={d.name}>
+                <th scope="row">{d.name}</th>
+                <td>{d.value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
       <div className="text-center text-[10px] text-ink-muted">74.63% food-service score is class 4 · 67.88% biodiversity score is class 5 (of 2,297,698 ha)</div>
     </div>
@@ -216,20 +263,38 @@ function VizFinding1() {
 }
 
 function VizFinding2() {
+  const reduceMotion = useReducedMotion() ?? false;
   const data = [...CULTURAL_SPACE].sort((a, b) => a.value - b.value);
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Indicative cultural space within the Food Estate area (ha)</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ left: 20, right: 30, top: 10, bottom: 10 }}>
             <XAxis type="number" stroke={MUTED} tick={{ fill: MUTED, fontSize: 9 }} />
             <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 10 }} width={140} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="value" fill={ACCENT} animationDuration={900} />
+            <Bar dataKey="value" fill={ACCENT} animationDuration={900} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Indicative cultural space within the Food Estate area (ha)</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Area (ha)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.value.toLocaleString('en-US', { maximumFractionDigits: 2 })}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 text-center text-[10px] text-ink-muted">
         Total {CULTURAL_TOTAL.toLocaleString('en-US', { maximumFractionDigits: 0 })} ha across 7 categories
       </div>
@@ -269,19 +334,39 @@ function VizFinding3() {
 }
 
 function VizConclusion() {
+  const reduceMotion = useReducedMotion() ?? false;
   const data = [...VILLAGE_STATUS];
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
-      <ResponsiveContainer width="100%" height={160}>
-        <PieChart>
-          <Pie data={data} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70} paddingAngle={2}>
-            {data.map((_, i) => (
-              <Cell key={i} fill={[SECOND, ACCENT, 'var(--color-line)', 'var(--color-ink-muted)'][i]} />
-            ))}
-          </Pie>
-          <Tooltip contentStyle={tooltipStyle} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div aria-hidden="true">
+        <ResponsiveContainer width="100%" height={160}>
+          <PieChart>
+            <Pie data={data} dataKey="value" nameKey="name" innerRadius={40} outerRadius={70} paddingAngle={2} isAnimationActive={!reduceMotion}>
+              {data.map((_, i) => (
+                <Cell key={i} fill={[SECOND, ACCENT, 'var(--color-line)', 'var(--color-ink-muted)'][i]} />
+              ))}
+            </Pie>
+            <Tooltip contentStyle={tooltipStyle} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <table className="sr-only">
+        <caption>Village development status (IDM) within the Food Estate area</caption>
+        <thead>
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Villages</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 space-y-1 text-xs text-ink-muted">
         {data.map((d, i) => (
           <div key={d.name} className="flex items-center gap-2">

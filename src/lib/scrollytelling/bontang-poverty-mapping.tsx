@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -83,8 +83,13 @@ const TLI_STUNTING = [
 ];
 
 function AnimatedNumber({ value }: { value: number }) {
+  const reduceMotion = useReducedMotion() ?? false;
   const [display, setDisplay] = useState(0);
   useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(value);
+      return;
+    }
     const startTime = performance.now();
     const dur = 900;
     let raf = 0;
@@ -97,7 +102,7 @@ function AnimatedNumber({ value }: { value: number }) {
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, reduceMotion]);
   return <span className="tabular-nums">{display.toLocaleString('en-US')}</span>;
 }
 
@@ -109,6 +114,7 @@ const tooltipStyle = {
 };
 
 function VizIntro() {
+  const reduceMotion = useReducedMotion() ?? false;
   const tiles = POOR_BY_REGION.map((r) => ({ ...r, isBontang: r.name === 'Bontang' }));
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
@@ -124,7 +130,7 @@ function VizIntro() {
             key={r.name}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.06, duration: 0.4 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.06, duration: reduceMotion ? 0 : 0.4 }}
             className="flex h-12 w-12 items-center justify-center text-[9px] font-medium"
             style={{
               background: r.isBontang ? ACCENT : 'var(--color-line)',
@@ -142,17 +148,18 @@ function VizIntro() {
 }
 
 function VizProblem() {
+  const reduceMotion = useReducedMotion() ?? false;
   const data = [...POOR_BY_REGION].sort((a, b) => a.count - b.count);
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Extreme-poor individuals (P3KE decile 1) per kabupaten/kota</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ left: 20, right: 30, top: 10, bottom: 10 }}>
             <XAxis type="number" stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} />
             <YAxis type="category" dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} width={110} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="count" animationDuration={900}>
+            <Bar dataKey="count" animationDuration={900} isAnimationActive={!reduceMotion}>
               {data.map((d, i) => (
                 <Cell key={i} fill={d.name === 'Bontang' ? ACCENT : 'var(--color-line)'} />
               ))}
@@ -160,11 +167,29 @@ function VizProblem() {
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Extreme-poor individuals (P3KE decile 1) per kabupaten/kota</caption>
+        <thead>
+          <tr>
+            <th scope="col">Kabupaten/kota</th>
+            <th scope="col">Individuals</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.count.toLocaleString('en-US')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
 
 function VizMethod() {
+  const reduceMotion = useReducedMotion() ?? false;
   const tracks = [
     { label: 'Sasaran 1', steps: ['Per-individual point digitization', 'Boundary & imagery overlay', 'Kernel density'], out: 'Concentration map' },
     { label: 'Sasaran 2', steps: ['19 P3KE indicators', 'Distribution overlay', 'Characteristic clustering'], out: 'Characteristic map' },
@@ -176,7 +201,7 @@ function VizMethod() {
           key={t.label}
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: ti * 0.15, duration: 0.5 }}
+          transition={{ delay: reduceMotion ? 0 : ti * 0.15, duration: reduceMotion ? 0 : 0.5 }}
           className="flex flex-1 flex-col items-center gap-2"
         >
           <div className="text-xs font-medium tracking-widest uppercase" style={{ color: ACCENT }}>
@@ -197,20 +222,40 @@ function VizMethod() {
 }
 
 function VizFinding1() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Mapping progress per kabupaten/kota — June 2023</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={PROGRESS_BY_REGION} margin={{ left: 0, right: 20, top: 10, bottom: 50 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 9 }} angle={-35} textAnchor="end" interval={0} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} unit="%" />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="sasaran1" name="Sasaran 1 (concentration map)" fill={ACCENT} animationDuration={800} />
-            <Bar dataKey="sasaran2" name="Sasaran 2 (characteristics)" fill={SECOND} animationDuration={800} />
+            <Bar dataKey="sasaran1" name="Sasaran 1 (concentration map)" fill={ACCENT} animationDuration={800} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="sasaran2" name="Sasaran 2 (characteristics)" fill={SECOND} animationDuration={800} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Mapping progress per kabupaten/kota, June 2023</caption>
+        <thead>
+          <tr>
+            <th scope="col">Kabupaten/kota</th>
+            <th scope="col">Sasaran 1 (concentration map)</th>
+            <th scope="col">Sasaran 2 (characteristics)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PROGRESS_BY_REGION.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.sasaran1}%</td>
+              <td>{d.sasaran2}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 flex items-center gap-4 text-xs text-ink-muted">
         <span className="flex items-center gap-1.5">
           <span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> Sasaran 1
@@ -225,6 +270,7 @@ function VizFinding1() {
 
 function VizFinding2() {
   // Qualitative hotspot-vs-spread visual (no citywide % figures were published for this comparison).
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full items-center justify-around p-6">
       {[
@@ -247,7 +293,7 @@ function VizFinding2() {
                   fill={ACCENT}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: panel.spread ? 0.5 : 0.85 }}
-                  transition={{ delay: i * 0.02, duration: 0.4 }}
+                  transition={{ delay: reduceMotion ? 0 : i * 0.02, duration: reduceMotion ? 0 : 0.4 }}
                 />
               );
             })}
@@ -261,6 +307,7 @@ function VizFinding2() {
 }
 
 function VizFinding3() {
+  const reduceMotion = useReducedMotion() ?? false;
   const tenureTotal = TLI_TENURE.reduce((s, d) => s + d.value, 0);
   return (
     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto p-4">
@@ -274,7 +321,7 @@ function VizFinding3() {
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(d.value / tenureTotal) * 100}%` }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: reduceMotion ? 0 : 0.8 }}
                 className="h-full"
                 style={{ background: ACCENT }}
               />
@@ -286,29 +333,67 @@ function VizFinding3() {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <div className="mb-1 text-xs text-ink-muted">Owns assets</div>
-          <ResponsiveContainer width="100%" height={90}>
-            <PieChart>
-              <Pie data={TLI_ASSETS} dataKey="value" nameKey="name" innerRadius={20} outerRadius={38}>
-                {TLI_ASSETS.map((_, i) => (
-                  <Cell key={i} fill={i === 0 ? 'var(--color-line)' : ACCENT} />
-                ))}
-              </Pie>
-              <Tooltip contentStyle={tooltipStyle} />
-            </PieChart>
-          </ResponsiveContainer>
+          <div aria-hidden="true">
+            <ResponsiveContainer width="100%" height={90}>
+              <PieChart>
+                <Pie data={TLI_ASSETS} dataKey="value" nameKey="name" innerRadius={20} outerRadius={38} isAnimationActive={!reduceMotion}>
+                  {TLI_ASSETS.map((_, i) => (
+                    <Cell key={i} fill={i === 0 ? 'var(--color-line)' : ACCENT} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={tooltipStyle} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <table className="sr-only">
+            <caption>Owns assets, Tanjung Laut Indah</caption>
+            <thead>
+              <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Households</th>
+              </tr>
+            </thead>
+            <tbody>
+              {TLI_ASSETS.map((d) => (
+                <tr key={d.name}>
+                  <th scope="row">{d.name}</th>
+                  <td>{d.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <div>
           <div className="mb-1 text-xs text-ink-muted">Stunting risk</div>
-          <ResponsiveContainer width="100%" height={90}>
-            <PieChart>
-              <Pie data={TLI_STUNTING} dataKey="value" nameKey="name" innerRadius={20} outerRadius={38}>
-                {TLI_STUNTING.map((_, i) => (
-                  <Cell key={i} fill={[SECOND, 'var(--color-line)', ACCENT][i]} />
-                ))}
-              </Pie>
-              <Tooltip contentStyle={tooltipStyle} />
-            </PieChart>
-          </ResponsiveContainer>
+          <div aria-hidden="true">
+            <ResponsiveContainer width="100%" height={90}>
+              <PieChart>
+                <Pie data={TLI_STUNTING} dataKey="value" nameKey="name" innerRadius={20} outerRadius={38} isAnimationActive={!reduceMotion}>
+                  {TLI_STUNTING.map((_, i) => (
+                    <Cell key={i} fill={[SECOND, 'var(--color-line)', ACCENT][i]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={tooltipStyle} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <table className="sr-only">
+            <caption>Child stunting risk, Tanjung Laut Indah</caption>
+            <thead>
+              <tr>
+                <th scope="col">Risk band</th>
+                <th scope="col">Children</th>
+              </tr>
+            </thead>
+            <tbody>
+              {TLI_STUNTING.map((d) => (
+                <tr key={d.name}>
+                  <th scope="row">{d.name}</th>
+                  <td>{d.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -316,18 +401,38 @@ function VizFinding3() {
 }
 
 function VizConclusion() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
-      <ResponsiveContainer width="100%" height={180}>
-        <PieChart>
-          <Pie data={ROLLOUT_STATUS} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-            {ROLLOUT_STATUS.map((_, i) => (
-              <Cell key={i} fill={[ACCENT, SECOND, 'var(--color-line)'][i]} />
-            ))}
-          </Pie>
-          <Tooltip contentStyle={tooltipStyle} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div aria-hidden="true">
+        <ResponsiveContainer width="100%" height={180}>
+          <PieChart>
+            <Pie data={ROLLOUT_STATUS} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2} isAnimationActive={!reduceMotion}>
+              {ROLLOUT_STATUS.map((_, i) => (
+                <Cell key={i} fill={[ACCENT, SECOND, 'var(--color-line)'][i]} />
+              ))}
+            </Pie>
+            <Tooltip contentStyle={tooltipStyle} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <table className="sr-only">
+        <caption>Mapping rollout status, 10 kabupaten/kota</caption>
+        <thead>
+          <tr>
+            <th scope="col">Status</th>
+            <th scope="col">Kabupaten/kota</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ROLLOUT_STATUS.map((r) => (
+            <tr key={r.name}>
+              <th scope="row">{r.name}</th>
+              <td>{r.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 space-y-1 text-xs text-ink-muted">
         {ROLLOUT_STATUS.map((r, i) => (
           <div key={r.name} className="flex items-center gap-2">

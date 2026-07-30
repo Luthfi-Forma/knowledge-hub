@@ -3,11 +3,11 @@
 <!-- SNAPSHOT file: overwrite it, do not append. Updated at every session close
      by /project-status, grounded in git log — not recall. -->
 
-- Updated: 2026-07-29
+- Updated: 2026-07-30
 - Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1, S2, S3 selesai**
-  (T-45–T-58); S4 (T-59–T-60) dan S5 (T-61–T-62) tersisa. M7 (lapisan
-  editorial, T-63–T-65) menunggu setelah M6 tutup.
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1, S2, S3 selesai,
+  S4 sebagian** (T-45–T-59); T-60 (S4) dan S5 (T-61–T-62) tersisa. M7
+  (lapisan editorial, T-63–T-65) menunggu setelah M6 tutup.
 
 ## Current status
 
@@ -51,7 +51,29 @@ redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`).
    post, angka `impact` sebagian post — semuanya cuma bisa ditulis pemilik
    situs.
 
-## Sesi ini (M6 Atlas — S1, S2, S3, 2026-07-29)
+## Sesi ini (M6 Atlas — S4 T-59, 2026-07-30)
+
+Satu task, belum di-commit. T-59 (satu-satunya kerja sisi React S4):
+`useReducedMotion()` sekarang dipanggil di 28 fungsi `Viz*` lintas 4 modul
+`lib/scrollytelling/*.tsx` (sebelumnya cuma shell `islands/Scrollytelling.tsx`
+yang memanggilnya, T-35) — men-gate 3 kelas motion (`motion.div`/`motion.circle`
+via ternary duration/delay, Recharts `Bar`/`Line`/`Pie` via prop bawaan
+`isAnimationActive`, `AnimatedNumber` kustom berbasis `requestAnimationFrame`
+di 3/4 modul). Tabel data `sr-only` ditambah untuk 15 chart Recharts (bukan
+untuk visual kustom non-Recharts — cakupan sengaja dibatasi persis sesuai
+teks task, WCAG 1.1.1). Detail lengkap + bug dorman yang ditemukan
+(`AnimatedNumber` Cikarang yang animasinya sudah lama tidak pernah bergerak)
+ada di `docs/TASK.md` Done T-59.
+
+Diverifikasi lewat teknik `docs/memory/LESSONS.md` (`client:load` +
+`useState(ids[N])` sementara, karena `IntersectionObserver` tidak fire di
+tooling Browser-pane sesi ini): 2 chart representatif diuji langsung dengan
+data cocok 1:1 (Cikarang `BarChart`, Bontang `PieChart`), Jabung/RPPLH tidak
+diuji terpisah (pola struktural identik, type-check + build sudah hijau).
+`npm run build` hijau, 44 halaman. Gate `grep` hex literal: nol di keempat
+modul.
+
+## Last session (M6 Atlas — S1, S2, S3, 2026-07-29)
 
 14 commit bersih di `main` (belum di-push): dari `a77f81f` (persiapan —
 handoff dipindah ke `docs/design/atlas/`, ADR-004) sampai `ac88863` (T-58,
@@ -109,26 +131,16 @@ browser baru dipakai setelah console log ditemukan menumpuk lintas-navigasi
 di tab lama (bukan bug halaman); `astro preview` dipakai konsisten, bukan
 dev server.
 
-## Last session (M6 prep, 2026-07-29 — sebelum sesi ini)
-
-Perencanaan M6 murni (bukan kode): handoff Claude Design "Atlas" diterima
-user di luar sesi, dipindah ke `docs/design/atlas/`; ADR-004 ditulis;
-ROADMAP/TASK/CLAUDE.md diperbarui. Detail penuh di commit `a77f81f` dan
-sesi log sebelumnya.
-
 ## Next steps
 
-1. **Mulai T-59** (S4) — satu-satunya kerja sisi React di M6: `useReducedMotion()`
-   di 4 modul `lib/scrollytelling/*.tsx` (hari ini hanya shell yang
-   memanggilnya) + tabel data alternatif tiap chart Recharts (kegagalan
-   WCAG 1.1.1 hari ini). Verifikasi ulang keempat modul tetap nol hex
-   literal setelah semua perubahan token S1.
+1. **Commit T-59** — kerja di working tree sesi ini belum di-commit; minta
+   konfirmasi user dulu (aturan commit eksplisit).
 2. T-60 — restyle Pagefind ke token Atlas, tutup `docs/memory/DEBT.md` #1.
 3. T-61 — OG image ikut Atlas (palet + Archivo/IBM Plex Mono, hapus 3 TTF
    Bodoni/Karla).
 4. T-62 — tutup M6: 14 item verification checklist handoff, remeasure
    berat transfer, **CHANGELOG diperbarui di sini** (sengaja belum
-   disentuh sepanjang S1–S3, mengikuti pola M5/T-44 — full pass di
+   disentuh sepanjang S1–S4, mengikuti pola M5/T-44 — full pass di
    task penutup milestone, bukan per-task).
 5. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
    (T-62), atau lebih awal jika user memintanya secara eksplisit.

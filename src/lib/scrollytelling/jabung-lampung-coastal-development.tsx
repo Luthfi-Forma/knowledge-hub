@@ -1,5 +1,5 @@
 import { type ComponentType } from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, PieChart, Pie } from 'recharts';
 import Scrollytelling, { type ScrollytellingSection } from '../../islands/Scrollytelling';
 
@@ -50,6 +50,7 @@ const tooltipStyle = {
 };
 
 function VizIntro() {
+  const reduceMotion = useReducedMotion() ?? false;
   const names = [
     'Way Jepara', 'Labuhan Maringgai', 'Sekampung Udik', 'Pasir Sakti', 'Mataram Baru',
     'Jabung', 'Waway Karya', 'Marga Sekampung', 'Bandar Sribhawono', 'Melinting', 'Gunung Pelindung', 'Braja Selebah',
@@ -64,7 +65,7 @@ function VizIntro() {
             key={n}
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.05, duration: 0.4 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.05, duration: reduceMotion ? 0 : 0.4 }}
             className="flex h-14 w-20 items-center justify-center px-1 text-center text-[9px] leading-tight text-ink-muted"
             style={{ background: n === 'Way Jepara' ? ACCENT : 'var(--color-line)', color: n === 'Way Jepara' ? 'var(--color-paper)' : undefined }}
           >
@@ -78,6 +79,7 @@ function VizIntro() {
 }
 
 function VizProblem() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col justify-center gap-3 p-6">
       {RTRW_TIERS.map((t, i) => (
@@ -85,7 +87,7 @@ function VizProblem() {
           key={t.code}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.1, duration: 0.4 }}
+          transition={{ delay: reduceMotion ? 0 : i * 0.1, duration: reduceMotion ? 0 : 0.4 }}
           className="border border-line bg-paper px-4 py-2.5"
         >
           <div className="flex items-baseline gap-2">
@@ -103,11 +105,18 @@ function VizProblem() {
 }
 
 function VizMethod() {
+  const reduceMotion = useReducedMotion() ?? false;
   const steps = ['19 facility & service indicators', 'Weighting per kecamatan', 'Skalogram score', 'Hierarki 1 / 2 / 3'];
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6">
       {steps.map((s, i) => (
-        <motion.div key={s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15, duration: 0.4 }} className="w-full max-w-xs">
+        <motion.div
+          key={s}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: reduceMotion ? 0 : i * 0.15, duration: reduceMotion ? 0 : 0.4 }}
+          className="w-full max-w-xs"
+        >
           <div
             className="border px-4 py-2.5 text-center text-xs"
             style={i === steps.length - 1 ? { borderColor: ACCENT, color: ACCENT, fontWeight: 500 } : { borderColor: 'var(--color-line)', color: 'var(--color-ink-muted)' }}
@@ -122,20 +131,40 @@ function VizMethod() {
 }
 
 function VizFinding1() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Capital candidates — IPD score &amp; facility-type count (of 19)</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={CAPITAL_CANDIDATES} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="ipd" name="IPD score" fill={ACCENT} animationDuration={800} />
-            <Bar dataKey="facilities" name="Facility types (/19)" fill={SECOND} animationDuration={800} />
+            <Bar dataKey="ipd" name="IPD score" fill={ACCENT} animationDuration={800} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="facilities" name="Facility types (/19)" fill={SECOND} animationDuration={800} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Capital candidates — IPD score and facility-type count (of 19)</caption>
+        <thead>
+          <tr>
+            <th scope="col">Kecamatan</th>
+            <th scope="col">IPD score</th>
+            <th scope="col">Facility types (/19)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {CAPITAL_CANDIDATES.map((d) => (
+            <tr key={d.name}>
+              <th scope="row">{d.name}</th>
+              <td>{d.ipd}</td>
+              <td>{d.facilities}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 flex items-center gap-4 text-xs text-ink-muted">
         <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> IPD score</span>
         <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Facility types</span>
@@ -145,18 +174,38 @@ function VizFinding1() {
 }
 
 function VizFinding2() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
-      <ResponsiveContainer width="100%" height={180}>
-        <PieChart>
-          <Pie data={HIERARCHY_TIERS} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2}>
-            {HIERARCHY_TIERS.map((_, i) => (
-              <Cell key={i} fill={[ACCENT, SECOND, 'var(--color-line)'][i]} />
-            ))}
-          </Pie>
-          <Tooltip contentStyle={tooltipStyle} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div aria-hidden="true">
+        <ResponsiveContainer width="100%" height={180}>
+          <PieChart>
+            <Pie data={HIERARCHY_TIERS} dataKey="value" nameKey="name" innerRadius={45} outerRadius={75} paddingAngle={2} isAnimationActive={!reduceMotion}>
+              {HIERARCHY_TIERS.map((_, i) => (
+                <Cell key={i} fill={[ACCENT, SECOND, 'var(--color-line)'][i]} />
+              ))}
+            </Pie>
+            <Tooltip contentStyle={tooltipStyle} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <table className="sr-only">
+        <caption>Settlement hierarchy tiers, 12 kecamatan</caption>
+        <thead>
+          <tr>
+            <th scope="col">Tier</th>
+            <th scope="col">Kecamatan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {HIERARCHY_TIERS.map((t) => (
+            <tr key={t.name}>
+              <th scope="row">{t.name}</th>
+              <td>{t.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 space-y-1 text-xs text-ink-muted">
         {HIERARCHY_TIERS.map((t, i) => (
           <div key={t.name} className="flex items-center gap-2">
@@ -170,6 +219,7 @@ function VizFinding2() {
 }
 
 function VizFinding3() {
+  const reduceMotion = useReducedMotion() ?? false;
   const zones = [
     { label: 'Agropolitan', place: 'Bandar Sribhawono', items: ['Corn', 'Cassava', 'Rice', 'Rubber', 'Palm oil'], note: 'Feeder Road corridor' },
     { label: 'Minapolitan', place: 'Labuhan Maringgai + Pasir Sakti', items: ['Pel. Maringgai', 'Pel. Way Penet', 'Pel. Way Sekampung'], note: 'Crab processing' },
@@ -181,7 +231,7 @@ function VizFinding3() {
           key={z.label}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.15, duration: 0.4 }}
+          transition={{ delay: reduceMotion ? 0 : i * 0.15, duration: reduceMotion ? 0 : 0.4 }}
           className="flex flex-1 flex-col items-center gap-2 border border-line bg-paper px-4 py-5 text-center"
         >
           <div className="text-xs font-medium tracking-widest uppercase" style={{ color: ACCENT }}>{z.label}</div>
@@ -199,20 +249,40 @@ function VizFinding3() {
 }
 
 function VizConclusion() {
+  const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
       <div className="mb-3 text-sm text-ink-muted">Three planning scenarios — % final achievement</div>
-      <div className="flex-1">
+      <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={SCENARIOS} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
             <XAxis dataKey="name" stroke={MUTED} tick={{ fill: 'var(--color-ink)', fontSize: 11 }} />
             <YAxis stroke={MUTED} tick={{ fill: MUTED, fontSize: 10 }} unit="%" />
             <Tooltip cursor={{ fill: 'var(--color-line)' }} contentStyle={tooltipStyle} />
-            <Bar dataKey="kawasan" name="Area development" fill={ACCENT} animationDuration={800} />
-            <Bar dataKey="infrastruktur" name="Infrastructure development" fill={SECOND} animationDuration={800} />
+            <Bar dataKey="kawasan" name="Area development" fill={ACCENT} animationDuration={800} isAnimationActive={!reduceMotion} />
+            <Bar dataKey="infrastruktur" name="Infrastructure development" fill={SECOND} animationDuration={800} isAnimationActive={!reduceMotion} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+      <table className="sr-only">
+        <caption>Planning scenarios — % final achievement</caption>
+        <thead>
+          <tr>
+            <th scope="col">Scenario</th>
+            <th scope="col">Area development</th>
+            <th scope="col">Infrastructure development</th>
+          </tr>
+        </thead>
+        <tbody>
+          {SCENARIOS.map((s) => (
+            <tr key={s.name}>
+              <th scope="row">{s.name}</th>
+              <td>{s.kawasan}%</td>
+              <td>{s.infrastruktur}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="mt-2 flex items-center gap-4 text-xs text-ink-muted">
         <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: ACCENT }} /> Area</span>
         <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5" style={{ background: SECOND }} /> Infrastructure</span>
