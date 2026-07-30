@@ -35,22 +35,27 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
   return Array.from(counts, ([tag, count]) => ({ tag, count })).sort((a, b) => a.tag.localeCompare(b.tag));
 }
 
-export async function getRelatedPosts(
-  post: CollectionEntry<'posts'>,
-  limit = 3,
-): Promise<CollectionEntry<'posts'>[]> {
+export interface RelatedPost {
+  post: CollectionEntry<'posts'>;
+  // Shared tags only — deliberately excludes the +2 same-project bonus
+  // below, which affects ranking but isn't itself a "tag" to display
+  // (Atlas's rail marginalia shows "+N shared tags", T-57).
+  sharedTagCount: number;
+}
+
+export async function getRelatedPosts(post: CollectionEntry<'posts'>, limit = 3): Promise<RelatedPost[]> {
   const posts = await getPublishedPosts();
   const tags = new Set(post.data.tags);
 
   return posts
     .filter((candidate) => candidate.id !== post.id)
     .map((candidate) => {
-      let score = 0;
+      const sharedTagCount = candidate.data.tags.filter((tag) => tags.has(tag)).length;
+      let score = sharedTagCount;
       if (post.data.project && candidate.data.project === post.data.project) {
         score += 2;
       }
-      score += candidate.data.tags.filter((tag) => tags.has(tag)).length;
-      return { candidate, score };
+      return { candidate, score, sharedTagCount };
     })
     .filter(({ score }) => score > 0)
     .sort((a, b) => {
@@ -58,7 +63,7 @@ export async function getRelatedPosts(
       return b.candidate.data.date.valueOf() - a.candidate.data.date.valueOf();
     })
     .slice(0, limit)
-    .map(({ candidate }) => candidate);
+    .map(({ candidate, sharedTagCount }) => ({ post: candidate, sharedTagCount }));
 }
 
 export async function getProjectSlugs(): Promise<string[]> {

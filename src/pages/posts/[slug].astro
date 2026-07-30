@@ -1,10 +1,28 @@
 ---
+// Post detail — Atlas rail marginalia (M6/T-57). Spec: docs/design/atlas/
+// README.md "Screens > 03 · /posts/[slug]"; layout reference
+// docs/design/atlas/Hi-Fi - Atlas Screens.dc.html screen 03 (a
+// scrollytelling post, Cikarang).
+//
+// Rail order, top to bottom: Sections (TableOfContents, non-scrollytelling
+// only — scrollytelling's own sections live inside the React island,
+// out of scope here) → Stamp lembar (coordinates/date/plate number/impact
+// slot) → Project (repo/demo promoted to real controls, up from a 14px
+// meta-text row) → Topics → Related plates (deliberately NOT Plate.astro
+// — "bergaya berbeda dari index... supaya terbaca sebagai rekomendasi",
+// so these read as recommendations, not more index entries).
+//
+// Marginalia cross-links (Hi-Fi's "tautan silang" block) are NOT rendered
+// anywhere on this page: zero posts have inline cross-links in their MDX
+// body today (M7 editorial gap, ADR-004 Consequences) and there's no
+// schema field to detect "this post has some" — an empty slot with no
+// data would be a placeholder, which M6's own rule forbids. The block
+// returns when M7 supplies real inline links and a way to surface them.
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import RelatedPosts from '../../components/RelatedPosts.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
-import { getPublishedPosts, getProjectTitle, getRelatedPosts } from '../../lib/posts';
+import { getPublishedPosts, getProjectTitle, getRelatedPosts, TYPE_LABEL } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
 import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
 import JabungLampungCoastalDevelopmentScrollytelling from '../../lib/scrollytelling/jabung-lampung-coastal-development';
@@ -29,117 +47,369 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { title, summary, date, type, tags, project, repo, demo, cover } = post.data;
+const { title, summary, date, type, tags, project, repo, demo, cover, coordinates, impact } = post.data;
 const { Content, headings } = await render(post);
+
+const allPosts = await getPublishedPosts();
+const plateNumbers = new Map(allPosts.map((p, i) => [p.id, i + 1]));
+const plateNumber = plateNumbers.get(post.id)!;
+const plateNumberLabel = String(plateNumber).padStart(2, '0');
+
 const relatedPosts = await getRelatedPosts(post);
+
 const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
-const wordCount = post.body?.trim().split(/\s+/).filter(Boolean).length ?? 0;
-const readingMinutes = Math.max(1, Math.round(wordCount / 200));
+const formattedDateShort = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 const sections = headings.filter((heading) => heading.depth === 2);
 const isArticle = type === 'article';
 const isScrollytelling = post.data.presentation === 'scrollytelling';
+
+const breadcrumbLeft = `Index / ${TYPE_LABEL[type]} / Plate ${plateNumberLabel}`;
+const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` : formattedDateShort;
 ---
 
-<BaseLayout title={`${title} — Afreza Hernanda`} description={summary} image={`/og/${post.id}.png`}>
-  <article class="mx-auto max-w-(--container-shell) px-5 py-10">
-    <p class="mb-2.5 text-xs font-medium tracking-wide text-research uppercase">
-      {isScrollytelling ? `${typeLabel} · ${formattedDate}` : `${typeLabel} · ${readingMinutes} min read · ${formattedDate}`}
-    </p>
-    {!isScrollytelling && (
-      <h1 class="font-display mb-4 text-3xl leading-[1.1] font-extrabold text-ink sm:text-4xl">{title}</h1>
-    )}
-    {!isScrollytelling && (
-      <p class="font-display mb-6 max-w-[52ch] text-lg leading-relaxed text-ink-muted italic">{summary}</p>
-    )}
+<BaseLayout
+  title={`${title} — Afreza Hernanda`}
+  description={summary}
+  image={`/og/${post.id}.png`}
+  breadcrumbLeft={breadcrumbLeft}
+  breadcrumbRight={breadcrumbRight}
+>
+  <article class="post-detail">
+    <header class="post-header">
+      <p class="post-notation">
+        <span class:list={['post-swatch', `hatch-${type}`]} aria-hidden="true" />
+        <span>{TYPE_LABEL[type]}</span>
+        {isScrollytelling && <span class="flag">Interactive</span>}
+      </p>
+      {!isScrollytelling && <h1 class="post-title">{title}</h1>}
+      {!isScrollytelling && <p class="post-dek">{summary}</p>}
+    </header>
 
-    {
-      !isScrollytelling && cover &&
-        (type === 'photo' ? (
-          <Image
-            src={cover}
-            alt={title}
-            class="mb-8 max-h-[75vh] w-full object-contain"
-            widths={[600, 1200]}
-            sizes="(min-width: 800px) 800px, 100vw"
-          />
-        ) : (
-          <Image
-            src={cover}
-            alt=""
-            class="mb-8 aspect-video w-full object-cover"
-            widths={[600, 1200]}
-            sizes="(min-width: 800px) 800px, 100vw"
-          />
-        ))
-    }
+    <div class="post-body">
+      <div class="post-main">
+        {
+          !isScrollytelling && cover &&
+            (type === 'photo' ? (
+              <Image
+                src={cover}
+                alt={title}
+                class="mb-8 max-h-[75vh] w-full object-contain"
+                widths={[600, 1200]}
+                sizes="800px"
+              />
+            ) : (
+              <Image src={cover} alt="" class="mb-8 aspect-video w-full object-cover" widths={[600, 1200]} sizes="800px" />
+            ))
+        }
 
-    {
-      (project || repo || demo) && (
-        <div class="mb-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-line py-3 text-sm">
-          {project && (
-            <span class="text-ink-muted">
-              Project:{' '}
-              <a href={`/projects/${project}`} class="text-research hover:underline">
-                {getProjectTitle(project)}
-              </a>
-            </span>
-          )}
-          {repo && (
-            <a href={repo} target="_blank" rel="noopener" class="text-research hover:underline">
-              Repository ↗
-            </a>
-          )}
-          {demo && (
-            <a href={demo} target="_blank" rel="noopener" class="text-research hover:underline">
-              Live demo ↗
-            </a>
-          )}
-        </div>
-      )
-    }
+        {!isScrollytelling && sections.length > 0 && <TableOfContents sections={sections} />}
 
-    {!isScrollytelling && sections.length > 0 && <TableOfContents sections={sections} />}
+        {
+          !isScrollytelling && (
+            <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
+              <Content />
+            </div>
+          )
+        }
 
-    {!isScrollytelling && (
-      <div class:list={['prose-content max-w-none text-[0.9375rem] leading-relaxed text-ink', isArticle && 'prose-article']}>
-        <Content />
+        {isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && <CikarangIndustrialSettlementScrollytelling client:visible />}
+        {isScrollytelling && post.id === 'bontang-poverty-mapping' && <BontangPovertyMappingScrollytelling client:visible />}
+        {isScrollytelling && post.id === 'jabung-lampung-coastal-development' && <JabungLampungCoastalDevelopmentScrollytelling client:visible />}
+        {isScrollytelling && post.id === 'rpplh-south-papua' && <RpplhSouthPapuaScrollytelling client:visible />}
       </div>
-    )}
 
-    {isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && (
-      <CikarangIndustrialSettlementScrollytelling client:visible />
-    )}
-    {isScrollytelling && post.id === 'bontang-poverty-mapping' && (
-      <BontangPovertyMappingScrollytelling client:visible />
-    )}
-    {isScrollytelling && post.id === 'jabung-lampung-coastal-development' && (
-      <JabungLampungCoastalDevelopmentScrollytelling client:visible />
-    )}
-    {isScrollytelling && post.id === 'rpplh-south-papua' && (
-      <RpplhSouthPapuaScrollytelling client:visible />
-    )}
+      <aside class="post-rail">
+        {!isScrollytelling && sections.length > 0 && <TableOfContents sections={sections} />}
 
-    {
-      tags.length > 0 && (
-        <div class="mt-10 flex flex-wrap gap-2 border-t border-line pt-6">
-          {tags.map((tag) => (
-            <a
-              href={`/topics/${tag}`}
-              class="inline-flex min-h-11 items-center border border-research px-2.5 py-1 text-xs text-research hover:bg-research hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-            >
-              {tag}
-            </a>
-          ))}
+        <div class="rail-block rail-stamp">
+          <p class="rail-heading">Stamp lembar</p>
+          <div class="rail-stamp-body">
+            {coordinates && <span>{coordinates}</span>}
+            <span>{formattedDate}</span>
+            <span>
+              {TYPE_LABEL[type]} · Plate {plateNumberLabel}
+            </span>
+            {impact && impact.map((fact) => <span>{fact.label}: {fact.value}</span>)}
+          </div>
         </div>
-      )
-    }
 
-    <RelatedPosts posts={relatedPosts} />
+        {
+          (project || repo || demo) && (
+            <div class="rail-block">
+              <p class="rail-heading">Project</p>
+              <div class="rail-project-controls">
+                {repo && (
+                  <a href={repo} target="_blank" rel="noopener" class="control control-primary">
+                    Repository ↗
+                  </a>
+                )}
+                {demo && (
+                  <a href={demo} target="_blank" rel="noopener" class="control control-secondary">
+                    Live demo ↗
+                  </a>
+                )}
+                {project && (
+                  <a href={`/projects/${project}`} class="control control-tertiary">
+                    {getProjectTitle(project)}
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        }
+
+        {
+          tags.length > 0 && (
+            <div class="rail-block">
+              <p class="rail-heading">Topics</p>
+              <div class="rail-topics">
+                {tags.map((tag) => (
+                  <a href={`/topics/${tag}`} class="rail-topic-chip">
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        {
+          relatedPosts.length > 0 && (
+            <div class="rail-block">
+              <p class="rail-heading">Related plates</p>
+              <div class="related-plates">
+                {relatedPosts.map(({ post: related, sharedTagCount }) => (
+                  <a href={`/posts/${related.id}`} class="related-plate">
+                    <p class="related-plate-notation">
+                      {TYPE_LABEL[related.data.type]} · +{sharedTagCount} shared {sharedTagCount === 1 ? 'tag' : 'tags'}
+                    </p>
+                    <p class="related-plate-title">{related.data.title}</p>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+      </aside>
+    </div>
   </article>
 </BaseLayout>
 
 <style>
+  .post-detail {
+    max-width: var(--container-shell);
+    margin-inline: auto;
+    padding: 40px 20px 48px;
+  }
+  @media (min-width: 640px) {
+    .post-detail {
+      padding: 40px 48px 48px;
+    }
+  }
+
+  .post-header {
+    max-width: 1000px;
+    margin-bottom: 32px;
+  }
+
+  .post-notation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .post-swatch {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-ink);
+  }
+
+  .post-title {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    font-stretch: 120%;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 1.04;
+    max-width: 28ch;
+    color: var(--color-ink);
+  }
+  @media (min-width: 640px) {
+    .post-title {
+      font-size: 48px;
+    }
+  }
+
+  .post-dek {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--color-ink-muted);
+  }
+  @media (min-width: 640px) {
+    .post-dek {
+      font-size: 19px;
+    }
+  }
+
+  .post-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  @media (min-width: 1024px) {
+    .post-body {
+      grid-template-columns: var(--container-prose) 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+  }
+
+  /* TableOfContents renders twice in the markup (once above .post-main's
+     content on narrow screens where the rail column collapses below the
+     prose, once in .post-rail for the ≥1024px 2-column layout) — CSS
+     toggles which copy is visible rather than duplicating the section
+     data fetch differently per breakpoint. `:global(nav)` is required:
+     the <nav> is TableOfContents' own root element, carrying ITS
+     component's scope hash, not this page's — an unmarked `> nav` here
+     compiles to a selector scoped to a hash that element never carries,
+     so it silently never matches (found by testing: both copies stayed
+     visible at once, rather than the intended none/block).
+   */
+  .post-main > :global(nav) {
+    display: block;
+    margin-bottom: 24px;
+  }
+  .post-rail > :global(nav) {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .post-main > :global(nav) {
+      display: none;
+    }
+    .post-rail > :global(nav) {
+      display: block;
+    }
+  }
+
+  .post-rail {
+    border-left: none;
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  @media (min-width: 1024px) {
+    .post-rail {
+      border-left: 1px solid var(--color-line);
+      padding-left: 24px;
+    }
+  }
+
+  .rail-heading {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .rail-stamp {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+    padding: 16px;
+  }
+  .rail-stamp-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--color-ink);
+  }
+
+  .rail-project-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .rail-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .rail-topic-chip {
+    display: inline-flex;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-ink);
+    font-size: 12.5px;
+    padding: 3px 7px;
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper);
+  }
+  .rail-topic-chip:hover,
+  .rail-topic-chip:focus-visible {
+    border-color: var(--color-research);
+    color: var(--color-research);
+  }
+  .rail-topic-chip:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .related-plates {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .related-plate {
+    display: block;
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper-raised);
+    padding: 10px;
+    text-decoration: none;
+    transition: border-color 120ms ease;
+  }
+  .related-plate:hover,
+  .related-plate:focus-visible {
+    border-color: var(--color-research);
+  }
+  .related-plate:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+  .related-plate-notation {
+    margin: 0 0 3px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .related-plate-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-weight: 600;
+    font-size: 14.5px;
+    line-height: 1.25;
+    color: var(--color-ink);
+  }
+
   .prose-content {
     font-family: var(--font-display);
   }
@@ -203,15 +473,12 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
   }
 
   /*
-   * Article-only reading polish (T-23): narrower measure, a Medium-style
-   * drop cap on the opening paragraph, and a centered pull-quote treatment.
-   * Scoped to .prose-article so project/research posts (which may carry
-   * code blocks or need the full container width) are untouched.
+   * Article-only reading polish (T-23): a Medium-style drop cap on the
+   * opening paragraph and a centered pull-quote treatment. The measure
+   * itself no longer needs a special-cased max-width here — every post's
+   * .post-main column is already 680px (--container-prose) via the grid
+   * above, article or not, since T-57 moved the whole page onto that grid.
    */
-  .prose-article {
-    max-width: var(--container-prose);
-    margin-inline: auto;
-  }
   .prose-article :global(p:first-of-type::first-letter) {
     float: left;
     margin-top: 0.03em;
@@ -236,4 +503,3 @@ const isScrollytelling = post.data.presentation === 'scrollytelling';
     line-height: 1.4;
   }
 </style>
-

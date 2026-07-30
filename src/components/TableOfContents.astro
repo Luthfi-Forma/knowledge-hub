@@ -1,4 +1,12 @@
 ---
+// "Bagian" — post detail rail marginalia (M6/T-57), restyled from the M3
+// bordered-box "On this page" nav. No active/current-section indicator:
+// Hi-Fi's mockup shows the first item with a border-left accent, but that
+// would need real scroll-spy (IntersectionObserver) to be honest rather
+// than decorative — out of this task's scope, and this session's tooling
+// has documented issues verifying IntersectionObserver-driven behavior
+// (docs/memory/LESSONS.md). A static list is correct without it; a false
+// "active" state would just be misleading.
 interface Section {
   slug: string;
   text: string;
@@ -12,16 +20,13 @@ interface Props {
 const { sections } = Astro.props;
 ---
 
-<nav aria-label="On this page" class="mb-8 border border-line px-5 py-4">
-  <p class="mb-2.5 text-xs font-medium tracking-wide text-ink-muted uppercase">On this page</p>
-  <ol class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm">
+<nav aria-label="On this page" class="toc">
+  <p class="toc-heading">Sections</p>
+  <ol class="toc-list">
     {
       sections.map((section) => (
         <li>
-          <a
-            href={`#${section.slug}`}
-            class="text-ink-muted hover:text-research focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-          >
+          <a href={`#${section.slug}`} class="toc-link">
             {section.text}
           </a>
         </li>
@@ -29,3 +34,36 @@ const { sections } = Astro.props;
     }
   </ol>
 </nav>
+
+<style>
+  .toc-heading {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .toc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .toc-link {
+    display: inline-block;
+    padding-left: 12px;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+  }
+  .toc-link:hover,
+  .toc-link:focus-visible {
+    color: var(--color-research);
+  }
+  .toc-link:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+</style>

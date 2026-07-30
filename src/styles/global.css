@@ -178,6 +178,25 @@
 }
 
 /*
+ * INTERACTIVE flag (docs/design/atlas/README.md "Legend swatch") — marks
+ * scrollytelling posts, wherever their notation row appears (Plate.astro's
+ * grid tiles, T-50; the post detail page's own header, T-57). Interactive
+ * markers only, never decoration, per the handoff's own rule for
+ * --color-flag.
+ */
+.flag {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-flag);
+  border: 1px solid var(--color-flag);
+  padding: 0 5px;
+  text-transform: uppercase;
+}
+
+/*
  * Atlas's control language — one shape, four tiers (docs/design/atlas/
  * README.md "Kontrol — satu bahasa, tiga tingkat" + the separate Icon spec
  * right after it, four treatments total). Replaces four different button
