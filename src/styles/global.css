@@ -284,6 +284,48 @@
 }
 
 /*
+ * Pagefind's classic UI widget (`pagefind-ui.js`/`.css`, injected at runtime
+ * by Header.astro's search dialog, M6/T-60) reads its whole look from these
+ * ten custom properties — closes DEBT #1 (the widget previously rendered
+ * with its own zinc-palette default CSS, never Atlas tokens). Set on
+ * `:root` rather than scoped to the dialog: custom properties inherit down
+ * the real DOM tree regardless of which component's scope-hash owns an
+ * ancestor node, and Pagefind mounts its markup well after Astro's own
+ * scoped `<style>` attributes are irrelevant (it's injected by a plain
+ * `<script>`, not rendered by any Astro component). `--pagefind-ui-font`
+ * uses body copy (Archivo), not the mono "notation" role the search
+ * trigger button itself uses — result titles and excerpts are prose, not
+ * measured data, and IBM Plex Mono at length reads as data-table text.
+ * `pagefind-ui.js`/`.css` only exist in `dist/pagefind/` after
+ * `pagefind --site dist` runs (package.json's `build` script) — these
+ * tokens have nothing to style in `astro dev`, only `astro preview` after
+ * a real build (already-documented constraint, `docs/design/atlas/Product
+ * Discovery - Knowledge Hub.dc.html` W8).
+ *
+ * `html:root`, not plain `:root`: pagefind-ui.css itself ships a `:root {
+ * --pagefind-ui-*: ... }` block with its own zinc-palette defaults, and its
+ * `<link>` is injected by Header.astro's script well after this stylesheet
+ * has already loaded — on a specificity tie, the stylesheet that arrives
+ * in the DOM later wins the cascade, which would silently put pagefind's
+ * defaults back on top of these. `html:root` (element + pseudo-class,
+ * matching the same root element) has one selector more than pagefind's
+ * plain `:root`, so it wins regardless of load order — confirmed via
+ * `getComputedStyle` during T-60 verification, see docs/TASK.md.
+ */
+html:root {
+  --pagefind-ui-primary: var(--color-research);
+  --pagefind-ui-text: var(--color-ink);
+  --pagefind-ui-background: var(--color-paper);
+  --pagefind-ui-border: var(--color-line-strong);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 0;
+  --pagefind-ui-image-border-radius: 0;
+  --pagefind-ui-image-box-ratio: 1;
+  --pagefind-ui-font: var(--font-body);
+  --pagefind-ui-tag: var(--color-ink-muted);
+}
+
+/*
  * Rail + field shell (M6/T-56) — the `224px 1fr` grid every LegendRail-
  * bearing page uses (Sheet Index, T-55; Topic pages, T-56): single column
  * until the rail is permanent at ≥1024px (LegendRail's own drawer takes

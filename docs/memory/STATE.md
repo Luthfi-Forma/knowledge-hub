@@ -5,9 +5,9 @@
 
 - Updated: 2026-07-30
 - Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1, S2, S3 selesai,
-  S4 sebagian** (T-45–T-59); T-60 (S4) dan S5 (T-61–T-62) tersisa. M7
-  (lapisan editorial, T-63–T-65) menunggu setelah M6 tutup.
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1–S4 selesai**
+  (T-45–T-60); S5 (T-61–T-62) tersisa. M7 (lapisan editorial, T-63–T-65)
+  menunggu setelah M6 tutup.
 
 ## Current status
 
@@ -15,7 +15,7 @@ Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
-di-push sesi ini** — 14 commit M6 baru ada di `main` lokal.
+di-push sesi ini** — 16 commit M6 baru ada di `main` lokal.
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
 Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
@@ -51,27 +51,37 @@ redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`).
    post, angka `impact` sebagian post — semuanya cuma bisa ditulis pemilik
    situs.
 
-## Sesi ini (M6 Atlas — S4 T-59, 2026-07-30)
+## Sesi ini (M6 Atlas — S4, T-59 + T-60, 2026-07-30)
 
-Satu task, belum di-commit. T-59 (satu-satunya kerja sisi React S4):
-`useReducedMotion()` sekarang dipanggil di 28 fungsi `Viz*` lintas 4 modul
-`lib/scrollytelling/*.tsx` (sebelumnya cuma shell `islands/Scrollytelling.tsx`
-yang memanggilnya, T-35) — men-gate 3 kelas motion (`motion.div`/`motion.circle`
-via ternary duration/delay, Recharts `Bar`/`Line`/`Pie` via prop bawaan
-`isAnimationActive`, `AnimatedNumber` kustom berbasis `requestAnimationFrame`
-di 3/4 modul). Tabel data `sr-only` ditambah untuk 15 chart Recharts (bukan
-untuk visual kustom non-Recharts — cakupan sengaja dibatasi persis sesuai
-teks task, WCAG 1.1.1). Detail lengkap + bug dorman yang ditemukan
-(`AnimatedNumber` Cikarang yang animasinya sudah lama tidak pernah bergerak)
-ada di `docs/TASK.md` Done T-59.
+2 commit, menutup S4. **T-59**: `useReducedMotion()` sekarang dipanggil di 28
+fungsi `Viz*` lintas 4 modul `lib/scrollytelling/*.tsx` (sebelumnya cuma shell
+`islands/Scrollytelling.tsx` yang memanggilnya, T-35) — men-gate 3 kelas
+motion (`motion.div`/`motion.circle` via ternary duration/delay, Recharts
+`Bar`/`Line`/`Pie` via prop bawaan `isAnimationActive`, `AnimatedNumber`
+kustom berbasis `requestAnimationFrame` di 3/4 modul). Tabel data `sr-only`
+ditambah untuk 15 chart Recharts saja (cakupan sengaja dibatasi persis sesuai
+teks task, WCAG 1.1.1 — bukan visual kustom non-Recharts). Diverifikasi lewat
+teknik `docs/memory/LESSONS.md` (`client:load` + `useState(ids[N])`
+sementara, karena `IntersectionObserver` tidak fire di tooling Browser-pane
+sesi ini): 2 chart representatif dikonfirmasi data cocok 1:1 (Cikarang
+`BarChart`, Bontang `PieChart`).
 
-Diverifikasi lewat teknik `docs/memory/LESSONS.md` (`client:load` +
-`useState(ids[N])` sementara, karena `IntersectionObserver` tidak fire di
-tooling Browser-pane sesi ini): 2 chart representatif diuji langsung dengan
-data cocok 1:1 (Cikarang `BarChart`, Bontang `PieChart`), Jabung/RPPLH tidak
-diuji terpisah (pola struktural identik, type-check + build sudah hijau).
-`npm run build` hijau, 44 halaman. Gate `grep` hex literal: nol di keempat
-modul.
+**T-60**: Pagefind di-restyle ke token Atlas (blok `--pagefind-ui-*` baru di
+`global.css`) + dialog search baru di `Header.astro` (buka via tombol/pintasan
+`/`, tutup via `Esc`/backdrop/tombol close), menutup DEBT #1. **Bug ditemukan
+& diperbaiki**: override token pertama pakai selector `:root` polos, kalah
+dari `:root` bawaan `pagefind-ui.css` sendiri karena stylesheet itu dimuat
+belakangan (JS-injected saat dialog dibuka) — pada dasi spesifisitas, yang
+tiba belakangan di DOM menang; diperbaiki jadi `html:root` (satu selector
+lebih spesifik, menang apa pun urutan muat). Diverifikasi lewat `astro
+preview` sungguhan: buka/tutup dialog (klik, `/`, `Esc`, backdrop, tombol
+close) semua benar, `PagefindUI` termount dengan hasil pencarian nyata
+("11 results for Cikarang"), token Atlas terkonfirmasi lewat
+`getComputedStyle` sesudah perbaikan `html:root`, radius 0px, nol console
+error. Detail lengkap kedua task ada di `docs/TASK.md` Done.
+
+`npm run build` hijau tiap task, 44 halaman. Gate `grep` hex literal: nol di
+keempat modul scrollytelling.
 
 ## Last session (M6 Atlas — S1, S2, S3, 2026-07-29)
 
@@ -133,21 +143,18 @@ dev server.
 
 ## Next steps
 
-1. **Commit T-59** — kerja di working tree sesi ini belum di-commit; minta
-   konfirmasi user dulu (aturan commit eksplisit).
-2. T-60 — restyle Pagefind ke token Atlas, tutup `docs/memory/DEBT.md` #1.
-3. T-61 — OG image ikut Atlas (palet + Archivo/IBM Plex Mono, hapus 3 TTF
-   Bodoni/Karla).
-4. T-62 — tutup M6: 14 item verification checklist handoff, remeasure
+1. **Mulai T-61** (S5) — OG image ikut Atlas (palet + Archivo/IBM Plex Mono,
+   hapus 3 TTF Bodoni/Karla).
+2. T-62 — tutup M6: 14 item verification checklist handoff, remeasure
    berat transfer, **CHANGELOG diperbarui di sini** (sengaja belum
    disentuh sepanjang S1–S4, mengikuti pola M5/T-44 — full pass di
    task penutup milestone, bukan per-task).
-5. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
+3. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
    (T-62), atau lebih awal jika user memintanya secara eksplisit.
-6. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
-7. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+4. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
+5. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-8. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+6. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 

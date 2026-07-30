@@ -16,9 +16,15 @@
 // "Topics" now points at /topics (T-54 renamed the route + added the
 // /tags → /topics redirect in vercel.json).
 //
-// Search is a visual-only control for now: T-60 wires the actual Pagefind
-// open/close behavior and the `/` keyboard shortcut this button and badge
-// describe.
+// Search dialog (M6/T-60): opened by the button below or the `/` shortcut
+// (guarded against typing targets, same pattern as the scrollytelling
+// shell's PageUp/PageDown handler), closed by Escape, backdrop click, or
+// the dialog's own close button. Pagefind's classic widget
+// (`pagefind-ui.js`/`.css`) is only injected on first open, not on every
+// page load — it only exists in `dist/pagefind/` after a real build
+// (`pagefind --site dist`), so there's nothing to fetch until a visitor
+// actually opens search. Token overrides live in global.css
+// (`--pagefind-ui-*`), not here — this component only owns open/close.
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
@@ -54,7 +60,15 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
           ))
         }
       </nav>
-      <button type="button" class="header-search" aria-label="Search">
+      <button
+        type="button"
+        id="search-trigger"
+        class="header-search"
+        aria-haspopup="dialog"
+        aria-controls="search-dialog"
+        aria-expanded="false"
+        aria-label="Search"
+      >
         <span aria-hidden="true">⌕</span> Search <span class="header-search-kbd" aria-hidden="true">/</span>
       </button>
     </div>
@@ -64,6 +78,85 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     <span>{resolvedBreadcrumbRight}</span>
   </div>
 </header>
+
+<div class="search-backdrop" data-search-backdrop hidden></div>
+<div id="search-dialog" class="search-dialog" role="dialog" aria-modal="true" aria-label="Search" hidden>
+  <div class="search-dialog-panel">
+    <div class="search-dialog-head">
+      <span class="search-dialog-label">Search</span>
+      <button type="button" class="control control-icon" data-search-close aria-label="Close search">✕</button>
+    </div>
+    <div id="pagefind-search"></div>
+  </div>
+</div>
+
+<script>
+  const trigger = document.getElementById('search-trigger');
+  const dialog = document.getElementById('search-dialog');
+  const backdrop = document.querySelector<HTMLElement>('[data-search-backdrop]');
+  const closeBtn = document.querySelector<HTMLElement>('[data-search-close]');
+  const mount = document.getElementById('pagefind-search');
+  let pagefindLoaded = false;
+
+  function isTypingTarget(el: EventTarget | null) {
+    if (!(el instanceof HTMLElement)) return false;
+    return el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName);
+  }
+
+  function loadPagefindUI(onReady: () => void) {
+    if (pagefindLoaded) {
+      onReady();
+      return;
+    }
+    pagefindLoaded = true;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/pagefind/pagefind-ui.css';
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = '/pagefind/pagefind-ui.js';
+    script.onload = () => {
+      // @ts-expect-error — global from pagefind-ui.js's classic (non-module) bundle, present only after `pagefind --site dist` has run
+      new window.PagefindUI({ element: '#pagefind-search', showSubResults: true, showImages: false });
+      onReady();
+    };
+    script.onerror = () => {
+      if (mount) mount.textContent = 'Search index only available in production builds (astro preview / the deployed site).';
+      onReady();
+    };
+    document.body.appendChild(script);
+  }
+
+  function openDialog() {
+    dialog?.removeAttribute('hidden');
+    if (backdrop) backdrop.hidden = false;
+    trigger?.setAttribute('aria-expanded', 'true');
+    loadPagefindUI(() => {
+      dialog?.querySelector<HTMLElement>('input')?.focus();
+    });
+  }
+
+  function closeDialog() {
+    dialog?.setAttribute('hidden', '');
+    if (backdrop) backdrop.hidden = true;
+    trigger?.setAttribute('aria-expanded', 'false');
+    trigger?.focus();
+  }
+
+  trigger?.addEventListener('click', openDialog);
+  backdrop?.addEventListener('click', closeDialog);
+  closeBtn?.addEventListener('click', closeDialog);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && dialog && !dialog.hidden) {
+      closeDialog();
+      return;
+    }
+    if (e.key === '/' && dialog?.hidden && !isTypingTarget(e.target) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      e.preventDefault();
+      openDialog();
+    }
+  });
+</script>
 
 <style>
   .collar {
@@ -176,5 +269,59 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
+  }
+
+  .search-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background-color: rgb(23 21 18 / 40%);
+  }
+  .search-backdrop[hidden] {
+    display: none;
+  }
+
+  .search-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    padding: 72px 20px 20px;
+  }
+  .search-dialog[hidden] {
+    display: none;
+  }
+
+  .search-dialog-panel {
+    width: 100%;
+    max-width: 640px;
+    max-height: calc(100vh - 92px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper);
+  }
+
+  .search-dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-line-strong);
+  }
+
+  .search-dialog-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  #pagefind-search {
+    padding: 16px;
+    overflow-y: auto;
   }
 </style>
