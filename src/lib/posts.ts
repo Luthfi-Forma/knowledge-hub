@@ -19,18 +19,6 @@ export async function getPublishedPosts(): Promise<CollectionEntry<'posts'>[]> {
   return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
-export async function getFeaturedProjects(limit = 4): Promise<CollectionEntry<'posts'>[]> {
-  const posts = await getPublishedPosts();
-  return posts.filter((post) => post.data.type === 'project').slice(0, limit);
-}
-
-export async function getLatestPosts(limit = 5): Promise<CollectionEntry<'posts'>[]> {
-  const posts = await getPublishedPosts();
-  // Photos read as bare captions in a text ledger row — they belong in the
-  // dedicated /photography grid, not mixed into the writing-focused feed.
-  return posts.filter((post) => post.data.type !== 'photo').slice(0, limit);
-}
-
 export async function getPhotos(): Promise<CollectionEntry<'posts'>[]> {
   const posts = await getPublishedPosts();
   return posts.filter((post) => post.data.type === 'photo');

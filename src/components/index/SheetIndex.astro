@@ -1,0 +1,186 @@
+---
+// SheetIndex — Atlas's Sheet Index (M6/T-55), promoted from the retired
+// M5 DATUM homepage (`home/ImmersiveIndex.astro`). Spec: docs/design/atlas/
+// README.md "Screens > 01 · / — Sheet Index"; layout reference
+// docs/design/atlas/Hi-Fi - Atlas Screens.dc.html screen 01.
+//
+// Shared between `/` (unfiltered) and `/explore/[type]` (filtered) —
+// the IA table calls the latter "sama dengan index terfilter" (the same
+// index, filtered), so this is one composition, not two. `activeType`
+// is the only thing that changes: LegendRail highlights the active swatch
+// and the plate grid narrows to that type, but the rail's own counts
+// stay computed from the FULL site (Hi-Fi's rail always shows total
+// counts, not the current view's).
+//
+// Layout is 2 tiers, not Hi-Fi's specific 3-4 row arrangement (a lead
+// plate, then 3-wide-cover, then 2-wide-side-cover, then 4-compact) —
+// that grouping reads as this particular mockup's illustrative variety,
+// not a formula; the README's own prose for this screen only describes
+// 2 tiers ("plate lead ... untuk karya berbobot, lalu grid plate
+// standar"). Lead = newest post in the current (possibly filtered) view,
+// standard grid = everything else, uniformly — self-maintaining as posts
+// are added, no manual curation.
+//
+// Plate numbers are global and stable: computed once from the full,
+// unfiltered, newest-first post list, so a given post is always "Plate
+// 04" whether viewed on `/` or filtered to its type on `/explore/[type]`
+// — matching the post detail page's own breadcrumb ("Index / Research /
+// Plate 01", T-57).
+import type { CollectionEntry } from 'astro:content';
+import Plate from '../Plate.astro';
+import LegendRail from '../LegendRail.astro';
+import { POST_TYPES, type PostType } from '../../lib/posts';
+import { topicCounts } from '../../lib/topics';
+
+interface Props {
+  /** ALL published posts, unfiltered — the rail's counts always reflect the whole site regardless of `activeType`. */
+  posts: CollectionEntry<'posts'>[];
+  activeType?: PostType | null;
+}
+
+const { posts, activeType = null } = Astro.props;
+
+const plateNumbers = new Map(posts.map((post, i) => [post.id, i + 1]));
+const displayedPosts = activeType ? posts.filter((post) => post.data.type === activeType) : posts;
+const [lead, ...rest] = displayedPosts;
+
+const typeCounts = POST_TYPES.map((type) => ({
+  type,
+  count: posts.filter((post) => post.data.type === type).length,
+}));
+const topics = Array.from(topicCounts(posts), ([tag, count]) => ({ tag, count: count.total })).sort(
+  (a, b) => b.count - a.count || a.tag.localeCompare(b.tag),
+);
+---
+
+<div class="sheet-index">
+  <LegendRail typeCounts={typeCounts} topics={topics} activeType={activeType} />
+  <div class="sheet-field">
+    <div class="sheet-content">
+      <div class="sheet-header">
+        <h1 class="sheet-title">Knowledge Hub</h1>
+        <p class="sheet-dek">
+          Spatial research, projects, and field notes on regional planning — one index, not five separate pages.
+          Reading regions through their data.
+        </p>
+      </div>
+      {
+        displayedPosts.length === 0 ? (
+          <p class="sheet-empty">Nothing published yet.</p>
+        ) : (
+          <>
+            {lead && <Plate post={lead} size="lead" plateNumber={plateNumbers.get(lead.id)!} headingLevel="h2" />}
+            {rest.length > 0 && (
+              <div class="sheet-grid">
+                {rest.map((post) => (
+                  <Plate post={post} size="standard" plateNumber={plateNumbers.get(post.id)!} />
+                ))}
+              </div>
+            )}
+          </>
+        )
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .sheet-index {
+    display: block;
+  }
+  @media (min-width: 1024px) {
+    .sheet-index {
+      display: grid;
+      grid-template-columns: var(--container-rail) 1fr;
+    }
+  }
+
+  /* CSS-only graticule field — no image asset, no canvas. A hairline grid
+     (--color-line, already low-contrast by design — T-48) sits behind the
+     plates via ::before so it never dims the actual content painted atop
+     it (forced above via z-index on .sheet-content, since an absolutely
+     positioned z-index:0 pseudo-element otherwise paints AFTER in-flow
+     block children, not before). */
+  .sheet-field {
+    position: relative;
+    padding: 24px 20px 32px;
+  }
+  @media (min-width: 640px) {
+    .sheet-field {
+      padding: 24px 48px 32px;
+    }
+  }
+  .sheet-field::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(to right, var(--color-line) 0 1px, transparent 1px 44px),
+      repeating-linear-gradient(to bottom, var(--color-line) 0 1px, transparent 1px 44px);
+  }
+
+  .sheet-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .sheet-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  @media (min-width: 900px) {
+    .sheet-header {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+  }
+
+  .sheet-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 125%;
+    font-weight: 800;
+    font-size: var(--text-sheet-title);
+    line-height: var(--text-sheet-title--line-height);
+    letter-spacing: 0.004em;
+    color: var(--color-ink);
+  }
+
+  .sheet-dek {
+    margin: 0;
+    max-width: 44ch;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+  }
+
+  .sheet-empty {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-ink-muted);
+  }
+
+  .sheet-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (min-width: 640px) {
+    .sheet-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1280px) {
+    .sheet-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
