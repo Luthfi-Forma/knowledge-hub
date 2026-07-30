@@ -6,18 +6,18 @@ import { getAllTags } from '../../lib/posts';
 const tags = (await getAllTags()).sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 ---
 
-<BaseLayout title="Tags — Afreza Hernanda" description="Browse all posts by tag.">
+<BaseLayout title="Topics — Afreza Hernanda" description="Browse all posts by topic.">
   <section class="mx-auto max-w-(--container-shell) px-5 py-8">
-    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Tags</h1>
+    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Topics</h1>
     {
       tags.length === 0 ? (
-        <EmptyState message="No tags yet." ctaHref="/explore" ctaLabel="Browse all posts" />
+        <EmptyState message="No topics yet." ctaHref="/" ctaLabel="Browse all posts" />
       ) : (
         <ul class="flex flex-wrap gap-2">
           {tags.map(({ tag, count }) => (
             <li>
               <a
-                href={`/tags/${tag}`}
+                href={`/topics/${tag}`}
                 class="inline-flex min-h-11 items-center border border-research px-3 py-1.5 text-sm text-research hover:bg-research hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
               >
                 {tag} ({count})

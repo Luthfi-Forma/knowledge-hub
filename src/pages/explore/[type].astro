@@ -19,7 +19,7 @@ const posts = (await getPublishedPosts()).filter((post) => post.data.type === ty
     <TypeFilter active={type} />
     {
       posts.length === 0 ? (
-        <EmptyState message={`No ${TYPE_LABEL[type].toLowerCase()} posts yet.`} ctaHref="/explore" ctaLabel="Back to all" />
+        <EmptyState message={`No ${TYPE_LABEL[type].toLowerCase()} posts yet.`} ctaHref="/" ctaLabel="Back to all" />
       ) : (
         <div class="grid gap-4 sm:grid-cols-2">
           {posts.map((post, i) => (

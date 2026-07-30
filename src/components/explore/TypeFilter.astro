@@ -7,8 +7,11 @@ interface Props {
 
 const { active } = Astro.props;
 
+// 'all' points at `/` (the site's only remaining all-posts index since
+// T-54 folded /explore into it), not `/explore` — that route no longer
+// exists as a page, just a redirect (vercel.json).
 const tabs = [
-  { key: 'all' as const, href: '/explore', label: 'All' },
+  { key: 'all' as const, href: '/', label: 'All' },
   ...POST_TYPES.map((type) => ({
     key: type,
     href: `/explore/${type}`,

@@ -13,8 +13,8 @@
 // Photography, and Contact drop out per ADR-004/the handoff's IA table:
 // Photography becomes secondary (reachable via Footer's type index),
 // Contact becomes a real block on /about + the footer, not a nav item.
-// "Topics" still points at /tags — the route itself isn't renamed until
-// T-54; only the label changes here, so nothing 404s in the meantime.
+// "Topics" now points at /topics (T-54 renamed the route + added the
+// /tags → /topics redirect in vercel.json).
 //
 // Search is a visual-only control for now: T-60 wires the actual Pagefind
 // open/close behavior and the `/` keyboard shortcut this button and badge
@@ -24,7 +24,7 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
 
 const navItems = [
   { href: '/', label: 'Index' },
-  { href: '/tags', label: 'Topics' },
+  { href: '/topics', label: 'Topics' },
   { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },
 ];

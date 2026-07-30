@@ -38,7 +38,7 @@ const year = new Date().getFullYear();
         topTopics.map(({ tag }, i) => (
           <>
             {i > 0 && <span class="footer-dot" aria-hidden="true">·</span>}
-            <a href={`/tags/${tag}`}>{tag}</a>
+            <a href={`/topics/${tag}`}>{tag}</a>
           </>
         ))
       }

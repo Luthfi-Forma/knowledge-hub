@@ -12,7 +12,7 @@ const photos = await getPhotos();
     <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Photography</h1>
     {
       photos.length === 0 ? (
-        <EmptyState message="No photos published yet." ctaHref="/explore" ctaLabel="See what's published" />
+        <EmptyState message="No photos published yet." ctaHref="/" ctaLabel="See what's published" />
       ) : (
         <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
           {photos.map((photo) => (

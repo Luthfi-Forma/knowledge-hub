@@ -13,15 +13,18 @@
 // swapping to a different layout.
 //
 // Not yet wired into any page: every current caller of PostCard/
-// PostListItem (Hero+FeaturedProjects+LatestPosts on `/`, PostList on
-// `/explore`, RelatedPosts on post detail, PostCard on `/projects/[name]`,
-// PostListItem on `/tags/[tag]`) is scheduled for its own rebuild in a later
-// M6 task (T-55/T-56/T-57/T-58) — migrating them here would be throwaway
-// work. The one exception, `/explore/[type]`, is migrated to Plate in this
-// same commit: no later task claims that route, and per the handoff's "one
-// container" principle it shouldn't keep using the retired card system for
-// the rest of M6 for no reason. PostCard/PostListItem/RelatedPosts stay in
-// the tree, still working, until each remaining caller is migrated.
+// PostListItem (Hero+FeaturedProjects+LatestPosts on `/`, RelatedPosts on
+// post detail, PostCard on `/projects/[name]`, PostListItem on
+// `/topics/[topic]` — renamed from `/tags/[tag]` in T-54) is scheduled for
+// its own rebuild in a later M6 task (T-55/T-56/T-57/T-58) — migrating
+// them here would be throwaway work. The one exception, `/explore/[type]`,
+// is migrated to Plate in this same commit (T-50): no later task claims
+// that route, and per the handoff's "one container" principle it
+// shouldn't keep using the retired card system for the rest of M6 for no
+// reason. PostCard/PostListItem/RelatedPosts stay in the tree, still
+// working, until each remaining caller is migrated. `/explore` (bare
+// index) no longer exists as a page as of T-54 — folded into `/`,
+// redirected via vercel.json.
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { TYPE_LABEL } from '../lib/posts';
