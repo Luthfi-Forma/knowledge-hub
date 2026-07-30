@@ -15,7 +15,7 @@ Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
-di-push** — 17 commit M6 ada di `main` lokal, keputusan push menunggu user
+di-push** — 18 commit M6 ada di `main` lokal, keputusan push menunggu user
 (lihat "Next steps").
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
@@ -56,7 +56,7 @@ Bodoni Moda/Karla dilepas total dari repo (fungsional maupun font file).
 (M5/T-42), carousel drag Featured Projects (M4/T-24), toggle mode.
 
 **Aksi tersisa untuk user (bukan kode):**
-1. **Push M6 ke `main` remote** — 17 commit lokal, belum dikirim. Situs
+1. **Push M6 ke `main` remote** — 18 commit lokal, belum dikirim. Situs
    live masih menyajikan build M5 lama sampai ini terjadi.
 2. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
    M3 — toggle akun, tidak bisa disentuh dari kode).
@@ -138,7 +138,7 @@ memakai `Plate` sama sekali; `/about` Experience menampilkan semua 9 role.
 
 ## Next steps
 
-1. **Push ke `main` remote** — 17 commit M6 lokal siap; situs live masih
+1. **Push ke `main` remote** — 18 commit M6 lokal siap; situs live masih
    menyajikan M5 sampai ini terjadi. Tunggu keputusan eksplisit user.
 2. **M7** (T-63–T-65) — 20 definisi topik, 3–5 cross-link inline per post,
    angka `impact` sebagian post. Ketiganya butuh input pemilik situs;

@@ -34,7 +34,7 @@ di `docs/design/atlas/`, arah+konsekuensi di
 [ADR-004](decisions/ADR-004-atlas-single-identity.md) — tutup lewat S1
 (Fondasi, T-45–T-49) → S2 (Komponen inti, T-50–T-52) → S3 (IA & route,
 T-53–T-58) → S4 (Aksesibilitas & search, T-59–T-60) → S5 (Aset & penutupan,
-T-61–T-62), 17 commit bersih di `main`, **belum di-push** (lihat
+T-61–T-62), 18 commit bersih di `main`, **belum di-push** (lihat
 `docs/memory/STATE.md`). **M7 — lapisan editorial** berikutnya, tapi
 menunggu 3 input yang cuma bisa ditulis pemilik situs (20 definisi topik,
 cross-link inline per post, angka `impact`) — lihat "Phase detail" di
