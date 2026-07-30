@@ -6,12 +6,16 @@ import { join } from 'node:path';
 const WIDTH = 1200;
 const HEIGHT = 630;
 
+// Atlas tokens (M6/T-48, docs/design/atlas/README.md), not read from
+// global.css: this file runs at build time under satori/resvg, outside any
+// CSS cascade, so the values are duplicated here by hand — same tradeoff
+// the self-hosted TTF fonts below already make.
 const COLOR = {
-  paper: '#f5efe1',
-  ink: '#18140f',
-  inkMuted: '#6b6152',
-  line: '#ddd3bc',
-  accent: '#38523a',
+  paper: '#f2ebda',
+  ink: '#171512',
+  inkMuted: '#4a4238',
+  line: '#c9bfa6',
+  accent: '#2c4630',
 };
 
 /*
@@ -24,10 +28,18 @@ function loadFont(filename: string): Buffer {
   return readFileSync(join(process.cwd(), 'src/lib/og-fonts', filename));
 }
 
+// Static per-weight TTF cuts (fontsource.org), not the self-hosted variable
+// Archivo the live site uses (public/fonts/archivo-variable-latin.woff2) —
+// satori/resvg's font handling doesn't support that file's woff2 compression
+// or its wdth axis (same constraint that made the original Bodoni Moda/Karla
+// cuts weight-specific TTFs, not a variable font). IBM Plex Mono here is a
+// second, separate download from public/fonts/ibm-plex-mono-400-latin.woff2
+// for the same reason — the site's copy is woff2-only.
 const fonts = [
-  { name: 'Bodoni Moda', data: loadFont('bodoni-800.ttf'), weight: 800 as const, style: 'normal' as const },
-  { name: 'Karla', data: loadFont('karla-400.ttf'), weight: 400 as const, style: 'normal' as const },
-  { name: 'Karla', data: loadFont('karla-600.ttf'), weight: 600 as const, style: 'normal' as const },
+  { name: 'Archivo', data: loadFont('archivo-800.ttf'), weight: 800 as const, style: 'normal' as const },
+  { name: 'Archivo', data: loadFont('archivo-600.ttf'), weight: 600 as const, style: 'normal' as const },
+  { name: 'Archivo', data: loadFont('archivo-400.ttf'), weight: 400 as const, style: 'normal' as const },
+  { name: 'IBM Plex Mono', data: loadFont('ibm-plex-mono-400.ttf'), weight: 400 as const, style: 'normal' as const },
 ];
 
 interface OgImageProps {
@@ -49,7 +61,7 @@ export async function renderOgImage({ eyebrow, title, meta }: OgImageProps): Pro
           justifyContent: 'space-between',
           backgroundColor: COLOR.paper,
           padding: '64px 72px',
-          fontFamily: 'Karla',
+          fontFamily: 'Archivo',
         },
         children: [
           {
@@ -58,8 +70,9 @@ export async function renderOgImage({ eyebrow, title, meta }: OgImageProps): Pro
               style: {
                 display: 'flex',
                 alignItems: 'center',
+                fontFamily: 'IBM Plex Mono',
                 fontSize: '22px',
-                fontWeight: 600,
+                fontWeight: 400,
                 letterSpacing: '2px',
                 textTransform: 'uppercase',
                 color: COLOR.accent,
@@ -72,7 +85,7 @@ export async function renderOgImage({ eyebrow, title, meta }: OgImageProps): Pro
             props: {
               style: {
                 display: 'flex',
-                fontFamily: 'Bodoni Moda',
+                fontFamily: 'Archivo',
                 fontWeight: 800,
                 fontSize: title.length > 70 ? '58px' : '68px',
                 lineHeight: 1.12,

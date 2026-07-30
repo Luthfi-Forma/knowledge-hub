@@ -5,9 +5,9 @@
 
 - Updated: 2026-07-30
 - Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1–S4 selesai**
-  (T-45–T-60); S5 (T-61–T-62) tersisa. M7 (lapisan editorial, T-63–T-65)
-  menunggu setelah M6 tutup.
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1–S4 selesai, S5
+  sebagian** (T-45–T-61); T-62 (penutup M6) tersisa. M7 (lapisan editorial,
+  T-63–T-65) menunggu setelah M6 tutup.
 
 ## Current status
 
@@ -15,7 +15,7 @@ Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
-di-push sesi ini** — 16 commit M6 baru ada di `main` lokal.
+di-push sesi ini** — 17 commit M6 baru ada di `main` lokal.
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
 Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
@@ -51,7 +51,17 @@ redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`).
    post, angka `impact` sebagian post — semuanya cuma bisa ditulis pemilik
    situs.
 
-## Sesi ini (M6 Atlas — S4, T-59 + T-60, 2026-07-30)
+## Sesi ini (M6 Atlas — S4 + S5 start, T-59/T-60/T-61, 2026-07-30)
+
+**T-61** (S5, di atas T-59/T-60 di bawah): OG image (`lib/og-image.ts`)
+dipindah dari palet cream/Bodoni-Karla lama ke token Atlas — 5 hex literal
+diganti nilai Atlas persis, 4 TTF baru diunduh dari fontsource.org (Archivo
+800/600/400 + IBM Plex Mono 400 — bukan file variable yang sudah di-self-
+host situs, satori/resvg tidak menangani woff2/sumbu `wdth`-nya, kendala
+teknis sama seperti kenapa Bodoni/Karla dulu juga TTF statis), 3 TTF lama
+dihapus. Diverifikasi lewat build production sungguhan: `/og/default.png` +
+`/og/cikarang-industrial-settlement-pattern.png` diunduh & dibuka sebagai
+gambar, keduanya PNG 1200×630 valid dengan palet+tipografi Atlas benar.
 
 2 commit, menutup S4. **T-59**: `useReducedMotion()` sekarang dipanggil di 28
 fungsi `Viz*` lintas 4 modul `lib/scrollytelling/*.tsx` (sebelumnya cuma shell
@@ -143,18 +153,18 @@ dev server.
 
 ## Next steps
 
-1. **Mulai T-61** (S5) — OG image ikut Atlas (palet + Archivo/IBM Plex Mono,
-   hapus 3 TTF Bodoni/Karla).
-2. T-62 — tutup M6: 14 item verification checklist handoff, remeasure
-   berat transfer, **CHANGELOG diperbarui di sini** (sengaja belum
-   disentuh sepanjang S1–S4, mengikuti pola M5/T-44 — full pass di
-   task penutup milestone, bukan per-task).
-3. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
+1. **Mulai T-62** — task terakhir M6, tutup milestone: 14 item verification
+   checklist handoff satu per satu, remeasure berat transfer 4 halaman (pola
+   T-44) ke `docs/TESTING.md`, perbarui ROADMAP/STATE/CHANGELOG/DEBT/LESSONS
+   + RULES.md (durasi motion 120ms/200ms/300ms menggantikan konvensi M5).
+   **CHANGELOG diperbarui di sini** (sengaja belum disentuh sepanjang
+   S1–S5, mengikuti pola M5/T-44 — full pass di task penutup milestone).
+2. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
    (T-62), atau lebih awal jika user memintanya secara eksplisit.
-4. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
-5. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+3. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
+4. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-6. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
