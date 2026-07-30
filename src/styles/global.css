@@ -265,6 +265,23 @@
 }
 
 /*
+ * Rail + field shell (M6/T-56) — the `224px 1fr` grid every LegendRail-
+ * bearing page uses (Sheet Index, T-55; Topic pages, T-56): single column
+ * until the rail is permanent at ≥1024px (LegendRail's own drawer takes
+ * over below that). Extracted here on its second use rather than left
+ * duplicated a third time, same threshold as `.hatch-*` and `.control-*`.
+ */
+.rail-layout {
+  display: block;
+}
+@media (min-width: 1024px) {
+  .rail-layout {
+    display: grid;
+    grid-template-columns: var(--container-rail) 1fr;
+  }
+}
+
+/*
  * Wrapped in Tailwind's `base` layer (not left unlayered) so that per-element
  * utility classes (font-extrabold, font-medium, ...) — which Tailwind v4
  * generates inside `@layer utilities` — can still override these defaults.

@@ -35,11 +35,6 @@ export async function getAllTags(): Promise<{ tag: string; count: number }[]> {
   return Array.from(counts, ([tag, count]) => ({ tag, count })).sort((a, b) => a.tag.localeCompare(b.tag));
 }
 
-export async function getPostsByTag(tag: string): Promise<CollectionEntry<'posts'>[]> {
-  const posts = await getPublishedPosts();
-  return posts.filter((post) => post.data.tags.includes(tag));
-}
-
 export async function getRelatedPosts(
   post: CollectionEntry<'posts'>,
   limit = 3,

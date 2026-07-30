@@ -1,34 +1,190 @@
 ---
+// /topics/[topic] — Atlas's topic page (M6/T-56). Spec: docs/design/atlas/
+// README.md "Screens > 02 · /topics/[topic]"; layout reference
+// docs/design/atlas/Hi-Fi - Atlas Screens.dc.html screen 02. Rail here is
+// topics-only (no type-legend block), matching that screen — unlike Sheet
+// Index, filtering by type isn't this page's job.
+//
+// Definition comes from the `topics` content collection (T-53) — schema
+// only until M7 supplies real entries, so `getEntry` returns undefined for
+// every topic today. Per M6's own rule (ADR-004 Consequences), that's a
+// graceful omission, not a placeholder: the definition paragraph and its
+// wrapping simply don't render, rather than a dashed-border "TODO" shown
+// to the public (that convention is the handoff's own authoring-tool
+// device for internal preview, not something to ship).
+//
+// Topic page's h1 renders at Hi-Fi's stated 56px/800/122% — bigger than
+// the declared --text-page-title (40px) token that nominally covers "h1
+// every route". Treated as this page's own hero exception, the same
+// reasoning as Sheet Index's lead plate title (T-55): the topic name is
+// this page's single most defining element, not a generic page title.
+import { getEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostListItem from '../../components/PostListItem.astro';
-import EmptyState from '../../components/EmptyState.astro';
-import { getAllTags, getPostsByTag } from '../../lib/posts';
+import LegendRail from '../../components/LegendRail.astro';
+import Plate from '../../components/Plate.astro';
+import { getPublishedPosts, POST_TYPES, TYPE_LABEL } from '../../lib/posts';
+import { topicCounts, neighbours } from '../../lib/topics';
 
 export async function getStaticPaths() {
-  const tags = await getAllTags();
-  return tags.map(({ tag }) => ({
+  const posts = await getPublishedPosts();
+  return Array.from(topicCounts(posts).keys()).map((tag) => ({
     params: { topic: tag },
     props: { tag },
   }));
 }
 
 const { tag } = Astro.props;
-const posts = await getPostsByTag(tag);
+const posts = await getPublishedPosts();
+const plateNumbers = new Map(posts.map((post, i) => [post.id, i + 1]));
+const topicPosts = posts.filter((post) => post.data.tags.includes(tag));
+
+const counts = topicCounts(posts);
+const thisCounts = counts.get(tag)!;
+const allTopics = Array.from(counts, ([t, c]) => ({ tag: t, count: c.total })).sort(
+  (a, b) => b.count - a.count || a.tag.localeCompare(b.tag),
+);
+const byTypeNotation = POST_TYPES.filter((type) => thisCounts.byType[type] > 0)
+  .map((type) => `${thisCounts.byType[type]} ${TYPE_LABEL[type].toLowerCase()}`)
+  .join(' · ');
+
+const topicEntry = await getEntry('topics', tag);
+const neighbourTopics = neighbours(tag, posts, 6);
+
+const breadcrumbLeft = `Topics / ${tag} · ${thisCounts.total} plates`;
+const breadcrumbRight = 'Neighbours computed from co-occurring tags';
 ---
 
-<BaseLayout title={`#${tag} — Afreza Hernanda`} description={`Posts tagged ${tag}.`}>
-  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
-    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">#{tag}</h1>
-    {
-      posts.length === 0 ? (
-        <EmptyState message={`No posts tagged "${tag}" yet.`} ctaHref="/topics" ctaLabel="Browse all topics" />
-      ) : (
-        <div class="flex flex-col border-b border-line">
-          {posts.map((post) => (
-            <PostListItem post={post} href={`/posts/${post.id}`} headingLevel="h2" />
-          ))}
-        </div>
-      )
-    }
-  </section>
+<BaseLayout
+  title={`${tag} — Topics — Afreza Hernanda`}
+  description={topicEntry?.data.definition ?? `Posts about ${tag}.`}
+  breadcrumbLeft={breadcrumbLeft}
+  breadcrumbRight={breadcrumbRight}
+>
+  <div class="topic-page rail-layout">
+    <LegendRail topics={allTopics} activeTopic={tag} topicsHeading={`All topics · ${allTopics.length}`} />
+    <div class="topic-field">
+      <p class="topic-notation">
+        Topic · {thisCounts.total} {thisCounts.total === 1 ? 'plate' : 'plates'} · {byTypeNotation}
+      </p>
+      <h1 class="topic-title">{tag}</h1>
+      {topicEntry && <p class="topic-definition">{topicEntry.data.definition}</p>}
+      <div class="topic-grid">
+        {
+          topicPosts.map((post) => (
+            <Plate post={post} size="standard" plateNumber={plateNumbers.get(post.id)!} headingLevel="h2" />
+          ))
+        }
+      </div>
+      {
+        neighbourTopics.length > 0 && (
+          <div class="topic-neighbours">
+            <p class="topic-neighbours-heading">Neighbouring topics — appear alongside {tag}</p>
+            <div class="topic-neighbours-list">
+              {neighbourTopics.map(({ tag: neighbourTag, count }) => (
+                <a href={`/topics/${neighbourTag}`} class="neighbour-chip">
+                  {neighbourTag} <span class="neighbour-count">{count}×</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .topic-field {
+    padding: 24px 20px 48px;
+  }
+  @media (min-width: 640px) {
+    .topic-field {
+      padding: 32px 48px;
+    }
+  }
+
+  .topic-notation {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .topic-title {
+    margin: 0 0 14px;
+    font-family: var(--font-display);
+    font-stretch: 122%;
+    font-weight: 800;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .topic-definition {
+    margin: 0 0 28px;
+    max-width: 64ch;
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--color-ink);
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+    margin-bottom: 32px;
+  }
+  @media (min-width: 640px) {
+    .topic-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .topic-neighbours-heading {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .topic-neighbours-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .neighbour-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper-raised);
+    color: var(--color-ink);
+    text-decoration: none;
+    font-size: 14px;
+    transition:
+      border-color 120ms ease,
+      color 120ms ease;
+  }
+  .neighbour-chip:hover,
+  .neighbour-chip:focus-visible {
+    border-color: var(--color-research);
+    color: var(--color-research);
+  }
+  .neighbour-chip:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .neighbour-count {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+  }
+</style>

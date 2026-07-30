@@ -53,7 +53,7 @@ const topics = Array.from(topicCounts(posts), ([tag, count]) => ({ tag, count: c
 );
 ---
 
-<div class="sheet-index">
+<div class="sheet-index rail-layout">
   <LegendRail typeCounts={typeCounts} topics={topics} activeType={activeType} />
   <div class="sheet-field">
     <div class="sheet-content">
@@ -85,16 +85,6 @@ const topics = Array.from(topicCounts(posts), ([tag, count]) => ({ tag, count: c
 </div>
 
 <style>
-  .sheet-index {
-    display: block;
-  }
-  @media (min-width: 1024px) {
-    .sheet-index {
-      display: grid;
-      grid-template-columns: var(--container-rail) 1fr;
-    }
-  }
-
   /* CSS-only graticule field — no image asset, no canvas. A hairline grid
      (--color-line, already low-contrast by design — T-48) sits behind the
      plates via ::before so it never dims the actual content painted atop

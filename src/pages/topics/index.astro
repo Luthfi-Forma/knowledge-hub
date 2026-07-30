@@ -1,31 +1,63 @@
 ---
+// /topics — indeks 20 topik (M6/T-56), naik ke nav per README's IA table.
+// No dedicated Hi-Fi mockup for this exact screen (only Sheet Index and
+// the single-topic page were mocked) — built as a plain grid of TopicChip
+// (T-51), Atlas's own tag shape, rather than inventing new chip styling.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EmptyState from '../../components/EmptyState.astro';
-import { getAllTags } from '../../lib/posts';
+import TopicChip from '../../components/TopicChip.astro';
+import { getPublishedPosts } from '../../lib/posts';
+import { topicCounts } from '../../lib/topics';
 
-const tags = (await getAllTags()).sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+const posts = await getPublishedPosts();
+const topics = Array.from(topicCounts(posts), ([tag, count]) => ({ tag, count: count.total })).sort(
+  (a, b) => b.count - a.count || a.tag.localeCompare(b.tag),
+);
+const breadcrumbLeft = `Topics · ${topics.length}`;
 ---
 
-<BaseLayout title="Topics — Afreza Hernanda" description="Browse all posts by topic.">
-  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
-    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Topics</h1>
+<BaseLayout title="Topics — Afreza Hernanda" description="Browse all posts by topic." breadcrumbLeft={breadcrumbLeft}>
+  <section class="topics-index">
+    <h1 class="topics-title">Topics</h1>
     {
-      tags.length === 0 ? (
+      topics.length === 0 ? (
         <EmptyState message="No topics yet." ctaHref="/" ctaLabel="Browse all posts" />
       ) : (
-        <ul class="flex flex-wrap gap-2">
-          {tags.map(({ tag, count }) => (
-            <li>
-              <a
-                href={`/topics/${tag}`}
-                class="inline-flex min-h-11 items-center border border-research px-3 py-1.5 text-sm text-research hover:bg-research hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-              >
-                {tag} ({count})
-              </a>
-            </li>
+        <div class="topics-grid">
+          {topics.map(({ tag, count }) => (
+            <TopicChip topic={tag} count={count} />
           ))}
-        </ul>
+        </div>
       )
     }
   </section>
 </BaseLayout>
+
+<style>
+  .topics-index {
+    max-width: var(--container-shell);
+    margin-inline: auto;
+    padding: 32px 20px;
+  }
+  @media (min-width: 640px) {
+    .topics-index {
+      padding: 32px 48px;
+    }
+  }
+
+  .topics-title {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-weight: 700;
+    font-size: var(--text-page-title);
+    line-height: var(--text-page-title--line-height);
+    color: var(--color-ink);
+  }
+
+  .topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
