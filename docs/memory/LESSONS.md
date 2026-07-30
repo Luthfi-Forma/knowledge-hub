@@ -472,3 +472,75 @@ even when the JS approach would be correct in a real browser. This
 sidesteps the tooling gap entirely rather than working around it per
 verification, and is arguably better practice regardless (one less thing
 depending on JS execution order).
+
+## 2026-07-29 — Astro scoped `<style>` does not reach into child components' own root elements [harvest-candidate]
+
+Tags: #astro #css-scoping
+
+Hit twice this session, both times as a silent no-op rather than an error:
+Plate.astro's `.plate-cover img` never matched an `<Image>`-rendered
+`<img>` (T-50), and `posts/[slug].astro`'s `.post-main > nav` /
+`.post-rail > nav` never matched `TableOfContents.astro`'s `<nav>` root
+element (T-57) — both TOC copies rendered simultaneously on mobile
+instead of the CSS toggling between them.
+
+Root cause: Astro's scoped-style mechanism stamps each component's
+compiled output with *that component's own* scope-hash attribute. A
+child component's root element carries the child's hash, not the
+parent's — so a parent selector like `.post-main > nav` compiles to
+something like `.post-main > nav[data-astro-cid-PARENTHASH]`, which can
+never match a `<nav data-astro-cid-CHILDHASH>` rendered by a child. This
+is invisible in the source and produces no build warning; it just quietly
+never applies.
+
+**Fix**: wrap the un-namespaced tag selector in `:global()` — e.g.
+`.post-main > :global(nav)`. **Generalized rule**: any parent-scoped CSS
+selector that targets a bare tag/class expected to be a *child
+component's own root element* (not an element the parent itself renders)
+needs `:global()`. Check this class of bug specifically whenever a new
+child component's root element is targeted from a parent's `<style>`
+block for the first time.
+
+## 2026-07-29 — A CSS comment containing the literal substring `*/` self-terminates early [harvest-candidate]
+
+Tags: #css #build-tooling
+
+In `global.css` (T-56), a comment reading `.hatch-*/.control-*` (word
+separator `-*` immediately followed by `/control-*`) contains the literal
+two-character sequence `*/`, which is the CSS comment terminator — so the
+comment closed after `.hatch-*` and the remaining text (`.control-*` plus
+the real closing `*/`) became live, invalid CSS. This produced only a
+production-optimizer warning ("Unexpected token Delim('*')"), not a build
+failure — `npm run build` still reported success, making it very easy to
+miss.
+
+**Fix**: reword to avoid the literal `*/` sequence (e.g. spell it out as
+"`.hatch-*` dan `.control-*`" instead of joining them with a slash).
+**Generalized rule**: never write `*/` as a literal substring inside a CSS
+comment's text, even when it reads naturally as a word/path separator —
+grep for `\*/` inside comment bodies specifically after editing any
+comment that discusses glob-style or path-style class name patterns.
+
+## 2026-07-29 — `document.documentElement.scrollWidth` can be a false positive for horizontal overflow when `position:fixed` + `transform`-animated elements are present in this tool
+
+Tags: #browser-verification #css-overflow
+
+While verifying the Sheet Index at a 375px viewport (T-55),
+`scrollWidth` reported 468px — looked like a real horizontal-overflow
+regression from the Plate cover-column fix just applied. It wasn't:
+`window.scrollX` stayed 0 after `scrollTo(1000, 0)` (a real overflow
+would have let the page actually scroll), and an exhaustive
+`getBoundingClientRect()` sweep over every DOM element found no element
+whose right edge exceeded the 375px viewport (max was 375.2px, i.e.
+rounding noise). The likely cause is `LegendRail`'s drawer, which uses
+`position: fixed` + `transform: translateX(-100%)` — this combination
+appears to confuse `scrollWidth` measurement in this session's specific
+browser tool, not in real browsers.
+
+**Working verification technique**: when `scrollWidth` suggests overflow
+but the page "feels" fine, cross-check with (1) `window.scrollX` after a
+forced `scrollTo` (does the viewport actually move?) and (2) a full
+`getBoundingClientRect()` sweep for any element's right edge exceeding
+`window.innerWidth`. Only treat it as a real bug if both of those also
+indicate overflow — `scrollWidth` alone is not trustworthy in this tool
+whenever `position:fixed`-animated elements are on the page.

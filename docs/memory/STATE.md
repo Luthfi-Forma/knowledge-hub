@@ -5,42 +5,41 @@
 
 - Updated: 2026-07-29
 - Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" dibuka** — perencanaan
-  selesai, T-45/T-46 sudah dikerjakan, kode dimulai dari T-47.
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1, S2, S3 selesai**
+  (T-45–T-58); S4 (T-59–T-60) dan S5 (T-61–T-62) tersisa. M7 (lapisan
+  editorial, T-63–T-65) menunggu setelah M6 tutup.
 
 ## Current status
 
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. 11 post
-nyata. Situs sekarang punya **dua identitas visual penuh**, dipilih
-pengunjung lewat toggle persisten di Header atau registration seam yang
-bisa diseret di homepage:
+(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
+di-push sesi ini** — 14 commit M6 baru ada di `main` lokal.
 
-- **Reading Mode** (default) — identitas krem final M3: kertas krem
-  `#F5EFE1`, ink `#18140F`, aksen hijau `#38523A`, Bodoni Moda + Karla.
-  Tidak diubah sedikit pun selama M5.
-- **Immersive Mode** ("DATUM") — identitas kedua dari nol: hampir-hitam
-  `#05090C`, teks bone `#DBE2DE`, aksen hijau cerah `#5A8D5D`, tipografi
-  Archivo (variable font, sumbu `wdth`+`wght`, self-hosted). Homepage,
-  `/explore`, dan `/about` masing-masing punya komposisi Immersive sendiri
-  (DATUM index berkolom-per-tipe, atau dossier untuk About); halaman lain
-  otomatis ikut berganti palet/font lewat remap token tanpa komposisi
-  bespoke.
+Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
+Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
+berperan ketat (`--color-research`/`--color-project`/`--color-flag`
+menggantikan satu `--color-accent` serba-guna), tipografi Archivo (self-
+hosted, sumbu `wdth`) + IBM Plex Mono untuk notasi, radius nol di seluruh
+sistem, satu wadah konten `Plate` (3 ukuran) menggantikan PostCard+
+PostListItem, rail legenda 224px permanen (`LegendRail`+`TopicChip`) yang
+jadi drawer di <1024px, dan collar 2-baris (nav 4 item + breadcrumb notasi)
+di setiap halaman.
 
-Mekanisme dual-mode (ADR-003): remap 8 custom property CSS yang sama di
-`:root[data-mode='immersive']`, **bukan** island kedua atau route
-terpisah — nol fetch runtime, nol duplikasi build, nol duplikasi indeks
-Pagefind. Terverifikasi: klausa 4 ADR-002 ("tidak pernah island di layout
-global") tetap utuh — toggle dan seam keduanya Tier-1 vanilla, bukan React.
+IA final: **Index** (`/`, Sheet Index — 1 lead plate + grid standard, filter
+tipe via `/explore/[type]` yang memakai ulang komposisi yang sama) ·
+**Topics** (`/topics` + `/topics/[topic]`, menggantikan `/tags`, topik
+bertetangga dihitung dari co-occurrence tag) · **Projects** (`/projects/
+[name]`, repo/demo sebagai kontrol) · **About** (`/about`, satu komposisi
+Dossier dengan kontak dipromosikan ke kartu fakta). Photography turun jadi
+sekunder (dijangkau dari Footer). `/posts/[slug]` **tidak berubah URL-nya**
+— rail marginalia baru (stamp, project, topics, related plates) di
+sampingnya. 404 dapat mini type-legend. `vercel.json` baru menangani 3
+redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`).
 
-Situs juga tetap punya semua fitur M1–M4: carousel drag Featured Projects,
-Explore (filter + search Pagefind), detail post (+TOC, related posts, OG
-image — diskip untuk 4 post scrollytelling), halaman tag, project hub
-(sekarang dengan repo/demo link nyata + cover art digenerate — lihat di
-bawah), About dengan timeline interaktif, `/photography`, 404, sitemap +
-RSS + robots.txt, Vercel Web Analytics.
+**Sengaja mati** (bukan regresi — dicatat ADR-004): registration seam
+(M5/T-42), carousel drag Featured Projects (M4/T-24), toggle mode.
 
 **Aksi tersisa untuk user (bukan kode):**
 1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
@@ -48,129 +47,95 @@ RSS + robots.txt, Vercel Web Analytics.
 2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli (bukan sesi ini), atau berikan API key PSI. Lihat
    "Blockers" di bawah.
+3. **M7** (setelah M6 tutup): 20 definisi topik, 3–5 cross-link inline per
+   post, angka `impact` sebagian post — semuanya cuma bisa ditulis pemilik
+   situs.
 
-## Sesi ini (M6 dibuka — perencanaan Atlas, 2026-07-29)
+## Sesi ini (M6 Atlas — S1, S2, S3, 2026-07-29)
 
-User berkonsultasi dengan **Claude Design** di luar sesi ini dan membawa
-handoff lengkap bernama **"Atlas"** (zip di root repo → sekarang di-versi di
-`docs/design/atlas/`). Arahnya: **melebur dua identitas M5 jadi satu** —
-bahasa kartografis DATUM diangkat ke latar kertas terang — dan menaikkan
-**topik** jadi warga kelas satu karena audiens utama situs adalah komunitas
-GIS. Rail legenda permanen mengisi ~44% viewport yang hari ini kosong.
+14 commit bersih di `main` (belum di-push): dari `a77f81f` (persiapan —
+handoff dipindah ke `docs/design/atlas/`, ADR-004) sampai `ac88863` (T-58,
+menutup S3). Task T-45 s/d T-58 selesai; detail lengkap tiap task ada di
+`docs/TASK.md` Done (masing-masing punya paragraf verifikasi sendiri, tidak
+diulang di sini).
 
-Yang dikerjakan sesi ini adalah **persiapan, bukan kode Atlas**:
+**S1 — Fondasi** (T-45–T-49): bundel handoff masuk repo; ADR-004 (satu
+identitas Atlas, ADR-003 Superseded sebagian — Tier-0/Tier-1 ADR-003 #1/#2
+tetap berlaku); mekanisme dual-mode dibongkar total; 9 token warna Atlas
+(`--color-chart-1/2` dipertahankan sebagai alias supaya nol edit React di
+4 modul scrollytelling tetap benar); radius nol; tipografi Archivo+IBM Plex
+Mono (Bodoni Moda/Karla dilepas).
 
-- **T-45**: bundel handoff dipindah dari zip di root ke `docs/design/atlas/`
-  (8 file), pointer ditambah di `CLAUDE.md`.
-- **T-46**: **ADR-004** ditulis — ADR-003 jadi Superseded, tapi hanya
-  keputusan #3–#5-nya; **#1 (Tier-0) dan #2 (Tier-1 ≤2KB di layout global)
-  tetap berlaku** dan masih dipakai Atlas untuk drawer rail, filter legenda,
-  search.
-- ROADMAP (M6 + M7), TASK.md (T-45 s/d T-65 dalam 5 seksi), CLAUDE.md.
+**S2 — Komponen inti** (T-50–T-52): `Plate.astro` (satu wadah konten, 3
+ukuran); `LegendRail.astro`+`TopicChip.astro` (rail permanen/drawer); collar
+Header 2-baris + skip-link (menutup kegagalan WCAG 2.4.1 nyata) + bahasa
+kontrol 4 tingkat + Footer 4 kolom.
 
-**Tiga keputusan user (2026-07-29)** yang membentuk rencana:
-1. Dual-mode dihapus **total** — bukan diarsipkan, bukan jadi identitas ketiga.
-2. **M6 = struktur** dengan graceful empty state; konten editorial (20 definisi
-   topik, cross-link inline, angka `impact`) dipisah jadi **M7**.
-3. OG image ikut identitas Atlas (palet + typeface), bukan dibiarkan jadi utang
-   visual yang terlihat publik.
+**S3 — IA & route** (T-53–T-58): `lib/topics.ts` (co-occurrence, tanpa
+daftar manual) + skema koleksi `topics` (kosong sampai M7); `/tags` →
+`/topics` + `vercel.json` redirect; `/` jadi Sheet Index (disatukan dengan
+`/explore/[type]` — satu komponen `SheetIndex`, dua rute); `/topics` +
+`/topics/[topic]`; rail marginalia post detail; `/projects/[name]`,
+`/about` (Dossier, kontak dipromosikan), `/photography`, `404`.
 
-**Satu koreksi nyata terhadap handoff, ditemukan dari repo bukan dari dokumen.**
-Handoff menyatakan *"nama token tidak berubah dari `global.css` — hanya
-nilainya"*. Tidak akurat: repo punya `--color-accent`, `--color-chart-1`,
-`--color-chart-2`; palet Atlas tidak memuat ketiganya. Empat modul
-scrollytelling menunjuk `var(--color-chart-1/2)` lewat konstanta lokal, jadi
-klaim **"nol edit React"** hanya bertahan kalau kedua token itu dipertahankan
-sebagai **alias** ke `--color-research`/`--color-project` — sudah masuk T-48.
-`--color-accent` tidak bisa dialias; ia dipakai lewat utility Tailwind di
-banyak `.astro` dan harus diganti per-callsite.
+**3 bug nyata ditemukan & diperbaiki lewat pengujian sungguhan** (bukan
+diklaim beres dari kode):
+1. `Plate.astro`'s kolom cover lebar-piksel-tetap (300px untuk lead) tidak
+   menyempit di layar sempit — pemanggil pertama yang benar-benar merender
+   lead+cover (Sheet Index, T-55) baru mengekspos ini; T-50 sendiri tidak
+   pernah menguji kombinasi itu. Diperbaiki: tumpuk vertikal di <480px.
+2. Komentar sendiri di `global.css` (`.hatch-*/.control-*`) memuat `*/`
+   literal yang menutup komentar CSS lebih awal — parser produksi gagal
+   dengan warning yang nyaris terlewat karena build tetap "sukses" (T-56).
+3. Selector `.post-main > nav` tidak pernah cocok karena `<nav>` adalah
+   root element komponen ANAK (`TableOfContents.astro`) yang membawa
+   scope-hash sendiri — Astro scoped style tidak menembus batas komponen
+   (pola yang sama seperti `<Image>`'s `<img>` di Plate.astro, T-50).
+   Kedua salinan TOC tampil sekaligus di mobile sampai diperbaiki dengan
+   `:global(nav)` (T-57).
 
-Dua konsekuensi yang handoff tidak sebut, sekarang tercatat di ADR-004:
-`src/lib/og-image.ts` menghardcode palet lama sebagai hex + membaca 3 TTF
-Bodoni/Karla (tidak ikut remap token, ditangani T-61), dan mempensiunkan
-`FeaturedProjects` **mematikan carousel drag T-24** — satu dari dua fitur
-unggulan M4.
+**2 penyimpangan sadar dari deskripsi task/rencana awal**, keduanya
+dijelaskan alasannya di commit + TASK.md:
+- `/photography` TIDAK memakai `Plate` sama sekali (rencana asli:
+  "grid plate compact") — baik compact (tak pernah tampilkan cover) maupun
+  standard (cover jadi kolom-samping kecil) tidak cocok untuk galeri foto;
+  `PhotoTile.astro` dipertahankan & direstyle, bukan dihapus (T-58).
+- Experience di `/about` menampilkan semua 9 role, bukan "3 + tombol lihat
+  selebihnya" seperti Hi-Fi — dianggap kurang jujur untuk portofolio yang
+  justru ingin menunjukkan riwayat kerja nyata (T-58).
 
-## Last session (M5 — DATUM, 2026-07-28 s/d 2026-07-29)
+**Pola verifikasi berulang** (detail di `docs/memory/LESSONS.md`): tab
+browser baru dipakai setelah console log ditemukan menumpuk lintas-navigasi
+di tab lama (bukan bug halaman); `astro preview` dipakai konsisten, bukan
+dev server.
 
-Dipicu dokumen visi "Knowledge Hub 2.0" milik user. Brainstorming 14 agent
-(2 workflow) menemukan situs gagal memenuhi kriteria suksesnya sendiri
-(`post → project hub → repo/demo` ≤ 2 klik, putus di setiap sambungan) —
-diperbaiki lebih dulu (S1) sebelum kerja visual apa pun. Tujuan yang
-menentukan seluruh arah: user menyatakan target 12 bulannya adalah
-**situsnya sendiri sebagai bukti kemampuan teknis** — itu sebabnya
-identitas kedua dibangun, bukan sekadar konten ditambah.
+## Last session (M6 prep, 2026-07-29 — sebelum sesi ini)
 
-**S1 — Etalase** (T-31–T-35): `repo:`/`demo:` nyata di 3 post project +
-perbaikan org repo salah; `Project: X` jadi link nyata; cover art project
-**digenerate** (SVG editorial + `@resvg/resvg-js`, bukan screenshot — atas
-arahan eksplisit user, masing-masing mengkodekan fakta nyata dari post-nya
-seperti "13 lines · 128 stations"); portrait.png dipindah ke `astro:assets`
-(−98,8% ukuran); dua animasi `repeat: Infinity` dihapus (kegagalan WCAG
-2.2.2); net `prefers-reduced-motion` global ditambah; terjemahan penuh
-label/caption chart Indonesia→English di 4 modul scrollytelling (lingkupnya
-jauh lebih luas dari perkiraan awal — lihat LESSONS.md).
-
-**S2 — Fondasi dual-mode** (T-37–T-39): ADR-003 memperjelas klausa 4
-ADR-002 sebagai larangan hidrasi framework, bukan larangan byte; blok
-remap 8 token warna yang sudah ada di `@layer base` (bukan token
-paralel — terverifikasi 0 hex literal & 72 `var(--color-*)` di 4 modul
-scrollytelling, jadi seluruh situs ikut berganti tanpa edit React);
-`ModeController` Tier-1 (script pra-paint + tombol toggle, ~325 byte gzip).
-
-**S3 — Identitas DATUM** (T-40–T-41): `ImmersiveIndex.astro` — homepage
-jadi indeks lembar survei bergraticule, plate berkoordinat asli (field
-`coordinates` baru di schema, diisi 10/11 post dari koordinat desimal
-nyata), kolom-per-tipe dengan legenda-sebagai-filter. Tipografi Archivo
-(variable font self-hosted, disederhanakan dari usulan awal 3-keluarga
-jadi 1 — sumbu lebarnya sendiri sudah jadi "payload kartografis").
-
-**S4 — Registration seam** (T-42): grip yang bisa diseret untuk mengupas
-Reading dan mengungkap Immersive di bawahnya (`clip-path`, tanpa clone
-DOM, tanpa `rAF`), plus `@view-transition { navigation: auto }` CSS murni
-untuk crossfade antar halaman. Dua bug aksesibilitas/mobile nyata
-ditemukan lewat pengujian dan diperbaiki (grip tak fokusabel saat
-istirahat; grip terpotong di layar sempit).
-
-**S5 — Perluasan + penutupan** (T-43–T-44): Immersive diperluas ke
-`/explore` (pakai ulang `ImmersiveIndex`) dan `/about` (komposisi baru,
-`ImmersiveDossier.astro`). Aturan motion dikonsolidasi ke `docs/RULES.md`.
-T-36 (baseline Lighthouse) dicoba ulang, tetap terblokir tooling — lihat
-Blockers.
-
-**Pola verifikasi berulang sepanjang M5** (detail lengkap di
-`docs/memory/LESSONS.md`): browser tool sesi ini tidak reliably
-me-repaint elemen yang sudah dirender setelah custom property CSS-nya
-dimutasi via JS pasca-paint (ditemukan 2x, di `background-color` T-39 dan
-di `clip-path`/`left` berbasis `clamp()` T-42) — pola verifikasi yang
-terbukti andal: reload sungguhan dengan state (`localStorage`) diisi
-lebih dulu, bukan mutasi-lalu-baca. Solusinya juga sekaligus jadi kode
-yang lebih baik: nilai yang harus benar di first paint ditulis di CSS
-lewat selector `:root[data-mode='immersive']`, bukan diserahkan ke script.
-
-Semua 7 commit M5 bersih ter-push ke `main`. Detail lengkap tiap task ada
-di `docs/TASK.md` (Done); rasionale arsitektur di ADR-003 dan
-`docs/RULES.md` "Motion rules".
+Perencanaan M6 murni (bukan kode): handoff Claude Design "Atlas" diterima
+user di luar sesi, dipindah ke `docs/design/atlas/`; ADR-004 ditulis;
+ROADMAP/TASK/CLAUDE.md diperbarui. Detail penuh di commit `a77f81f` dan
+sesi log sebelumnya.
 
 ## Next steps
 
-1. **Mulai T-47** — bongkar mekanisme dual-mode. Ini task pertama yang
-   menyentuh kode Atlas, dan gate-nya keras:
-   `grep -rn "data-mode\|mode-toggle\|RegistrationSeam" src/` harus nol.
-   Lalu berurut T-48 → T-62; tiap seksi (S1–S5) harus `npm run build` hijau
-   sebelum lanjut.
-2. Verifikasi visual M6 memakai `astro preview`, **bukan** dev server — dev
-   server Vite pernah memberi sinyal font palsu di T-41. Pola yang terbukti
-   di M5: reload sungguhan, bukan mutasi-lalu-baca.
-3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+1. **Mulai T-59** (S4) — satu-satunya kerja sisi React di M6: `useReducedMotion()`
+   di 4 modul `lib/scrollytelling/*.tsx` (hari ini hanya shell yang
+   memanggilnya) + tabel data alternatif tiap chart Recharts (kegagalan
+   WCAG 1.1.1 hari ini). Verifikasi ulang keempat modul tetap nol hex
+   literal setelah semua perubahan token S1.
+2. T-60 — restyle Pagefind ke token Atlas, tutup `docs/memory/DEBT.md` #1.
+3. T-61 — OG image ikut Atlas (palet + Archivo/IBM Plex Mono, hapus 3 TTF
+   Bodoni/Karla).
+4. T-62 — tutup M6: 14 item verification checklist handoff, remeasure
+   berat transfer, **CHANGELOG diperbarui di sini** (sengaja belum
+   disentuh sepanjang S1–S3, mengikuti pola M5/T-44 — full pass di
+   task penutup milestone, bukan per-task).
+5. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
+   (T-62), atau lebih awal jika user memintanya secara eksplisit.
+6. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
+7. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-   Kalau ini akhirnya jalan, jalankan **sebelum** T-47 supaya ada baseline
-   pra-Atlas untuk dibandingkan.
-4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog, menunggu
-   keputusan user kapan pun.
-5. Font Spectral (dari usulan tipografi Immersive awal) **tidak lagi
-   relevan** — Atlas memutuskan satu keluarga (Archivo) mengerjakan display
-   dan body lewat sumbu `wdth`, plus IBM Plex Mono untuk notasi.
+8. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
@@ -179,9 +144,8 @@ dan 2026-07-29) lewat 3 jalur (PSI web UI, PSI API via WebFetch, PSI API
 via `curl`): UI macet di polling, API konsisten 429 (keyless quota) di
 kedua percobaan. Bukan sesuatu yang bisa diperbaiki dari sisi kode —
 perlu user menjalankan PageSpeed Insights dari browser sungguhan, atau
-memberi API key PSI. Data pengganti (berat transfer produksi nyata,
-diukur ulang setelah M5 selesai) ada di `docs/TESTING.md` — mengonfirmasi
-mekanisme dual-mode menambah <1KB JS ke halaman scrollytelling terberat.
+memberi API key PSI. Data pengganti (berat transfer produksi nyata) ada di
+`docs/TESTING.md`.
 
 ## Open questions
 

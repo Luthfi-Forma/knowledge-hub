@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-29 (M6/M7 ditambahkan)
+- Updated: 2026-07-29 (M6 S1–S3 selesai, S4–S5 tersisa)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -13,7 +13,7 @@
 | M3 | Identitas & polish | Desain visual final, About/CV, photography, OG images, RSS, sitemap, Vercel Analytics | done |
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
 | M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
-| M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | planned |
+| M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | in progress (S1–S3 selesai T-45–T58; S4–S5 tersisa T-59–T-62) |
 | M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | planned |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
@@ -32,8 +32,10 @@ user — lihat T-20/T-21 di TASK.md Backlog.
 catatan tabel milestone). M6 mengerjakan perombakan visual "Atlas" dari
 handoff Claude Design yang di-versi di `docs/design/atlas/` — arah dan
 konsekuensinya diputuskan di
-[ADR-004](decisions/ADR-004-atlas-single-identity.md). Task aktif dimulai
-dari T-45 di TASK.md.
+[ADR-004](decisions/ADR-004-atlas-single-identity.md). S1 (Fondasi,
+T-45–T-49), S2 (Komponen inti, T-50–T-52), dan S3 (IA & route, T-53–T-58)
+selesai — 14 commit bersih di `main`. Task aktif dimulai dari T-59 (S4 —
+Aksesibilitas & search) di TASK.md.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
