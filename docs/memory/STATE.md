@@ -4,10 +4,10 @@
      by /project-status, grounded in git log — not recall. -->
 
 - Updated: 2026-07-30
-- Milestone: M1–M5 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" — S1–S4 selesai, S5
-  sebagian** (T-45–T-61); T-62 (penutup M6) tersisa. M7 (lapisan editorial,
-  T-63–T-65) menunggu setelah M6 tutup.
+- Milestone: M1–M6 selesai (satu pengecualian tercatat: T-36 baseline
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" tutup total**
+  (S1–S5, T-45–T-62). M7 (lapisan editorial, T-63–T-65) menunggu input
+  yang cuma bisa ditulis pemilik situs — lihat "Aksi tersisa untuk user".
 
 ## Current status
 
@@ -15,7 +15,8 @@ Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
 (public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
-di-push sesi ini** — 17 commit M6 baru ada di `main` lokal.
+di-push** — 17 commit M6 ada di `main` lokal, keputusan push menunggu user
+(lihat "Next steps").
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
 Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
@@ -24,8 +25,9 @@ menggantikan satu `--color-accent` serba-guna), tipografi Archivo (self-
 hosted, sumbu `wdth`) + IBM Plex Mono untuk notasi, radius nol di seluruh
 sistem, satu wadah konten `Plate` (3 ukuran) menggantikan PostCard+
 PostListItem, rail legenda 224px permanen (`LegendRail`+`TopicChip`) yang
-jadi drawer di <1024px, dan collar 2-baris (nav 4 item + breadcrumb notasi)
-di setiap halaman.
+jadi drawer di <1024px, collar 2-baris (nav 4 item + breadcrumb notasi) di
+setiap halaman, dan search sungguhan (dialog Pagefind, token Atlas, buka
+lewat tombol/`/`, tutup `Esc`).
 
 IA final: **Index** (`/`, Sheet Index — 1 lead plate + grid standard, filter
 tipe via `/explore/[type]` yang memakai ulang komposisi yang sama) ·
@@ -36,145 +38,125 @@ Dossier dengan kontak dipromosikan ke kartu fakta). Photography turun jadi
 sekunder (dijangkau dari Footer). `/posts/[slug]` **tidak berubah URL-nya**
 — rail marginalia baru (stamp, project, topics, related plates) di
 sampingnya. 404 dapat mini type-legend. `vercel.json` baru menangani 3
-redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`).
+redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`) —
+**belum teruji di produksi sungguhan**, cuma diverifikasi statis, karena
+redirect Vercel hanya berlaku di edge produksi dan M6 belum di-push.
+
+Aksesibilitas: skip-link ke `#main` (WCAG 2.4.1), `aria-current="page"` di
+nav, ring fokus `2px solid var(--color-research)` di semua kontrol, semua
+kontrol+chip ≥44px (termasuk `TopicChip`'s target sentuh via `::after`
+tak-terlihat), 15 chart Recharts dapat tabel data `sr-only` (WCAG 1.1.1),
+`useReducedMotion()` dipanggil di 28 fungsi `Viz*` lintas 4 modul
+scrollytelling (bukan cuma shell-nya).
+
+OG image (`lib/og-image.ts`) ikut Atlas — palet + Archivo/IBM Plex Mono,
+Bodoni Moda/Karla dilepas total dari repo (fungsional maupun font file).
 
 **Sengaja mati** (bukan regresi — dicatat ADR-004): registration seam
 (M5/T-42), carousel drag Featured Projects (M4/T-24), toggle mode.
 
 **Aksi tersisa untuk user (bukan kode):**
-1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
+1. **Push M6 ke `main` remote** — 17 commit lokal, belum dikirim. Situs
+   live masih menyajikan build M5 lama sampai ini terjadi.
+2. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
    M3 — toggle akun, tidak bisa disentuh dari kode).
-2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
+3. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli (bukan sesi ini), atau berikan API key PSI. Lihat
    "Blockers" di bawah.
-3. **M7** (setelah M6 tutup): 20 definisi topik, 3–5 cross-link inline per
-   post, angka `impact` sebagian post — semuanya cuma bisa ditulis pemilik
-   situs.
+4. **M7**: 20 definisi topik, 3–5 cross-link inline per post, angka
+   `impact` sebagian post — semuanya cuma bisa ditulis pemilik situs.
 
-## Sesi ini (M6 Atlas — S4 + S5 start, T-59/T-60/T-61, 2026-07-30)
+## Sesi ini (M6 Atlas — S4+S5 penutup, T-59–T-62, 2026-07-30)
 
-**T-61** (S5, di atas T-59/T-60 di bawah): OG image (`lib/og-image.ts`)
-dipindah dari palet cream/Bodoni-Karla lama ke token Atlas — 5 hex literal
-diganti nilai Atlas persis, 4 TTF baru diunduh dari fontsource.org (Archivo
-800/600/400 + IBM Plex Mono 400 — bukan file variable yang sudah di-self-
-host situs, satori/resvg tidak menangani woff2/sumbu `wdth`-nya, kendala
-teknis sama seperti kenapa Bodoni/Karla dulu juga TTF statis), 3 TTF lama
-dihapus. Diverifikasi lewat build production sungguhan: `/og/default.png` +
-`/og/cikarang-industrial-settlement-pattern.png` diunduh & dibuka sebagai
-gambar, keduanya PNG 1200×630 valid dengan palet+tipografi Atlas benar.
+4 commit (T-59, T-60, T-61 kode; T-62 dokumentasi murni), menutup M6
+total. Detail penuh tiap task ada di `docs/TASK.md` Done — ringkasan:
 
-2 commit, menutup S4. **T-59**: `useReducedMotion()` sekarang dipanggil di 28
-fungsi `Viz*` lintas 4 modul `lib/scrollytelling/*.tsx` (sebelumnya cuma shell
-`islands/Scrollytelling.tsx` yang memanggilnya, T-35) — men-gate 3 kelas
-motion (`motion.div`/`motion.circle` via ternary duration/delay, Recharts
-`Bar`/`Line`/`Pie` via prop bawaan `isAnimationActive`, `AnimatedNumber`
-kustom berbasis `requestAnimationFrame` di 3/4 modul). Tabel data `sr-only`
-ditambah untuk 15 chart Recharts saja (cakupan sengaja dibatasi persis sesuai
-teks task, WCAG 1.1.1 — bukan visual kustom non-Recharts). Diverifikasi lewat
-teknik `docs/memory/LESSONS.md` (`client:load` + `useState(ids[N])`
-sementara, karena `IntersectionObserver` tidak fire di tooling Browser-pane
-sesi ini): 2 chart representatif dikonfirmasi data cocok 1:1 (Cikarang
-`BarChart`, Bontang `PieChart`).
+- **T-59**: `useReducedMotion()` di 28 fungsi `Viz*` lintas 4 modul
+  scrollytelling (3 kelas motion di-gate: `motion.div`/`circle` via
+  ternary duration, Recharts via `isAnimationActive`, `AnimatedNumber`
+  rAF kustom). 15 tabel data `sr-only` untuk tiap chart Recharts (cakupan
+  sengaja dibatasi ke Recharts, bukan visual kustom). Bug dorman
+  ditemukan di `AnimatedNumber` Cikarang (`useState(value)` bukan
+  `useState(0)` — animasinya sudah lama tak pernah bergerak), sengaja
+  tidak diperbaiki (di luar scope).
+- **T-60**: dialog search sungguhan di `Header.astro` (buka tombol/`/`,
+  tutup `Esc`/backdrop/close), Pagefind direstyle ke token Atlas — menutup
+  DEBT #1. Bug ditemukan & diperbaiki: override `--pagefind-ui-*` perlu
+  `html:root` bukan `:root` polos, karena stylesheet Pagefind di-load
+  belakangan (JS-injected) dan menang dasi spesifisitas by source order.
+- **T-61**: OG image (`lib/og-image.ts`) pindah ke palet+font Atlas; 4 TTF
+  baru dari fontsource.org (bukan variable font situs — satori/resvg
+  tidak menangani woff2/`wdth`-nya), 3 TTF Bodoni/Karla lama dihapus.
+- **T-62**: 14 item verification checklist handoff **semua lolos**
+  (diperiksa satu per satu — grep statis untuk yang bisa, `astro preview`
+  sungguhan untuk sisanya: rail/legenda/topic-chip/skip-link/focus-ring/
+  aria-current/44px/post-tanpa-cover). Remeasurement transfer 4 rute via
+  `astro preview` lokal (bukan URL live — M6 belum di-push; gzip bukan
+  brotli — `astro preview` tidak menegosiasikan brotli; kedua penyimpangan
+  metodologi dari T-36/T-44 ditandai eksplisit di `docs/TESTING.md`).
+  Bundle scrollytelling ~209 KB gzip, nyaris flat vs. baseline T-36/T-44
+  (~215–220 KB br) — T-59 tidak menambah bobot berarti. 6 dokumen
+  diperbarui: ROADMAP (M6 done), CHANGELOG (full pass pertama sejak M5),
+  DEBT (nol entri baru), LESSONS (2 entri baru — koreksi teknik
+  verifikasi `window.innerWidth`, spesifisitas `html:root` vs `:root`
+  untuk widget pihak ketiga), RULES (durasi motion 120/200/300ms,
+  digrounding dari `grep` pola yang benar-benar dipakai).
 
-**T-60**: Pagefind di-restyle ke token Atlas (blok `--pagefind-ui-*` baru di
-`global.css`) + dialog search baru di `Header.astro` (buka via tombol/pintasan
-`/`, tutup via `Esc`/backdrop/tombol close), menutup DEBT #1. **Bug ditemukan
-& diperbaiki**: override token pertama pakai selector `:root` polos, kalah
-dari `:root` bawaan `pagefind-ui.css` sendiri karena stylesheet itu dimuat
-belakangan (JS-injected saat dialog dibuka) — pada dasi spesifisitas, yang
-tiba belakangan di DOM menang; diperbaiki jadi `html:root` (satu selector
-lebih spesifik, menang apa pun urutan muat). Diverifikasi lewat `astro
-preview` sungguhan: buka/tutup dialog (klik, `/`, `Esc`, backdrop, tombol
-close) semua benar, `PagefindUI` termount dengan hasil pencarian nyata
-("11 results for Cikarang"), token Atlas terkonfirmasi lewat
-`getComputedStyle` sesudah perbaikan `html:root`, radius 0px, nol console
-error. Detail lengkap kedua task ada di `docs/TASK.md` Done.
+Dua lesson baru dari sesi ini (`docs/memory/LESSONS.md`, 2026-07-30):
+(1) `window.innerWidth`/`getBoundingClientRect()` **juga** tidak bisa
+dipercaya di tooling Browser-pane ini saat elemen `position:fixed` ada di
+DOM — bukan cuma `scrollWidth` seperti dicatat T-55; `document.
+documentElement.clientWidth` yang benar. (2) Menimpa custom property
+`:root` milik widget pihak ketiga yang stylesheet-nya dimuat belakangan
+(lazy-loaded) butuh selector lebih spesifik dari `:root` (`html:root`),
+bukan cuma urutan file sumber — cascade menang lewat urutan DOM saat
+render, bukan urutan penulisan.
 
-`npm run build` hijau tiap task, 44 halaman. Gate `grep` hex literal: nol di
-keempat modul scrollytelling.
+`npm run build` hijau tiap task, 44 halaman. Gate `grep` hex literal: nol
+di keempat modul scrollytelling.
 
 ## Last session (M6 Atlas — S1, S2, S3, 2026-07-29)
 
-14 commit bersih di `main` (belum di-push): dari `a77f81f` (persiapan —
-handoff dipindah ke `docs/design/atlas/`, ADR-004) sampai `ac88863` (T-58,
-menutup S3). Task T-45 s/d T-58 selesai; detail lengkap tiap task ada di
-`docs/TASK.md` Done (masing-masing punya paragraf verifikasi sendiri, tidak
-diulang di sini).
+14 commit (T-45–T-58, menutup S1–S3). Ringkasan singkat (detail penuh di
+`docs/TASK.md` Done, tidak diulang di sini):
 
-**S1 — Fondasi** (T-45–T-49): bundel handoff masuk repo; ADR-004 (satu
-identitas Atlas, ADR-003 Superseded sebagian — Tier-0/Tier-1 ADR-003 #1/#2
-tetap berlaku); mekanisme dual-mode dibongkar total; 9 token warna Atlas
-(`--color-chart-1/2` dipertahankan sebagai alias supaya nol edit React di
-4 modul scrollytelling tetap benar); radius nol; tipografi Archivo+IBM Plex
-Mono (Bodoni Moda/Karla dilepas).
+- **S1 — Fondasi**: bundel handoff masuk repo; ADR-004; dual-mode
+  dibongkar total; 9 token warna Atlas; radius nol; Archivo+IBM Plex Mono.
+- **S2 — Komponen inti**: `Plate.astro`; `LegendRail`+`TopicChip`; collar
+  2-baris + skip-link; bahasa kontrol 4 tingkat; Footer 4 kolom.
+- **S3 — IA & route**: `lib/topics.ts` (co-occurrence); `/tags` →
+  `/topics`; `/` jadi Sheet Index; halaman topik; rail marginalia post;
+  `/projects/[name]`, `/about` (Dossier), `/photography`, `404`.
 
-**S2 — Komponen inti** (T-50–T-52): `Plate.astro` (satu wadah konten, 3
-ukuran); `LegendRail.astro`+`TopicChip.astro` (rail permanen/drawer); collar
-Header 2-baris + skip-link (menutup kegagalan WCAG 2.4.1 nyata) + bahasa
-kontrol 4 tingkat + Footer 4 kolom.
-
-**S3 — IA & route** (T-53–T-58): `lib/topics.ts` (co-occurrence, tanpa
-daftar manual) + skema koleksi `topics` (kosong sampai M7); `/tags` →
-`/topics` + `vercel.json` redirect; `/` jadi Sheet Index (disatukan dengan
-`/explore/[type]` — satu komponen `SheetIndex`, dua rute); `/topics` +
-`/topics/[topic]`; rail marginalia post detail; `/projects/[name]`,
-`/about` (Dossier, kontak dipromosikan), `/photography`, `404`.
-
-**3 bug nyata ditemukan & diperbaiki lewat pengujian sungguhan** (bukan
-diklaim beres dari kode):
-1. `Plate.astro`'s kolom cover lebar-piksel-tetap (300px untuk lead) tidak
-   menyempit di layar sempit — pemanggil pertama yang benar-benar merender
-   lead+cover (Sheet Index, T-55) baru mengekspos ini; T-50 sendiri tidak
-   pernah menguji kombinasi itu. Diperbaiki: tumpuk vertikal di <480px.
-2. Komentar sendiri di `global.css` (`.hatch-*/.control-*`) memuat `*/`
-   literal yang menutup komentar CSS lebih awal — parser produksi gagal
-   dengan warning yang nyaris terlewat karena build tetap "sukses" (T-56).
-3. Selector `.post-main > nav` tidak pernah cocok karena `<nav>` adalah
-   root element komponen ANAK (`TableOfContents.astro`) yang membawa
-   scope-hash sendiri — Astro scoped style tidak menembus batas komponen
-   (pola yang sama seperti `<Image>`'s `<img>` di Plate.astro, T-50).
-   Kedua salinan TOC tampil sekaligus di mobile sampai diperbaiki dengan
-   `:global(nav)` (T-57).
-
-**2 penyimpangan sadar dari deskripsi task/rencana awal**, keduanya
-dijelaskan alasannya di commit + TASK.md:
-- `/photography` TIDAK memakai `Plate` sama sekali (rencana asli:
-  "grid plate compact") — baik compact (tak pernah tampilkan cover) maupun
-  standard (cover jadi kolom-samping kecil) tidak cocok untuk galeri foto;
-  `PhotoTile.astro` dipertahankan & direstyle, bukan dihapus (T-58).
-- Experience di `/about` menampilkan semua 9 role, bukan "3 + tombol lihat
-  selebihnya" seperti Hi-Fi — dianggap kurang jujur untuk portofolio yang
-  justru ingin menunjukkan riwayat kerja nyata (T-58).
-
-**Pola verifikasi berulang** (detail di `docs/memory/LESSONS.md`): tab
-browser baru dipakai setelah console log ditemukan menumpuk lintas-navigasi
-di tab lama (bukan bug halaman); `astro preview` dipakai konsisten, bukan
-dev server.
+3 bug nyata ditemukan & diperbaiki lewat pengujian sungguhan (bukan
+diklaim beres dari kode): `Plate`'s kolom cover tidak menyempit di layar
+sempit (T-55); komentar `global.css` dengan `*/` literal menutup komentar
+CSS lebih awal (T-56); TOC dirender dua kali karena Astro scoped style
+tidak menembus batas komponen anak (T-57). 2 penyimpangan sadar dari
+rencana awal (keduanya dijelaskan di TASK.md): `/photography` tidak
+memakai `Plate` sama sekali; `/about` Experience menampilkan semua 9 role.
 
 ## Next steps
 
-1. **Mulai T-62** — task terakhir M6, tutup milestone: 14 item verification
-   checklist handoff satu per satu, remeasure berat transfer 4 halaman (pola
-   T-44) ke `docs/TESTING.md`, perbarui ROADMAP/STATE/CHANGELOG/DEBT/LESSONS
-   + RULES.md (durasi motion 120ms/200ms/300ms menggantikan konvensi M5).
-   **CHANGELOG diperbarui di sini** (sengaja belum disentuh sepanjang
-   S1–S5, mengikuti pola M5/T-44 — full pass di task penutup milestone).
-2. **Belum di-push** — pertimbangkan push setelah M6 benar-benar tutup
-   (T-62), atau lebih awal jika user memintanya secara eksplisit.
-3. M7 (T-63–T-65) menunggu setelah M6 — lihat ROADMAP.md.
-4. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+1. **Push ke `main` remote** — 17 commit M6 lokal siap; situs live masih
+   menyajikan M5 sampai ini terjadi. Tunggu keputusan eksplisit user.
+2. **M7** (T-63–T-65) — 20 definisi topik, 3–5 cross-link inline per post,
+   angka `impact` sebagian post. Ketiganya butuh input pemilik situs;
+   tidak ada task M7 yang bisa dikerjakan tanpa itu lebih dulu.
+3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
 **T-36 (baseline Lighthouse resmi)** — dicoba 2x di sesi berbeda (2026-07-28
 dan 2026-07-29) lewat 3 jalur (PSI web UI, PSI API via WebFetch, PSI API
 via `curl`): UI macet di polling, API konsisten 429 (keyless quota) di
-kedua percobaan. Bukan sesuatu yang bisa diperbaiki dari sisi kode —
-perlu user menjalankan PageSpeed Insights dari browser sungguhan, atau
-memberi API key PSI. Data pengganti (berat transfer produksi nyata) ada di
-`docs/TESTING.md`.
+kedua percobaan. Tidak dicoba ulang di sesi ini (T-62) — sudah dua kali
+gagal identik, mengulang lagi tidak menambah informasi. Bukan sesuatu
+yang bisa diperbaiki dari sisi kode — perlu user menjalankan PageSpeed
+Insights dari browser sungguhan, atau memberi API key PSI. Data pengganti
+(berat transfer produksi nyata) ada di `docs/TESTING.md`.
 
 ## Open questions
 

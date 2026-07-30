@@ -14,6 +14,40 @@ the project starts tagging releases.
 
 ### Added
 
+- **Atlas — one visual identity** (M6, T-45–T-62), replacing M5's dual-mode
+  mechanism. Design tokens: 9 roled colors (`--color-research`/`-project`/
+  `-flag` split apart what one `--color-accent` used to do, `--color-line-
+  strong` for interactive-control borders at real WCAG contrast), a single
+  variable Archivo family for both display and body via its `wdth` axis,
+  self-hosted IBM Plex Mono for coordinates/notation, and radius zero
+  site-wide. New shared components: `Plate` (one content container, three
+  sizes, replacing `PostCard`+`PostListItem`), `LegendRail`+`TopicChip` (a
+  permanent 224px rail below ≥1024px, a drawer above it, doubling as the
+  type filter), a two-row collar header (nav + sheet-notation breadcrumb +
+  skip-link), and a four-column footer.
+- `lib/topics.ts` — co-occurrence-based topic counts and neighbour
+  computation (no manual topic list), backing a new `topics` content
+  collection and `/topics` + `/topics/[topic]` routes (replacing `/tags`).
+- `/` is now the Sheet Index (one lead plate + a standard grid), shared
+  with `/explore/[type]` as the same component filtered; post detail pages
+  gained a rail of marginalia (section nav, sheet stamp, project controls,
+  topic chips, related plates); `/projects/[name]`, `/about` (rewritten as
+  one Dossier composition with real contact promoted into it), and
+  `/photography` were all rebuilt on the new component set; `404` gained a
+  mini type-legend.
+- A real search dialog (opened by a header control or the `/` shortcut,
+  closed by `Esc`) mounting Pagefind's classic UI widget on first open,
+  restyled to Atlas's tokens via `--pagefind-ui-*` overrides — previously
+  Pagefind only existed on the retired `/explore` page with its default
+  zinc-palette CSS.
+- `useReducedMotion()` now gates every animation in all 4 scrollytelling
+  data modules (previously only the shared shell called it), and every
+  Recharts chart in those modules (15 total) got a screen-reader-only data
+  table, closing a real WCAG 1.1.1 gap.
+- OG image generation (`lib/og-image.ts`) now renders with Atlas's palette
+  and typefaces (Archivo + IBM Plex Mono) instead of the retired cream/
+  Bodoni-Karla combination.
+
 - **Immersive Mode** — a second, self-hosted visual identity ("DATUM")
   alongside the existing cream-paper "Reading Mode," switchable via a
   persistent header toggle or a draggable registration seam on the
@@ -120,6 +154,13 @@ the project starts tagging releases.
 
 ### Changed
 
+- IA restructure (M6, ADR-004): `/explore` folded into `/` (same component,
+  optionally filtered by type), `/tags`/`/tags/[tag]` renamed to `/topics`/
+  `/topics/[topic]` — both old paths now 308-redirect via `vercel.json`.
+  `/posts/[slug]` did not move, preserving existing external citations.
+- Motion duration convention consolidated (M6, T-62): 120ms for hover/color
+  transitions, 200ms for layout/position changes, 300ms as a hard ceiling
+  — replacing M5's ad hoc 300ms/220ms figures. See `docs/RULES.md`.
 - Final visual identity applied site-wide, replacing the M1 provisional
   zinc/Plus Jakarta Sans tokens: cream paper palette, Bodoni Moda (display +
   article body) paired with Karla (UI/meta), sharp/minimal corner radii in
@@ -150,11 +191,46 @@ the project starts tagging releases.
 
 ### Removed
 
+- Dual-mode mechanism — Immersive Mode, the registration seam, and
+  `mode-toggle.ts` — superseded by Atlas's single identity (M6, ADR-004,
+  which supersedes ADR-003 #3–#5 while keeping #1–#2). Cross-document view
+  transitions (`@view-transition { navigation: auto }`) were kept
+  unchanged; they were never mode-specific. `ImmersiveIndex.astro`/
+  `ImmersiveDossier.astro` weren't deleted outright — rewritten in place as
+  `SheetIndex.astro`/`Dossier.astro`, Atlas's replacements for the same
+  routes.
+- Bodoni Moda and Karla — the last two references were `lib/og-image.ts`'s
+  fonts, migrated to Archivo + IBM Plex Mono (M6, T-61); the live site's
+  own `<link>`s were already gone since M6 S1 (T-49).
+- `TypeFilter.astro`, `explore/PostList.astro`, `RelatedPosts.astro`,
+  `PostListItem.astro`, `Contact.astro`, `SectionHeading.astro` — each
+  retired the moment its last caller was rebuilt on `Plate`/`LegendRail`/
+  the post-detail rail marginalia (M6, T-50/54/55/57/58). Carousel drag on
+  Featured Projects (T-24, M4) died as an indirect consequence of
+  `FeaturedProjects.astro` itself being retired, not a direct removal.
 - `type: "journal"` merged into `type: "article"` — only one post used it
   and it rendered identically; the sole journal post was migrated (T-22).
 
 ### Fixed
 
+- `Plate`'s fixed-pixel cover column (300px for the lead size) didn't
+  narrow on small screens, exposed once the Sheet Index became the first
+  real caller to render a lead plate with a cover; below 480px the cover
+  and text now stack vertically instead (M6, T-55).
+- A self-referential `.hatch-*`/`.control-*` comment in `global.css`
+  contained a literal `*/`, closing the CSS comment early and silently
+  breaking the production CSS optimizer with an easy-to-miss warning
+  (build still "succeeded") (M6, T-56).
+- The post-detail table of contents rendered twice at once on mobile — the
+  breakpoint-exclusive `display` rule targeted `.post-main > nav`, but
+  `<nav>` is `TableOfContents.astro`'s own root element carrying its own
+  Astro scope-hash, which the parent page's scoped selector can't reach
+  across a component boundary; fixed with `:global(nav)` (M6, T-57).
+- `--pagefind-ui-*` token overrides initially lost to Pagefind's own
+  built-in `:root` defaults, because its stylesheet is injected (and thus
+  loads) after the site's own — a tie on selector specificity that source
+  order then decides. Fixed by bumping to `html:root`, which wins
+  regardless of load order (M6, T-60).
 - Post detail pages now render their `cover` image (was silently unused).
 - Project titles on `/projects` respect real acronyms (e.g.
   "CDMP-Jabodetabek") instead of naively title-casing the URL slug.

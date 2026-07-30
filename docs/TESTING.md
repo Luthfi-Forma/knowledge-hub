@@ -158,6 +158,53 @@ This is still not a Lighthouse score — no CWV timing, no accessibility or
 SEO audit categories — see T-36 in `docs/TASK.md` Backlog for what's still
 needed and from whom.
 
+## Post-M6 remeasurement (T-62, 2026-07-30)
+
+T-36 stays open and untouched this round — not re-attempted, since the last
+two tries (T-36, T-44) both hit the same `HTTP 429` keyless-quota wall with
+no sign it clears on its own; see T-36 in `docs/TASK.md` Backlog.
+
+**Methodology differs from T-36/T-44 on purpose**: M6 has not been pushed
+yet (16 local commits ahead of the deployed M5 site as of this entry), so
+measuring the *live* URL the way T-36/T-44 did would just remeasure the old
+M5 build, not Atlas. Measured instead via `curl` against `astro preview`
+(the real production `dist/` build) on localhost — a legitimate stand-in
+for "the production build," same server this session already used to
+verify every M6 task, just not yet the deployed origin. Two consequences,
+both flagged rather than silently glossed over: (1) `astro preview`'s
+`compression` middleware only negotiates **gzip**, not the **brotli** T-36/
+T-44 measured against Vercel's CDN — gzip runs a few percent larger than
+brotli on the same text, so these numbers aren't a byte-exact comparison
+against the earlier tables, only a relative-trend one; (2) TTFB is
+loopback-to-localhost, not a real network path — expect it near zero
+regardless of route, not comparable to T-36/T-44's ~0.1–1s figures.
+
+| Route | HTML (gzip) | TTFB (loopback) |
+|---|---|---|
+| `/` (Sheet Index) | 7.4 KB | 6 ms |
+| `/topics` | 4.1 KB | 8 ms |
+| `/about` (Dossier) | 5.7 KB | 9 ms |
+| `/posts/rpplh-south-papua` (scrollytelling) | 9.2 KB | 34 ms |
+
+Chosen to track the same shape of route T-44 covered (index, a secondary
+listing, About, the heaviest scrollytelling post) while swapping in M6's
+renamed/rebuilt equivalents (`/explore` → `/`, `/tags` → `/topics`).
+
+**The number that actually matters — did T-59's `useReducedMotion()` +
+`sr-only` table additions meaningfully grow the scrollytelling bundle**,
+checked directly via chunk-import tracing (same technique as T-36/T-44):
+`client.js` (56.5 KB gz) + the post's own island chunk (5.5 KB gz) +
+`PieChart.js` (5.4 KB gz) + `Scrollytelling.js` (143.0 KB gz) +
+`react-dom.js` (4.3 KB gz) = **~693 KB raw / ~209 KB gzip total**. Against
+T-36's pre-M6 baseline (**~220 KB br**) and T-44's post-M5 figure
+(**~215 KB br**), this is flat within measurement noise — T-59 added
+conditional ternaries and markup to existing code, zero new dependencies,
+exactly as expected. (Not a regression given the gzip-vs-brotli caveat
+above either — gzip run against the *same* build would read a few percent
+higher than brotli on identical bytes, so ~209 KB gzip is if anything a
+slightly pessimistic reading next to the brotli-measured priors, not an
+optimistic one.)
+
 ## Known gaps
 
 - No automated unit/integration/e2e test suite. Coverage today comes from

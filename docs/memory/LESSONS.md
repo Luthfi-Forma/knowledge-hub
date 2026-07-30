@@ -544,3 +544,79 @@ forced `scrollTo` (does the viewport actually move?) and (2) a full
 `window.innerWidth`. Only treat it as a real bug if both of those also
 indicate overflow — `scrollWidth` alone is not trustworthy in this tool
 whenever `position:fixed`-animated elements are on the page.
+
+## 2026-07-30 — Correction to the above: `window.innerWidth` itself is unreliable whenever a `position:fixed` element is in the DOM in this tool; use `document.documentElement.clientWidth` as ground truth instead [harvest-candidate]
+
+Tags: #browser-verification #css-overflow
+
+While verifying the T-60 search dialog (`position: fixed; inset: 0`) at a
+375px viewport, `getBoundingClientRect()` on the dialog itself reported
+`width: 468`, and `window.innerWidth` — the exact value the 2026-07-29
+entry above recommends as the cross-check ground truth — read **468 too**,
+not 375. So the technique that entry proposes ("compare against
+`window.innerWidth`") would have silently validated a false overflow
+reading as correct, because both numbers are wrong together in this tool
+whenever a `position:fixed` element is present — not just `scrollWidth` as
+originally scoped. `document.documentElement.clientWidth`, by contrast,
+correctly read `375` in the same check.
+
+Root cause looks broader than the original entry's `position:fixed` +
+`transform` framing: `window.devicePixelRatio` itself was observed at
+different values across page loads in this tool (`2.0` during one 375px
+check, `1.25` during an unrelated 1280px check moments later, neither
+matching this environment's real display) — a real browser's DPR doesn't
+fluctuate between loads at a fixed viewport size. A third data point from
+the same session: `getComputedStyle(el).outlineWidth` on a plain
+(non-fixed) focused nav link read `1.6px` for a rule that unambiguously
+specifies `outline: 2px solid` in the actual stylesheet (confirmed by
+reading the matched `CSSRule` directly, not just the computed value) —
+`1.6 / 2 = 0.8 = 1 / 1.25`, matching that moment's reported DPR exactly.
+
+**Revised working technique**: don't trust `window.innerWidth`/
+`window.innerHeight` or `getBoundingClientRect()`/`getComputedStyle()` px
+readings at face value in this tool — they can carry a DPR-shaped scaling
+error that isn't present in the actual rendered page. Ground truth that
+held up under cross-checking every time this session: (1)
+`document.documentElement.clientWidth`/`clientHeight` for viewport size,
+(2) `window.scrollX`/`scrollY` after a forced `scrollTo` for "is this
+actually scrollable" (a boolean, immune to scaling), and (3) reading the
+matched CSS rule's `cssText` directly from `document.styleSheets` for "what
+value does the source actually specify" instead of trusting the computed
+pixel readout. When a computed-style number looks off by a suspicious
+ratio (0.8, 1.25, 2, etc.), check `window.devicePixelRatio` first before
+concluding there's a real layout bug.
+
+## 2026-07-30 — Overriding a third-party stylesheet's own `:root` custom properties needs higher specificity than `:root`, not just later source order, when that stylesheet loads dynamically [harvest-candidate]
+
+Tags: #css #specificity #third-party-widgets
+
+T-60 added `--pagefind-ui-*` token overrides to `global.css`, a `<link>`
+Astro bundles into `<head>` on first paint. Pagefind's own classic UI
+widget (`pagefind-ui.css`) ships its own `:root { --pagefind-ui-primary:
+#393939; ... }` block with its zinc-palette defaults — and that
+stylesheet is injected by a `<script>`-created `<link>` only when a
+visitor actually opens search, i.e. well *after* `global.css` has already
+loaded. Confirmed via `getComputedStyle(document.documentElement)
+.getPropertyValue('--pagefind-ui-primary')` returning `#393939` (Pagefind's
+default) instead of the intended `#2c4630` (Atlas's `--color-research`),
+and via `document.querySelectorAll('link[rel=stylesheet]')` showing
+`pagefind-ui.css` listed after the site's own bundled stylesheet.
+
+Both blocks use the exact same selector (`:root`), so specificity is tied
+— and on a tie, CSS resolves by the order rules appear in the *cascade*,
+which for separate stylesheets is the order their `<link>`/`<style>`
+entered the DOM, not the order the source files were written or the order
+their content conceptually "belongs." A dynamically-injected stylesheet
+therefore always cascade-wins any tied-specificity rule against whatever
+was already on the page, regardless of which one a developer intends to
+be authoritative.
+
+**Fix**: bump the intended-authoritative rule's specificity above a plain
+`:root` — `html:root` (element + pseudo-class matching the same root
+element) has specificity (0,1,1) vs. `:root`'s (0,1,0), so it wins
+unconditionally without `!important` and without caring what order the
+two stylesheets load in. Generalizes to any case of restyling a
+third-party widget's CSS-custom-property API when that widget's own
+stylesheet is loaded on-demand (lazy search UIs, embedded players, chat
+widgets, map libraries) rather than up front alongside the site's own
+CSS.

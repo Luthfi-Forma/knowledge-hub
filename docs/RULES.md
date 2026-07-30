@@ -1,6 +1,6 @@
 # Project Rules — knowledge-hub
 
-- Updated: 2026-07-29
+- Updated: 2026-07-30
 
 This project follows Claude Engineering OS standards by default (see
 `CLAUDE.md`, "Standards in force"). **This file records only the deltas** —
@@ -41,7 +41,7 @@ harvest-lessons candidate rather than patched silently mid-migration.
 - Aturan *content-first*: tiap milestone wajib menambah konten nyata, bukan
   hanya fitur.
 
-## Motion rules (M5, T-44)
+## Motion rules (M5 T-44, diperbarui M6 T-62)
 
 Dikonsolidasi dari pola yang benar-benar dipakai selama M5 — bukan sistem
 token baru, murni penulisan ulang apa yang sudah terbukti bekerja supaya
@@ -89,13 +89,27 @@ sama, bukan menemukan ulang.
   nilai awal di CSS sekaligus menghindari kelas bug ini dan mempercepat
   first paint di browser sungguhan.
 - **Durasi yang sudah dipakai** (bukan token formal, konvensi longgar untuk
-  konsistensi): 300ms `ease` untuk pergantian warna/latar mode (transisi
-  di `body`); 220ms `ease` untuk settle registration seam (`clip-path` dan
-  posisi grip). Keduanya "snappy", bukan lambat/dramatis — cocok dengan
-  identitas situs yang restrained. Pakai kisaran ini untuk transisi baru
-  kecuali ada alasan spesifik untuk berbeda; jangan bikin sistem token
-  durasi formal untuk ini kecuali kebutuhannya benar-benar tumbuh melampaui
-  segelintir kasus ad-hoc yang ada sekarang.
+  konsistensi) — **diperbarui M6 (T-62)**, menggantikan konvensi M5 di
+  bawah: **120ms `ease` untuk hover/fokus** (warna teks, warna/latar
+  border — `.control`, `Plate`, `TopicChip`, nav link, semua kontrol
+  interaktif Atlas dipakai konsisten di sinilah); **200ms `ease` untuk
+  perubahan layout/posisi** (`transform` drawer `LegendRail`, satu-satunya
+  kasus hari ini — geser posisi, bukan sekadar ganti warna, jadi butuh
+  sedikit lebih lama supaya terbaca sebagai gerak, bukan kedip); **300ms
+  sebagai batas atas keras**, bukan target — dipakai `body`'s
+  `background-color`/`color` transition (kasus paling "berat": seluruh
+  halaman berpotensi berganti warna sekaligus, meski hari ini tidak ada
+  state yang benar-benar memicunya). Ketiganya sudah konsisten dipakai di
+  seluruh komponen Atlas (`grep -rn "[0-9]\+ms" src/` mengonfirmasi tidak
+  ada nilai lain selain tiga ini) — jangan tambah nilai keempat kecuali ada
+  kategori interaksi baru yang benar-benar tidak cocok di salah satu dari
+  tiga di atas, dan tetap jangan bikin sistem token durasi formal kecuali
+  kebutuhannya tumbuh jauh melampaui pola ad-hoc ini. (Konvensi M5 lama —
+  300ms untuk pergantian warna/latar mode, 220ms untuk settle registration
+  seam — digantikan di atas; mekanisme dual-mode & seam yang jadi
+  konsumennya sudah dibongkar total di M6, ADR-004, jadi 220ms tidak lagi
+  punya pemakai, digantikan 200ms layout untuk kasus serupa/perubahan
+  posisi.)
 - **Island (React/framework apa pun) tidak pernah di layout global** — ini
   aturan ADR-002/ADR-003, bukan aturan motion baru, tapi motion-nya sendiri
   jadi konsekuensi langsung: transisi mode dan seam dikerjakan Tier-1
