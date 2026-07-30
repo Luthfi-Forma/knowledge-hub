@@ -1,0 +1,483 @@
+---
+// Dossier — Atlas's /about composition (M6/T-58), promoted from the M5
+// DATUM-only ImmersiveDossier.astro. Spec: docs/design/atlas/README.md
+// "Screens > 05 · /about"; layout reference docs/design/atlas/Hi-Fi -
+// Atlas Screens.dc.html screen 05. Now the page's ONLY composition — the
+// old Reading-mode markup in about.astro is gone, not just backgrounded.
+//
+// Contact is promoted into the header's quick-facts card as real controls
+// (email = primary, LinkedIn = secondary) — this is what "Contact.astro
+// dilebur" means: the standalone component and the homepage's old
+// #contact anchor both go away, replaced by this always-visible block.
+//
+// Deliberate deviation from Hi-Fi: Experience shows all entries, not a
+// "3 visible + N more" truncation. Hiding 6 of 9 real roles behind a
+// click reads as less honest on a portfolio whose whole point is
+// demonstrating a real work history — and the existing per-entry
+// <details> disclosure (M3) already keeps the page scannable. Treated as
+// this mockup's canvas-height artifact, not a mandate.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface ExpertiseArea {
+  title: string;
+  description: string;
+  chips: string[];
+}
+interface DocumentEntry {
+  title: string;
+  org: string;
+}
+interface ExperienceEntry {
+  role: string;
+  org: string;
+  dates: string;
+  description?: string;
+}
+interface OrgEntry {
+  role: string;
+  org: string;
+  dates: string;
+}
+
+interface Props {
+  portrait: ImageMetadata;
+  location: string;
+  degree: string;
+  bio: string[];
+  languages: string[];
+  email: string;
+  linkedin: string;
+  expertise: ExpertiseArea[];
+  documents: DocumentEntry[];
+  experience: ExperienceEntry[];
+  organizations: OrgEntry[];
+}
+
+const { portrait, location, degree, bio, languages, email, linkedin, expertise, documents, experience, organizations } =
+  Astro.props;
+---
+
+<div class="dossier-header">
+  <div class="dossier-portrait">
+    <Image src={portrait} alt="Portrait of Afreza Luthfi Hernanda" width={200} />
+  </div>
+  <div class="dossier-intro">
+    <p class="dossier-eyebrow">Urban &amp; Regional Planner</p>
+    <h1 class="dossier-name">Afreza Luthfi Hernanda</h1>
+    {bio.map((paragraph) => <p class="dossier-bio">{paragraph}</p>)}
+  </div>
+  <div class="dossier-facts">
+    <div class="dossier-fact">
+      <p class="dossier-fact-label">Education</p>
+      <p class="dossier-fact-value">{degree}</p>
+    </div>
+    <div class="dossier-fact">
+      <p class="dossier-fact-label">Languages</p>
+      <p class="dossier-fact-value">{languages.join(' · ')}</p>
+    </div>
+    <div class="dossier-fact">
+      <p class="dossier-fact-label">Location</p>
+      <p class="dossier-fact-value">{location}</p>
+    </div>
+    <div class="dossier-contact">
+      <a href={`mailto:${email}`} class="control control-primary">
+        {email}
+      </a>
+      <a href={linkedin} target="_blank" rel="noopener" class="control control-secondary">
+        LinkedIn ↗
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="dossier-columns">
+  <section>
+    <p class="dossier-heading">Expertise · {expertise.length} areas</p>
+    <div class="dossier-expertise">
+      {
+        expertise.map((area, i) => (
+          <div class:list={['dossier-expertise-item', i === 0 && 'is-featured']}>
+            <p class="dossier-expertise-title">{area.title}</p>
+            <p class="dossier-expertise-desc">{area.description}</p>
+            <ul class="dossier-chip-list">
+              {area.chips.map((chip) => (
+                <li class="dossier-chip">{chip}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+  <section>
+    <p class="dossier-heading">Official documents · {documents.length}</p>
+    <div class="dossier-documents">
+      {
+        documents.map((doc) => (
+          <div class="dossier-document">
+            <p class="dossier-document-title">{doc.title}</p>
+            <p class="dossier-document-org">{doc.org}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="dossier-heading dossier-heading-spaced">Organizations · {organizations.length}</p>
+    <ol class="dossier-orgs">
+      {
+        organizations.map((org) => (
+          <li class="dossier-org-row">
+            <span class="dossier-org-body">
+              <span class="dossier-org-role">{org.role}</span>
+              <span class="dossier-org-name">{org.org}</span>
+            </span>
+            <span class="dossier-org-dates">{org.dates}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</div>
+
+<section class="dossier-experience">
+  <p class="dossier-heading">Experience · {experience.length} roles</p>
+  <ol class="dossier-timeline">
+    {
+      experience.map((xp) => (
+        <li class="dossier-timeline-row">
+          <span class="dossier-timeline-dot" aria-hidden="true" />
+          <p class="dossier-timeline-dates">{xp.dates}</p>
+          {xp.description ? (
+            <details>
+              <summary class="dossier-timeline-summary">
+                <span class="dossier-timeline-role">
+                  {xp.role}
+                  <span class="dossier-timeline-marker" aria-hidden="true">
+                    +
+                  </span>
+                </span>
+                <span class="dossier-timeline-org">{xp.org}</span>
+              </summary>
+              <p class="dossier-timeline-desc">{xp.description}</p>
+            </details>
+          ) : (
+            <div>
+              <span class="dossier-timeline-role">{xp.role}</span>
+              <span class="dossier-timeline-org">{xp.org}</span>
+            </div>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .dossier-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  @media (min-width: 900px) {
+    .dossier-header {
+      grid-template-columns: 200px 1fr 300px;
+      align-items: start;
+      gap: 40px;
+    }
+  }
+
+  .dossier-portrait {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+  }
+  .dossier-portrait :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .dossier-eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-research);
+  }
+
+  .dossier-name {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    font-stretch: 122%;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 1.02;
+    color: var(--color-ink);
+  }
+  @media (min-width: 640px) {
+    .dossier-name {
+      font-size: 52px;
+    }
+  }
+
+  .dossier-bio {
+    margin: 0 0 14px;
+    max-width: 62ch;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--color-ink);
+  }
+  .dossier-bio:first-of-type {
+    max-width: 52ch;
+    font-size: 19px;
+    line-height: 1.55;
+  }
+
+  .dossier-facts {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .dossier-fact-label {
+    margin: 0 0 3px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .dossier-fact-value {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .dossier-contact {
+    padding-top: 12px;
+    border-top: 1px solid var(--color-line);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .dossier-contact .control {
+    justify-content: flex-start;
+    padding: 0 14px;
+  }
+
+  .dossier-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+  }
+  @media (min-width: 900px) {
+    .dossier-columns {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+    }
+  }
+
+  .dossier-heading {
+    margin: 0 0 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .dossier-heading-spaced {
+    margin-top: 28px;
+  }
+
+  .dossier-expertise {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .dossier-expertise-item {
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper-raised);
+    padding: 14px;
+  }
+  .dossier-expertise-item.is-featured {
+    border-color: var(--color-ink);
+    background-color: var(--color-paper);
+    padding: 16px;
+  }
+  .dossier-expertise-title {
+    margin: 0 0 5px;
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--color-ink);
+  }
+  .is-featured .dossier-expertise-title {
+    font-size: 18px;
+  }
+  .dossier-expertise-desc {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+  .is-featured .dossier-expertise-desc {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  .dossier-chip-list {
+    display: none;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+  }
+  .is-featured .dossier-chip-list {
+    display: flex;
+  }
+  .dossier-chip {
+    font-size: 12px;
+    padding: 3px 7px;
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-ink);
+  }
+
+  .dossier-documents {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dossier-document {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper);
+    padding: 12px 14px;
+  }
+  .dossier-document-title {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .dossier-document-org {
+    margin: 3px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+
+  .dossier-orgs {
+    display: flex;
+    flex-direction: column;
+  }
+  .dossier-org-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+    border-top: 1px solid var(--color-line);
+    padding: 10px 0;
+  }
+  .dossier-org-row:first-child {
+    border-top: none;
+  }
+  .dossier-org-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .dossier-org-role {
+    font-size: 14px;
+    color: var(--color-ink);
+  }
+  .dossier-org-name {
+    font-size: 12px;
+    color: var(--color-ink-muted);
+  }
+  .dossier-org-dates {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+
+  .dossier-timeline {
+    position: relative;
+    margin-left: 4px;
+    border-left: 1px solid var(--color-line-strong);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .dossier-timeline-row {
+    position: relative;
+    padding-left: 24px;
+  }
+  .dossier-timeline-dot {
+    position: absolute;
+    top: 6px;
+    left: -5px;
+    width: 9px;
+    height: 9px;
+    background-color: var(--color-research);
+  }
+  .dossier-timeline-dates {
+    margin: 0 0 2px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+  }
+  .dossier-timeline-role {
+    display: block;
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--color-ink);
+  }
+  .dossier-timeline-org {
+    display: block;
+    font-size: 13.5px;
+    color: var(--color-ink-muted);
+  }
+  .dossier-timeline-summary {
+    display: flex;
+    cursor: pointer;
+    list-style: none;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 16px;
+  }
+  .dossier-timeline-summary::-webkit-details-marker {
+    display: none;
+  }
+  .dossier-timeline-summary:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+  .dossier-timeline-marker {
+    display: inline-block;
+    margin-left: 6px;
+    color: var(--color-research);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .dossier-timeline-marker {
+      transition: transform 200ms ease;
+    }
+    details[open] > .dossier-timeline-summary .dossier-timeline-marker {
+      transform: rotate(45deg);
+    }
+  }
+  .dossier-timeline-desc {
+    margin: 6px 0 0;
+    max-width: 58ch;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+  }
+</style>

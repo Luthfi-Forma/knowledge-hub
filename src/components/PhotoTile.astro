@@ -1,30 +1,85 @@
 ---
+// PhotoTile — kept and restyled for Atlas (M6/T-58), not replaced by
+// Plate.astro: Plate's anatomy (notation → title → summary → stamp, with
+// an optional SIDE cover column) is built for text-forward content with a
+// supporting thumbnail, not an image-forward gallery — reusing it here
+// would shrink every photo to a small side strip on a page whose entire
+// purpose is showing the photos. A dedicated tile stays the better fit,
+// given an Atlas hairline border + mono notation line instead of the old
+// caption-only treatment.
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   post: CollectionEntry<'posts'>;
   href: string;
+  plateNumber: number;
 }
 
-const { post, href } = Astro.props;
-const { title, cover } = post.data;
+const { post, href, plateNumber } = Astro.props;
+const { title, cover, coordinates, date } = post.data;
+const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const plateNumberLabel = String(plateNumber).padStart(2, '0');
 ---
 
 {
   cover && (
-    <a
-      href={href}
-      class="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-    >
-      <Image
-        src={cover}
-        alt={title}
-        class="aspect-square w-full object-cover"
-        widths={[300, 600]}
-        sizes="(min-width: 1024px) 23vw, (min-width: 640px) 31vw, 47vw"
-      />
-      <p class="mt-2 text-sm text-ink group-hover:text-research">{title}</p>
+    <a href={href} class="photo-tile">
+      <Image src={cover} alt={title} class="photo-tile-image" widths={[300, 600]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw" />
+      <div class="photo-tile-caption">
+        <p class="photo-tile-notation">
+          Photo · Plate {plateNumberLabel}
+          {coordinates && ` · ${coordinates}`} · {formattedDate}
+        </p>
+        <p class="photo-tile-title">{title}</p>
+      </div>
     </a>
   )
 }
+
+<style>
+  .photo-tile {
+    display: block;
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper);
+    text-decoration: none;
+    transition: border-color 120ms ease;
+  }
+  .photo-tile:hover,
+  .photo-tile:focus-visible {
+    border-color: var(--color-research);
+  }
+  .photo-tile:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .photo-tile-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .photo-tile-caption {
+    padding: 10px 12px;
+  }
+
+  .photo-tile-notation {
+    margin: 0 0 4px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .photo-tile-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--color-ink);
+  }
+</style>

@@ -1,19 +1,121 @@
 ---
+// 404 — "sheet index mini" (M6/T-58): 4 type-legend links, per the
+// handoff's own description. Not a full LegendRail (that component
+// requires a `topics` list; a lost visitor doesn't need all 20 topics,
+// just a fast way back into the archive by type) — built as a small
+// standalone block reusing the same global .hatch-* swatches. Search is
+// already present on every page via Header's collar (T-52), so nothing
+// extra is needed for that half of "4 legenda tipe + search".
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublishedPosts, POST_TYPES, TYPE_LABEL } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const typeCounts = POST_TYPES.map((type) => ({
+  type,
+  count: posts.filter((post) => post.data.type === type).length,
+}));
 ---
 
-<BaseLayout title="Page not found — Afreza Hernanda">
-  <section class="mx-auto max-w-(--container-shell) px-5 py-16 text-center">
-    <p class="mb-2.5 text-xs font-medium tracking-wide text-research uppercase">404</p>
-    <h1 class="font-display mb-3.5 text-3xl font-extrabold text-ink sm:text-4xl">Page not found</h1>
-    <p class="mx-auto mb-6 max-w-[38ch] text-sm leading-relaxed text-ink-muted">
-      The page you're looking for doesn't exist or has moved.
-    </p>
-    <a
-      href="/"
-      class="inline-flex min-h-11 items-center bg-ink px-5 text-sm font-semibold text-paper hover:bg-ink-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-    >
-      Back to home
-    </a>
+<BaseLayout title="Page not found — Afreza Hernanda" breadcrumbLeft="404 · Page not found">
+  <section class="not-found-page">
+    <p class="not-found-eyebrow">404</p>
+    <h1 class="not-found-title">Page not found</h1>
+    <p class="not-found-copy">The page you're looking for doesn't exist or has moved.</p>
+
+    <div class="not-found-legend">
+      {
+        typeCounts.map(({ type, count }) => (
+          <a href={`/explore/${type}`} class="not-found-type">
+            <span class:list={['not-found-swatch', `hatch-${type}`]} aria-hidden="true" />
+            <span>{TYPE_LABEL[type]}</span>
+            <span class="not-found-count">{count}</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <a href="/" class="control control-primary">Back to home</a>
   </section>
 </BaseLayout>
+
+<style>
+  .not-found-page {
+    max-width: 480px;
+    margin-inline: auto;
+    padding: 64px 20px;
+    text-align: center;
+  }
+
+  .not-found-eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-research);
+  }
+
+  .not-found-title {
+    margin: 0 0 14px;
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-weight: 700;
+    font-size: var(--text-page-title);
+    line-height: var(--text-page-title--line-height);
+    color: var(--color-ink);
+  }
+
+  .not-found-copy {
+    margin: 0 0 24px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-ink-muted);
+  }
+
+  .not-found-legend {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-ink);
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .not-found-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 14px;
+    text-decoration: none;
+    color: var(--color-ink);
+    font-size: 14px;
+    border-top: 1px solid var(--color-line);
+    transition: background-color 120ms ease;
+  }
+  .not-found-type:first-child {
+    border-top: none;
+  }
+  .not-found-type:hover,
+  .not-found-type:focus-visible {
+    background-color: var(--color-paper-raised);
+  }
+  .not-found-type:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: -2px;
+  }
+
+  .not-found-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-ink);
+  }
+
+  .not-found-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-ink-muted);
+  }
+</style>

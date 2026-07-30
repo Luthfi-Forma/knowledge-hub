@@ -1,25 +1,69 @@
 ---
+// /photography — Atlas grid (M6/T-58). No dedicated Hi-Fi mockup for this
+// screen (only the 5 IA screens were mocked) — kept on PhotoTile.astro
+// (restyled for Atlas, see that file for why it isn't Plate.astro here).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import EmptyState from '../../components/EmptyState.astro';
 import PhotoTile from '../../components/PhotoTile.astro';
-import { getPhotos } from '../../lib/posts';
+import { getPhotos, getPublishedPosts } from '../../lib/posts';
 
 const photos = await getPhotos();
+const allPosts = await getPublishedPosts();
+const plateNumbers = new Map(allPosts.map((post, i) => [post.id, i + 1]));
+const breadcrumbLeft = `Photography · ${photos.length} ${photos.length === 1 ? 'plate' : 'plates'}`;
 ---
 
-<BaseLayout title="Photography — Afreza Hernanda" description="A photo collection from fieldwork and travel.">
-  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
-    <h1 class="font-display mb-5 text-2xl font-extrabold text-ink">Photography</h1>
+<BaseLayout
+  title="Photography — Afreza Hernanda"
+  description="A photo collection from fieldwork and travel."
+  breadcrumbLeft={breadcrumbLeft}
+>
+  <section class="photography-page">
+    <h1 class="photography-title">Photography</h1>
     {
       photos.length === 0 ? (
         <EmptyState message="No photos published yet." ctaHref="/" ctaLabel="See what's published" />
       ) : (
-        <div class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
+        <div class="photography-grid">
           {photos.map((photo) => (
-            <PhotoTile post={photo} href={`/posts/${photo.id}`} />
+            <PhotoTile post={photo} href={`/posts/${photo.id}`} plateNumber={plateNumbers.get(photo.id)!} />
           ))}
         </div>
       )
     }
   </section>
 </BaseLayout>
+
+<style>
+  .photography-page {
+    max-width: var(--container-shell);
+    margin-inline: auto;
+    padding: 32px 20px;
+  }
+  @media (min-width: 640px) {
+    .photography-page {
+      padding: 32px 48px;
+    }
+  }
+
+  .photography-title {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-weight: 700;
+    font-size: var(--text-page-title);
+    line-height: var(--text-page-title--line-height);
+    color: var(--color-ink);
+  }
+
+  .photography-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 640px) {
+    .photography-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

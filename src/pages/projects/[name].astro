@@ -1,7 +1,14 @@
 ---
+// Project hub — Atlas composition (M6/T-58). Spec: docs/design/atlas/
+// README.md "Screens > 04 · /projects/[name]"; layout reference
+// docs/design/atlas/Hi-Fi - Atlas Screens.dc.html screen 04
+// (jabodetabek-connect). Hi-Fi's 3 stat cards (e.g. "128 · stasiun") are
+// NOT reproduced — those numbers came from the M5 cover-art generation
+// script, never stored in the content schema, so there's nothing real to
+// put in them without fabricating figures. They can return once the
+// `impact` field (T-53) has real per-project data, not before.
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/PostCard.astro';
-import SectionHeading from '../../components/SectionHeading.astro';
 import { getProjectSlugs, getPostsByProject, getProjectSummary, getProjectTitle } from '../../lib/posts';
 
 export async function getStaticPaths() {
@@ -12,44 +19,328 @@ export async function getStaticPaths() {
       const summary = await getProjectSummary(slug);
       return {
         params: { name: slug },
-        props: { posts, summary },
+        props: { slug, posts, summary },
       };
     }),
   );
 }
 
-const { name } = Astro.params;
-const { posts, summary } = Astro.props;
+const { slug, posts, summary } = Astro.props;
 const { repo, demo } = summary;
-const title = getProjectTitle(name);
+const title = getProjectTitle(slug);
+const primaryPost = posts[0];
+
+const topics = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+
+const otherSlugs = (await getProjectSlugs()).filter((s) => s !== slug);
+const otherProjects = await Promise.all(
+  otherSlugs.map(async (otherSlug) => ({
+    slug: otherSlug,
+    title: getProjectTitle(otherSlug),
+    count: (await getPostsByProject(otherSlug)).length,
+  })),
+);
+
+const breadcrumbLeft = `Projects / ${slug} · ${posts.length} ${posts.length === 1 ? 'plate' : 'plates'}`;
+const breadcrumbRight = primaryPost.data.coordinates ?? primaryPost.data.date.toLocaleDateString('en-US', { year: 'numeric' });
 ---
 
-<BaseLayout title={`${title} — Afreza Hernanda`}>
-  <section class="mx-auto max-w-(--container-shell) px-5 py-8">
-    <h1 class="font-display mb-3.5 text-3xl leading-tight font-extrabold text-ink sm:text-4xl">{title}</h1>
+<BaseLayout title={`${title} — Afreza Hernanda`} description={primaryPost.data.summary} breadcrumbLeft={breadcrumbLeft} breadcrumbRight={breadcrumbRight}>
+  <div class="project-hub">
+    <div class="project-main">
+      <p class="project-notation">
+        <span class="project-swatch hatch-project" aria-hidden="true" />
+        <span>Project hub</span>
+      </p>
+      <h1 class="project-title">{title}</h1>
+      <p class="project-dek">{primaryPost.data.summary}</p>
 
-    {
-      (repo || demo) && (
-        <div class="mb-8 flex flex-wrap gap-x-5 gap-y-2 border-y border-line py-3 text-sm">
-          {repo && (
-            <a href={repo} target="_blank" rel="noopener" class="text-research hover:underline">
-              Repository ↗
-            </a>
-          )}
-          {demo && (
-            <a href={demo} target="_blank" rel="noopener" class="text-research hover:underline">
-              Live demo ↗
-            </a>
-          )}
-        </div>
-      )
-    }
+      {
+        (repo || demo) && (
+          <div class="project-controls">
+            {repo && (
+              <a href={repo} target="_blank" rel="noopener" class="control control-primary">
+                Repository ↗
+              </a>
+            )}
+            {demo && (
+              <a href={demo} target="_blank" rel="noopener" class="control control-secondary">
+                Live demo ↗
+              </a>
+            )}
+          </div>
+        )
+      }
 
-    <SectionHeading title="Posts" />
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {posts.map((post) => (
-        <PostCard post={post} href={`/posts/${post.id}`} />
-      ))}
+      <p class="project-heading">Project chronology</p>
+      <ol class="project-timeline">
+        {
+          posts.map((post) => (
+            <li class="project-timeline-row">
+              <p class="project-timeline-date">{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+              <a href={`/posts/${post.id}`} class="project-timeline-title">
+                {post.data.title}
+              </a>
+              <p class="project-timeline-summary">{post.data.summary}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="project-note">
+        The next post from this project joins automatically via its <code>project:</code> field.
+      </p>
     </div>
-  </section>
+
+    <div class="project-rail">
+      {
+        primaryPost.data.cover && (
+          <div class="project-cover">
+            <Image src={primaryPost.data.cover} alt="" widths={[300, 600]} sizes="340px" />
+          </div>
+        )
+      }
+
+      {
+        topics.length > 0 && (
+          <div>
+            <p class="project-heading">Project topics</p>
+            <div class="project-topics">
+              {topics.map((tag) => (
+                <a href={`/topics/${tag}`} class="rail-topic-chip">
+                  {tag}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {
+        otherProjects.length > 0 && (
+          <div>
+            <p class="project-heading">Other projects</p>
+            <div class="project-others">
+              {otherProjects.map((other) => (
+                <a href={`/projects/${other.slug}`} class="project-other">
+                  <p class="project-other-title">{other.title}</p>
+                  <p class="project-other-count">
+                    {other.count} {other.count === 1 ? 'plate' : 'plates'}
+                  </p>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .project-hub {
+    max-width: var(--container-shell);
+    margin-inline: auto;
+    padding: 40px 20px 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  @media (min-width: 640px) {
+    .project-hub {
+      padding: 40px 48px 48px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .project-hub {
+      grid-template-columns: 1fr 340px;
+      gap: 48px;
+      align-items: start;
+    }
+  }
+
+  .project-notation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+  .project-swatch {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    border: 1px solid var(--color-ink);
+  }
+
+  .project-title {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    font-stretch: 122%;
+    font-weight: 800;
+    font-size: 40px;
+    line-height: 1.02;
+    color: var(--color-ink);
+  }
+  @media (min-width: 640px) {
+    .project-title {
+      font-size: 52px;
+    }
+  }
+
+  .project-dek {
+    margin: 0 0 24px;
+    max-width: 58ch;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--color-ink-muted);
+  }
+  @media (min-width: 640px) {
+    .project-dek {
+      font-size: 19px;
+    }
+  }
+
+  .project-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .project-heading {
+    margin: 0 0 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .project-timeline {
+    border-left: 1px solid var(--color-line-strong);
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .project-timeline-date {
+    margin: 0 0 3px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-ink-muted);
+  }
+  .project-timeline-title {
+    display: block;
+    font-family: var(--font-display);
+    font-stretch: 110%;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .project-timeline-title:hover,
+  .project-timeline-title:focus-visible {
+    color: var(--color-research);
+  }
+  .project-timeline-title:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+  .project-timeline-summary {
+    margin: 3px 0 0;
+    font-size: 13.5px;
+    color: var(--color-ink-muted);
+  }
+
+  .project-note {
+    margin: 20px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+  .project-note code {
+    font-family: var(--font-mono);
+  }
+
+  .project-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .project-cover {
+    border: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+  }
+  .project-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .project-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .rail-topic-chip {
+    display: inline-flex;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-ink);
+    font-size: 12.5px;
+    padding: 3px 7px;
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper);
+  }
+  .rail-topic-chip:hover,
+  .rail-topic-chip:focus-visible {
+    border-color: var(--color-research);
+    color: var(--color-research);
+  }
+  .rail-topic-chip:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .project-others {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .project-other {
+    display: block;
+    border: 1px solid var(--color-line-strong);
+    background-color: var(--color-paper-raised);
+    padding: 10px;
+    text-decoration: none;
+    transition: border-color 120ms ease;
+  }
+  .project-other:hover,
+  .project-other:focus-visible {
+    border-color: var(--color-research);
+  }
+  .project-other:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+  .project-other-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-stretch: 108%;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--color-ink);
+  }
+  .project-other-count {
+    margin: 3px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-ink-muted);
+  }
+</style>
