@@ -1,15 +1,136 @@
 ---
+// Footer — Atlas's four columns (M6/T-52). Spec: docs/design/atlas/
+// README.md "Footer — empat kolom"; layout reference docs/design/atlas/
+// Hi-Fi - Atlas Screens.dc.html (bottom of screen 01). Replaces the M3
+// footer (copyright + RSS only). Doubles as Photography's only remaining
+// link from global chrome — Photography isn't a nav item after this task's
+// IA change, but "Photography 3" in the Index column still routes there
+// via /explore/photo, matching the IA table's "sekunder (footer/rail)".
+import { getPublishedPosts, getAllTags, getProjectSlugs, getProjectTitle, POST_TYPES, TYPE_LABEL } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const typeCounts = POST_TYPES.map((type) => ({
+  type,
+  count: posts.filter((post) => post.data.type === type).length,
+}));
+const topTopics = (await getAllTags()).sort((a, b) => b.count - a.count).slice(0, 6);
+const projectSlugs = await getProjectSlugs();
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-line bg-paper-raised">
-  <div class="mx-auto flex max-w-(--container-shell) items-center justify-between px-5 py-4 text-xs tracking-wide text-ink-muted uppercase">
-    <span>© {year} Afreza Luthfi Hernanda</span>
-    <a
-      href="/rss.xml"
-      class="hover:text-research focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research"
-    >
-      RSS
-    </a>
+<footer class="footer">
+  <div class="footer-col">
+    <p class="footer-heading">Index</p>
+    <div class="footer-links">
+      {
+        typeCounts.map(({ type, count }) => (
+          <a href={`/explore/${type}`}>
+            {TYPE_LABEL[type]} {count}
+          </a>
+        ))
+      }
+    </div>
   </div>
+  <div class="footer-col">
+    <p class="footer-heading">Top topics</p>
+    <div class="footer-topics">
+      {
+        topTopics.map(({ tag }, i) => (
+          <>
+            {i > 0 && <span class="footer-dot" aria-hidden="true">·</span>}
+            <a href={`/tags/${tag}`}>{tag}</a>
+          </>
+        ))
+      }
+    </div>
+  </div>
+  <div class="footer-col">
+    <p class="footer-heading">Projects</p>
+    <div class="footer-links">
+      {projectSlugs.map((slug) => <a href={`/projects/${slug}`}>{getProjectTitle(slug)}</a>)}
+    </div>
+  </div>
+  <div class="footer-col">
+    <p class="footer-heading">Contact</p>
+    <div class="footer-links">
+      <a href="mailto:afrezahernanda@gmail.com">afrezahernanda@gmail.com</a>
+      <a href="https://www.linkedin.com/in/afrezaluthfi" target="_blank" rel="noopener">
+        LinkedIn ↗
+      </a>
+      <a href="/rss.xml">RSS</a>
+    </div>
+  </div>
+  <p class="footer-copyright">© {year} Afreza Luthfi Hernanda</p>
 </footer>
+
+<style>
+  .footer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px 32px;
+    padding: 24px 48px;
+    border-top: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+  }
+
+  .footer-heading {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13.5px;
+  }
+  .footer-links a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .footer-links a:hover,
+  .footer-links a:focus-visible {
+    color: var(--color-research);
+  }
+  .footer-links a:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .footer-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .footer-topics a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .footer-topics a:hover,
+  .footer-topics a:focus-visible {
+    color: var(--color-research);
+  }
+  .footer-dot {
+    color: var(--color-line-strong);
+  }
+
+  .footer-copyright {
+    grid-column: 1 / -1;
+    margin: 8px 0 0;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  @media (max-width: 767px) {
+    .footer {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

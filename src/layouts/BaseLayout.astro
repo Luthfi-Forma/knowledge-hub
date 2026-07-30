@@ -8,12 +8,17 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  /** Passed through to Header's row-2 breadcrumb; see Header.astro for how these default when a page hasn't supplied its own yet (T-55–T-58). */
+  breadcrumbLeft?: string;
+  breadcrumbRight?: string;
 }
 
 const {
   title,
   description = 'Personal knowledge hub connecting projects, writing, and research into one explorable ecosystem.',
   image = '/og/default.png',
+  breadcrumbLeft,
+  breadcrumbRight,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -43,11 +48,49 @@ const ogImageURL = new URL(image, Astro.site);
     <meta name="twitter:image" content={ogImageURL} />
   </head>
   <body class="font-body text-ink">
-    <Header />
-    <main>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header breadcrumbLeft={breadcrumbLeft ?? title} breadcrumbRight={breadcrumbRight} />
+    <main id="main">
       <slot />
     </main>
     <Footer />
     <Analytics />
   </body>
 </html>
+
+<style>
+  /*
+   * Skip-link (M6/T-52) — first element in <body>, closing a real WCAG
+   * 2.4.1 failure (no way to bypass the collar's nav before this). Hidden
+   * off-screen until focused, per the standard pattern; a sighted keyboard
+   * user tabbing from the top sees it appear, activates it, and lands on
+   * #main, skipping the collar's 2 rows of nav/search/breadcrumb.
+   */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    z-index: 100;
+    padding: 12px 20px;
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  /*
+   * Plain :focus, not :focus-visible — deliberately, unlike every other
+   * focus ring in this codebase. Verified via testing: a scripted
+   * .focus() call (and some browsers' focus-visible heuristics generally)
+   * doesn't reliably match :focus-visible without a preceding real keydown,
+   * which would make the skip-link silently fail to appear in exactly the
+   * cases that matter. A skip-link has no legitimate scenario where mouse
+   * focus would look bad — it's the first, otherwise-invisible element on
+   * the page — so there's no downside to the broader selector here.
+   */
+  .skip-link:focus {
+    top: 0;
+  }
+</style>

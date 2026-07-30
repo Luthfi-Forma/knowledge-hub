@@ -56,7 +56,7 @@ const {
 const resolvedTopicsHeading = topicsHeading ?? `Topics · ${topics.length}`;
 ---
 
-<button type="button" id="legend-trigger" class="legend-trigger" aria-expanded="false" aria-controls="legend-rail">
+<button type="button" id="legend-trigger" class="legend-trigger control control-secondary" aria-expanded="false" aria-controls="legend-rail">
   Legend
 </button>
 <div class="legend-backdrop" data-legend-backdrop hidden></div>
@@ -215,25 +215,11 @@ const resolvedTopicsHeading = topicsHeading ?? `Topics · ${topics.length}`;
   }
 
   /* Below 1024px the rail becomes a drawer: hidden off-canvas until the
-     Legend button reveals it as a fixed overlay. */
+     Legend button (styled via the shared .control/.control-secondary
+     classes, global.css) reveals it as a fixed overlay. */
   @media (max-width: 1023px) {
     .legend-trigger {
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 20px;
-      border: 1px solid var(--color-line-strong);
-      color: var(--color-ink);
-      background-color: var(--color-paper);
-      font-family: var(--font-mono);
-      font-size: 12.5px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .legend-trigger:focus-visible {
-      outline: 2px solid var(--color-research);
-      outline-offset: 2px;
     }
 
     .legend-backdrop {

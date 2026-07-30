@@ -1,28 +1,180 @@
 ---
+// Collar — Atlas's two-row header (M6/T-52). Spec:
+// docs/design/atlas/README.md "Header — collar lembar (dua baris)"; layout
+// reference docs/design/atlas/Hi-Fi - Atlas Screens.dc.html (every screen's
+// top chrome). Row 1: wordmark + 4-item nav + search control. Row 2:
+// breadcrumb in "sheet notation" (mono, uppercase, ink-muted on
+// paper-raised) — replaces a conventional breadcrumb, and is deliberately
+// per-page content, not decoration (Hi-Fi shows different text on every
+// one of the 5 screens, e.g. "Sheet index · 11 plates · 20 topics · no
+// filter" on `/` vs "Index / Research / Plate 01" on a post).
+//
+// Nav is the IA's final 4 items (Index/Topics/Projects/About) — Explore,
+// Photography, and Contact drop out per ADR-004/the handoff's IA table:
+// Photography becomes secondary (reachable via Footer's type index),
+// Contact becomes a real block on /about + the footer, not a nav item.
+// "Topics" still points at /tags — the route itself isn't renamed until
+// T-54; only the label changes here, so nothing 404s in the meantime.
+//
+// Search is a visual-only control for now: T-60 wires the actual Pagefind
+// open/close behavior and the `/` keyboard shortcut this button and badge
+// describe.
+const pathname = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+
 const navItems = [
-  { href: '/explore', label: 'Explore' },
-  { href: '/photography', label: 'Photography' },
+  { href: '/', label: 'Index' },
+  { href: '/tags', label: 'Topics' },
+  { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },
-  { href: '/#contact', label: 'Contact' },
 ];
+
+interface Props {
+  /** Left side of the row-2 breadcrumb — page-specific ("Sheet index · 11 plates · ...", "Index / Research / Plate 01"). Falls back to the page title when a page hasn't been given precise breadcrumb text yet (T-55–T-58 each supply their own). */
+  breadcrumbLeft: string;
+  /** Right side of row 2 — also page-specific in the handoff (a post's coordinates+date, a topic's neighbour-count note), not always the "Projection..." constant. Defaults to that constant since most pages have no more specific fact to show yet. */
+  breadcrumbRight?: string;
+}
+
+const { breadcrumbLeft, breadcrumbRight } = Astro.props;
+const compiledYear = new Date().getFullYear();
+const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · Datum WGS84 · Compiled ${compiledYear}`;
 ---
 
-<header class="sticky top-0 z-10 border-b border-line bg-paper">
-  <div class="mx-auto flex max-w-(--container-shell) flex-wrap items-center justify-between gap-x-3 gap-y-1 px-5 py-4">
-    <a href="/" class="font-display text-base text-ink sm:text-lg">Afreza Hernanda</a>
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-      <nav aria-label="Primary" class="flex flex-wrap gap-x-0.5 text-xs font-medium tracking-wide text-ink-muted uppercase">
+<header class="collar">
+  <div class="collar-row-1">
+    <a href="/" class="wordmark">Afreza L. Hernanda</a>
+    <div class="collar-controls">
+      <nav aria-label="Primary" class="collar-nav">
         {
           navItems.map((item) => (
-            <a
-              href={item.href}
-              class="inline-flex min-h-11 items-center px-1.5 text-ink-muted hover:text-research focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-research sm:px-2"
-            >
+            <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           ))
         }
       </nav>
+      <button type="button" class="header-search" aria-label="Search">
+        <span aria-hidden="true">⌕</span> Search <span class="header-search-kbd" aria-hidden="true">/</span>
+      </button>
     </div>
   </div>
+  <div class="collar-row-2">
+    <span>{breadcrumbLeft}</span>
+    <span>{resolvedBreadcrumbRight}</span>
+  </div>
 </header>
+
+<style>
+  .collar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: var(--color-paper);
+  }
+
+  .collar-row-1 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    padding: 16px 48px;
+    border-bottom: 1px solid var(--color-ink);
+  }
+
+  .wordmark {
+    font-family: var(--font-display);
+    font-stretch: 118%;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--color-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .collar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .collar-nav {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-ink-muted);
+    border-bottom: 2px solid transparent;
+    transition:
+      color 120ms ease,
+      border-color 120ms ease;
+    white-space: nowrap;
+  }
+  .nav-link:hover {
+    color: var(--color-ink);
+  }
+  .nav-link:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+  .nav-link.is-active {
+    color: var(--color-ink);
+    border-bottom-color: var(--color-research);
+  }
+
+  .header-search {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-left: 6px;
+    padding: 0 12px;
+    border: 1px solid var(--color-line-strong);
+    background: none;
+    color: var(--color-ink-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .header-search:hover {
+    border-color: var(--color-research);
+    color: var(--color-research);
+  }
+  .header-search:focus-visible {
+    outline: 2px solid var(--color-research);
+    outline-offset: 2px;
+  }
+
+  .header-search-kbd {
+    border: 1px solid var(--color-line);
+    padding: 0 4px;
+    font-size: 10.5px;
+  }
+
+  .collar-row-2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 20px;
+    padding: 8px 48px;
+    border-bottom: 1px solid var(--color-ink);
+    background-color: var(--color-paper-raised);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+</style>

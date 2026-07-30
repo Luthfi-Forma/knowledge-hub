@@ -178,6 +178,93 @@
 }
 
 /*
+ * Atlas's control language — one shape, four tiers (docs/design/atlas/
+ * README.md "Kontrol — satu bahasa, tiga tingkat" + the separate Icon spec
+ * right after it, four treatments total). Replaces four different button
+ * styles the audit found scattered across Hero, 404, TypeFilter, and
+ * tags/[tag] — not retrofitted onto those specific components in T-52
+ * since each is either retired outright (Hero/404's current markup, T-55/
+ * T-58) or rebuilt with its own control usage later (TypeFilter's
+ * replacement, tags/[tag] → /topics, T-54/56); applied here to Header's
+ * search control and LegendRail's drawer trigger, the two controls that
+ * exist in the shipped chrome today.
+ *
+ * Global plain classes (not @layer, matching the .hatch-* precedent above)
+ * so any component can compose `class="control control-secondary"` on
+ * whatever tag fits its context (<a> for navigation, <button> for actions)
+ * without a wrapper component reimplementing tag polymorphism. `.control`
+ * itself is wrapped in :where() — zero specificity — so a component that
+ * composes it (e.g. LegendRail's drawer trigger, hidden by default and
+ * only `display`-ed at <1024px) can still override individual properties
+ * like `display` with an equal-or-lower-specificity rule of its own,
+ * without needing `!important` or a source-order dependency.
+ */
+:where(.control) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.control:focus-visible {
+  outline: 2px solid var(--color-research);
+  outline-offset: 2px;
+}
+
+.control-primary {
+  padding: 0 20px;
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+.control-primary:hover {
+  background-color: var(--color-research);
+}
+
+.control-secondary {
+  padding: 0 20px;
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-ink);
+}
+.control-secondary:hover {
+  border-color: var(--color-research);
+  color: var(--color-research);
+}
+
+/* No horizontal padding per the handoff ("tanpa padding") — the 44px
+   touch target still holds because min-height + inline-flex centering
+   applies to any control regardless of padding, not just the ones with
+   visible horizontal padding. */
+.control-tertiary {
+  color: var(--color-research);
+  border-bottom: 1px solid var(--color-research);
+}
+.control-tertiary:hover {
+  color: var(--color-ink);
+  border-color: var(--color-ink);
+}
+
+.control-icon {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 1px solid var(--color-line-strong);
+  color: var(--color-ink-muted);
+}
+.control-icon:hover {
+  border-color: var(--color-research);
+  color: var(--color-research);
+}
+
+/*
  * Wrapped in Tailwind's `base` layer (not left unlayered) so that per-element
  * utility classes (font-extrabold, font-medium, ...) — which Tailwind v4
  * generates inside `@layer utilities` — can still override these defaults.
