@@ -14,10 +14,9 @@
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **M6 sudah
-di-push** (19 commit, `1fd6cd2..d39c524`) — situs live sekarang menyajikan
-Atlas, bukan lagi M5. T-63 (di bawah) masih di working tree lokal, belum
-di-push.
+(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Semua sudah di-push** — M6 (19 commit, `1fd6cd2..d39c524`) lalu T-63
+(`d39c524..37b8d6c`) — situs live sekarang menyajikan Atlas + 20 definisi
+topik.
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
 Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
@@ -95,8 +94,7 @@ preview` sungguhan: `/topics/gis` merender definisi persis + notasi
 `npm run build` hijau, 44 halaman, Pagefind 2126→2172 kata (definisi baru
 terindeks, sesuai ekspektasi).
 
-**Belum di-push** — T-63 masih di working tree lokal (belum commit saat
-snapshot ini ditulis; lihat commit terbaru untuk status pasti).
+T-63 commit + push sukses (`37b8d6c`).
 
 ## Last session (M6 Atlas — S4+S5 penutup, T-59–T-62, 2026-07-29/30)
 
@@ -129,16 +127,16 @@ butuh `html:root`, bukan cuma urutan file sumber.
 
 ## Next steps
 
-1. **Commit T-63** jika belum (lihat git log terbaru untuk status pasti).
-2. **M7 T-64/T-65** — cross-link inline per post, angka `impact` sebagian
+1. **M7 T-64/T-65** — cross-link inline per post, angka `impact` sebagian
    post. Keduanya butuh input pemilik situs; worksheet Artifact sesi ini
    sudah menyiapkan kandidat link (berperingkat shared-tag) dan 6 kandidat
    `impact` terkonfirmasi — tinggal keputusan final user.
-3. Verifikasi pasca-deploy: cek 3 redirect 308 `vercel.json` di domain
-   live sungguhan (belum pernah diuji nyata, cuma statis sebelum push).
-4. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+2. Verifikasi pasca-deploy: cek 3 redirect 308 `vercel.json` + 20 halaman
+   `/topics/[topic]` baru di domain live sungguhan (belum pernah diuji
+   nyata, cuma statis/lokal sebelum push).
+3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
