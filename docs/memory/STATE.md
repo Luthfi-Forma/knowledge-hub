@@ -5,18 +5,19 @@
 
 - Updated: 2026-07-30
 - Milestone: M1–M6 selesai (satu pengecualian tercatat: T-36 baseline
-  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" tutup total**
-  (S1–S5, T-45–T-62). M7 (lapisan editorial, T-63–T-65) menunggu input
-  yang cuma bisa ditulis pemilik situs — lihat "Aksi tersisa untuk user".
+  Lighthouse, lihat "Blockers" di bawah). **M6 "Atlas" tutup total dan
+  sudah di-push** (S1–S5, T-45–T-62). **M7 dimulai** — T-63 selesai;
+  T-64/T-65 masih menunggu input pemilik situs.
 
 ## Current status
 
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Belum
-di-push** — 18 commit M6 ada di `main` lokal, keputusan push menunggu user
-(lihat "Next steps").
+(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **M6 sudah
+di-push** (19 commit, `1fd6cd2..d39c524`) — situs live sekarang menyajikan
+Atlas, bukan lagi M5. T-63 (di bawah) masih di working tree lokal, belum
+di-push.
 
 Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
 Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
@@ -32,15 +33,16 @@ lewat tombol/`/`, tutup `Esc`).
 IA final: **Index** (`/`, Sheet Index — 1 lead plate + grid standard, filter
 tipe via `/explore/[type]` yang memakai ulang komposisi yang sama) ·
 **Topics** (`/topics` + `/topics/[topic]`, menggantikan `/tags`, topik
-bertetangga dihitung dari co-occurrence tag) · **Projects** (`/projects/
-[name]`, repo/demo sebagai kontrol) · **About** (`/about`, satu komposisi
-Dossier dengan kontak dipromosikan ke kartu fakta). Photography turun jadi
-sekunder (dijangkau dari Footer). `/posts/[slug]` **tidak berubah URL-nya**
-— rail marginalia baru (stamp, project, topics, related plates) di
-sampingnya. 404 dapat mini type-legend. `vercel.json` baru menangani 3
-redirect 308 (`/explore→/`, `/tags→/topics`, `/tags/:tag→/topics/:tag`) —
-**belum teruji di produksi sungguhan**, cuma diverifikasi statis, karena
-redirect Vercel hanya berlaku di edge produksi dan M6 belum di-push.
+bertetangga dihitung dari co-occurrence tag, **20/20 topik sekarang punya
+definisi** — T-63) · **Projects** (`/projects/[name]`, repo/demo sebagai
+kontrol) · **About** (`/about`, satu komposisi Dossier dengan kontak
+dipromosikan ke kartu fakta). Photography turun jadi sekunder (dijangkau
+dari Footer). `/posts/[slug]` **tidak berubah URL-nya** — rail marginalia
+baru (stamp, project, topics, related plates) di sampingnya. 404 dapat mini
+type-legend. `vercel.json` menangani 3 redirect 308 (`/explore→/`,
+`/tags→/topics`, `/tags/:tag→/topics/:tag`) — **sekarang berlaku di
+produksi** (M6 sudah di-push), belum diverifikasi lewat request sungguhan
+ke domain live pasca-push.
 
 Aksesibilitas: skip-link ke `#main` (WCAG 2.4.1), `aria-current="page"` di
 nav, ring fokus `2px solid var(--color-research)` di semua kontrol, semua
@@ -56,107 +58,97 @@ Bodoni Moda/Karla dilepas total dari repo (fungsional maupun font file).
 (M5/T-42), carousel drag Featured Projects (M4/T-24), toggle mode.
 
 **Aksi tersisa untuk user (bukan kode):**
-1. **Push M6 ke `main` remote** — 18 commit lokal, belum dikirim. Situs
-   live masih menyajikan build M5 lama sampai ini terjadi.
-2. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
+1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
    M3 — toggle akun, tidak bisa disentuh dari kode).
-3. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
+2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli (bukan sesi ini), atau berikan API key PSI. Lihat
    "Blockers" di bawah.
-4. **M7**: 20 definisi topik, 3–5 cross-link inline per post, angka
-   `impact` sebagian post — semuanya cuma bisa ditulis pemilik situs.
+3. **M7 T-64/T-65**: cross-link inline per post, angka `impact` sebagian
+   post — cuma bisa ditulis pemilik situs. T-63 (definisi topik) sudah
+   selesai sesi ini (17/20 dari user, 5 ditulis langsung — lihat di bawah).
 
-## Sesi ini (M6 Atlas — S4+S5 penutup, T-59–T-62, 2026-07-30)
+## Sesi ini (M6 push + M7 T-63, 2026-07-30)
 
-4 commit (T-59, T-60, T-61 kode; T-62 dokumentasi murni), menutup M6
-total. Detail penuh tiap task ada di `docs/TASK.md` Done — ringkasan:
+Dua hal di luar S1–S5 yang sudah tercatat sebelumnya (lihat "Last session"):
+**push M6 ke `main` remote** (19 commit, diminta eksplisit user) dan
+**T-63** (M7, definisi topik).
+
+**Push**: `git push origin main` sukses, `1fd6cd2..d39c524`. Situs live
+Vercel sekarang men-deploy Atlas — belum diverifikasi ulang pasca-deploy
+di domain live (redirect 308 khususnya, yang cuma bisa diuji nyata setelah
+push, bukan `astro preview` lokal).
+
+**T-63** (`src/content/topics/*.md`, 20 file baru): user menyerahkan
+definisi untuk 17/20 topik lewat file lokal (Bahasa Indonesia), merespons
+worksheet Artifact yang disiapkan sesi ini (mengelompokkan topik-per-post,
+kandidat cross-link berperingkat shared-tag, dan 6 angka `impact` yang
+sudah dikonfirmasi dari konten post yang sudah terbit). 17 definisi
+**diterjemahkan ke English** (dekat dengan aslinya, bukan ditulis ulang
+bebas) — topik adalah konten publik, `docs/RULES.md` mewajibkan English di
+sana. 5 sisanya (`maplibre`, `python`, `coastal-planning`, `d3`, `mdx`)
+tidak disuplai user secara berarti — ditulis langsung karena kelimanya
+fakta objektif tentang teknologi publik, bukan konten personal, mengikuti
+pola faktual-singkat yang user sendiri pakai di 17 lainnya. `.gitkeep` di
+direktori topik dihapus (sudah tidak perlu). Diverifikasi lewat `astro
+preview` sungguhan: `/topics/gis` merender definisi persis + notasi
+"6 plates · 2 project · 4 research" tetap benar, nol console error.
+`npm run build` hijau, 44 halaman, Pagefind 2126→2172 kata (definisi baru
+terindeks, sesuai ekspektasi).
+
+**Belum di-push** — T-63 masih di working tree lokal (belum commit saat
+snapshot ini ditulis; lihat commit terbaru untuk status pasti).
+
+## Last session (M6 Atlas — S4+S5 penutup, T-59–T-62, 2026-07-29/30)
+
+4 commit (T-59, T-60, T-61 kode; T-62 dokumentasi), menutup M6 total.
+Detail penuh tiap task ada di `docs/TASK.md` Done — ringkasan:
 
 - **T-59**: `useReducedMotion()` di 28 fungsi `Viz*` lintas 4 modul
-  scrollytelling (3 kelas motion di-gate: `motion.div`/`circle` via
-  ternary duration, Recharts via `isAnimationActive`, `AnimatedNumber`
-  rAF kustom). 15 tabel data `sr-only` untuk tiap chart Recharts (cakupan
-  sengaja dibatasi ke Recharts, bukan visual kustom). Bug dorman
-  ditemukan di `AnimatedNumber` Cikarang (`useState(value)` bukan
-  `useState(0)` — animasinya sudah lama tak pernah bergerak), sengaja
-  tidak diperbaiki (di luar scope).
+  scrollytelling (motion.div/circle via ternary duration, Recharts via
+  `isAnimationActive`, `AnimatedNumber` rAF kustom). 15 tabel data
+  `sr-only` untuk tiap chart Recharts. Bug dorman ditemukan di
+  `AnimatedNumber` Cikarang (`useState(value)` bukan `useState(0)`),
+  sengaja tidak diperbaiki (di luar scope).
 - **T-60**: dialog search sungguhan di `Header.astro` (buka tombol/`/`,
   tutup `Esc`/backdrop/close), Pagefind direstyle ke token Atlas — menutup
   DEBT #1. Bug ditemukan & diperbaiki: override `--pagefind-ui-*` perlu
-  `html:root` bukan `:root` polos, karena stylesheet Pagefind di-load
-  belakangan (JS-injected) dan menang dasi spesifisitas by source order.
-- **T-61**: OG image (`lib/og-image.ts`) pindah ke palet+font Atlas; 4 TTF
-  baru dari fontsource.org (bukan variable font situs — satori/resvg
-  tidak menangani woff2/`wdth`-nya), 3 TTF Bodoni/Karla lama dihapus.
-- **T-62**: 14 item verification checklist handoff **semua lolos**
-  (diperiksa satu per satu — grep statis untuk yang bisa, `astro preview`
-  sungguhan untuk sisanya: rail/legenda/topic-chip/skip-link/focus-ring/
-  aria-current/44px/post-tanpa-cover). Remeasurement transfer 4 rute via
-  `astro preview` lokal (bukan URL live — M6 belum di-push; gzip bukan
-  brotli — `astro preview` tidak menegosiasikan brotli; kedua penyimpangan
-  metodologi dari T-36/T-44 ditandai eksplisit di `docs/TESTING.md`).
-  Bundle scrollytelling ~209 KB gzip, nyaris flat vs. baseline T-36/T-44
-  (~215–220 KB br) — T-59 tidak menambah bobot berarti. 6 dokumen
-  diperbarui: ROADMAP (M6 done), CHANGELOG (full pass pertama sejak M5),
-  DEBT (nol entri baru), LESSONS (2 entri baru — koreksi teknik
-  verifikasi `window.innerWidth`, spesifisitas `html:root` vs `:root`
-  untuk widget pihak ketiga), RULES (durasi motion 120/200/300ms,
-  digrounding dari `grep` pola yang benar-benar dipakai).
+  `html:root` bukan `:root` polos (dasi spesifisitas, stylesheet Pagefind
+  dimuat belakangan).
+- **T-61**: OG image pindah ke palet+font Atlas; 4 TTF baru dari
+  fontsource.org, 3 TTF Bodoni/Karla lama dihapus.
+- **T-62**: 14 item verification checklist handoff semua lolos;
+  remeasurement transfer 4 rute; 6 dokumen diperbarui (ROADMAP, CHANGELOG,
+  DEBT, LESSONS ×2 entri baru, RULES — durasi motion 120/200/300ms).
 
-Dua lesson baru dari sesi ini (`docs/memory/LESSONS.md`, 2026-07-30):
-(1) `window.innerWidth`/`getBoundingClientRect()` **juga** tidak bisa
-dipercaya di tooling Browser-pane ini saat elemen `position:fixed` ada di
-DOM — bukan cuma `scrollWidth` seperti dicatat T-55; `document.
-documentElement.clientWidth` yang benar. (2) Menimpa custom property
-`:root` milik widget pihak ketiga yang stylesheet-nya dimuat belakangan
-(lazy-loaded) butuh selector lebih spesifik dari `:root` (`html:root`),
-bukan cuma urutan file sumber — cascade menang lewat urutan DOM saat
-render, bukan urutan penulisan.
-
-`npm run build` hijau tiap task, 44 halaman. Gate `grep` hex literal: nol
-di keempat modul scrollytelling.
-
-## Last session (M6 Atlas — S1, S2, S3, 2026-07-29)
-
-14 commit (T-45–T-58, menutup S1–S3). Ringkasan singkat (detail penuh di
-`docs/TASK.md` Done, tidak diulang di sini):
-
-- **S1 — Fondasi**: bundel handoff masuk repo; ADR-004; dual-mode
-  dibongkar total; 9 token warna Atlas; radius nol; Archivo+IBM Plex Mono.
-- **S2 — Komponen inti**: `Plate.astro`; `LegendRail`+`TopicChip`; collar
-  2-baris + skip-link; bahasa kontrol 4 tingkat; Footer 4 kolom.
-- **S3 — IA & route**: `lib/topics.ts` (co-occurrence); `/tags` →
-  `/topics`; `/` jadi Sheet Index; halaman topik; rail marginalia post;
-  `/projects/[name]`, `/about` (Dossier), `/photography`, `404`.
-
-3 bug nyata ditemukan & diperbaiki lewat pengujian sungguhan (bukan
-diklaim beres dari kode): `Plate`'s kolom cover tidak menyempit di layar
-sempit (T-55); komentar `global.css` dengan `*/` literal menutup komentar
-CSS lebih awal (T-56); TOC dirender dua kali karena Astro scoped style
-tidak menembus batas komponen anak (T-57). 2 penyimpangan sadar dari
-rencana awal (keduanya dijelaskan di TASK.md): `/photography` tidak
-memakai `Plate` sama sekali; `/about` Experience menampilkan semua 9 role.
+2 lesson baru (`docs/memory/LESSONS.md`, 2026-07-30): (1)
+`window.innerWidth`/`getBoundingClientRect()` juga tidak bisa dipercaya di
+tooling Browser-pane ini saat elemen `position:fixed` ada di DOM —
+`document.documentElement.clientWidth` yang benar. (2) Menimpa custom
+property `:root` widget pihak ketiga yang stylesheet-nya dimuat belakangan
+butuh `html:root`, bukan cuma urutan file sumber.
 
 ## Next steps
 
-1. **Push ke `main` remote** — 18 commit M6 lokal siap; situs live masih
-   menyajikan M5 sampai ini terjadi. Tunggu keputusan eksplisit user.
-2. **M7** (T-63–T-65) — 20 definisi topik, 3–5 cross-link inline per post,
-   angka `impact` sebagian post. Ketiganya butuh input pemilik situs;
-   tidak ada task M7 yang bisa dikerjakan tanpa itu lebih dulu.
-3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+1. **Commit T-63** jika belum (lihat git log terbaru untuk status pasti).
+2. **M7 T-64/T-65** — cross-link inline per post, angka `impact` sebagian
+   post. Keduanya butuh input pemilik situs; worksheet Artifact sesi ini
+   sudah menyiapkan kandidat link (berperingkat shared-tag) dan 6 kandidat
+   `impact` terkonfirmasi — tinggal keputusan final user.
+3. Verifikasi pasca-deploy: cek 3 redirect 308 `vercel.json` di domain
+   live sungguhan (belum pernah diuji nyata, cuma statis sebelum push).
+4. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
 **T-36 (baseline Lighthouse resmi)** — dicoba 2x di sesi berbeda (2026-07-28
 dan 2026-07-29) lewat 3 jalur (PSI web UI, PSI API via WebFetch, PSI API
 via `curl`): UI macet di polling, API konsisten 429 (keyless quota) di
-kedua percobaan. Tidak dicoba ulang di sesi ini (T-62) — sudah dua kali
-gagal identik, mengulang lagi tidak menambah informasi. Bukan sesuatu
-yang bisa diperbaiki dari sisi kode — perlu user menjalankan PageSpeed
-Insights dari browser sungguhan, atau memberi API key PSI. Data pengganti
-(berat transfer produksi nyata) ada di `docs/TESTING.md`.
+kedua percobaan. Bukan sesuatu yang bisa diperbaiki dari sisi kode — perlu
+user menjalankan PageSpeed Insights dari browser sungguhan, atau memberi
+API key PSI. Data pengganti (berat transfer produksi nyata) ada di
+`docs/TESTING.md`.
 
 ## Open questions
 

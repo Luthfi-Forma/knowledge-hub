@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-30 (M6 selesai — S1–S5, T-45–T-62; M7 berikutnya)
+- Updated: 2026-07-30 (M6 selesai — S1–S5, T-45–T-62; M7 dimulai — T-63 selesai)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -14,7 +14,7 @@
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
 | M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
 | M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | done |
-| M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | planned |
+| M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | in progress (T-63 selesai; T-64–T-65 tersisa) |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -34,11 +34,10 @@ di `docs/design/atlas/`, arah+konsekuensi di
 [ADR-004](decisions/ADR-004-atlas-single-identity.md) — tutup lewat S1
 (Fondasi, T-45–T-49) → S2 (Komponen inti, T-50–T-52) → S3 (IA & route,
 T-53–T-58) → S4 (Aksesibilitas & search, T-59–T-60) → S5 (Aset & penutupan,
-T-61–T-62), 18 commit bersih di `main`, **belum di-push** (lihat
-`docs/memory/STATE.md`). **M7 — lapisan editorial** berikutnya, tapi
-menunggu 3 input yang cuma bisa ditulis pemilik situs (20 definisi topik,
-cross-link inline per post, angka `impact`) — lihat "Phase detail" di
-bawah.
+T-61–T-62), 19 commit bersih di `main`, **sudah di-push**. **M7 — lapisan
+editorial** dimulai: T-63 (20 definisi topik) selesai. T-64 (cross-link
+inline per post) dan T-65 (angka `impact`) masih menunggu input yang cuma
+bisa ditulis pemilik situs — lihat "Phase detail" di bawah.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
@@ -163,10 +162,12 @@ Dipisah dari M6 atas keputusan user (2026-07-29): M6 membangun struktur dengan
 graceful empty state, M7 mengisinya. Ketiganya hanya bisa ditulis pemilik situs,
 bukan diturunkan dari kode.
 
-- 20 definisi topik 1 kalimat → `src/content/topics/*.md`.
-- 3–5 cross-link inline per post di body MDX — hari ini **nol** di seluruh repo,
+- [x] 20 definisi topik 1 kalimat → `src/content/topics/*.md` (T-63, 2026-07-30
+  — 17 dari user, 5 fakta teknologi objektif ditulis langsung karena bukan
+  konten personal, lihat TASK.md Done).
+- [ ] 3–5 cross-link inline per post di body MDX — hari ini **nol** di seluruh repo,
   sehingga rail marginalia M6 lahir kosong.
-- Angka `impact` untuk sebagian post → tampil di stamp lembar.
+- [ ] Angka `impact` untuk sebagian post → tampil di stamp lembar.
 
 ## Icebox
 
