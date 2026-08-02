@@ -473,7 +473,7 @@ sidesteps the tooling gap entirely rather than working around it per
 verification, and is arguably better practice regardless (one less thing
 depending on JS execution order).
 
-## 2026-07-29 — Astro scoped `<style>` does not reach into child components' own root elements [harvest-candidate]
+## 2026-07-29 — Astro scoped `<style>` does not reach into child components' own root elements [harvested 2026-07-30]
 
 Tags: #astro #css-scoping
 
@@ -501,7 +501,7 @@ needs `:global()`. Check this class of bug specifically whenever a new
 child component's root element is targeted from a parent's `<style>`
 block for the first time.
 
-## 2026-07-29 — A CSS comment containing the literal substring `*/` self-terminates early [harvest-candidate]
+## 2026-07-29 — A CSS comment containing the literal substring `*/` self-terminates early [harvested 2026-07-30]
 
 Tags: #css #build-tooling
 
@@ -521,7 +521,7 @@ comment's text, even when it reads naturally as a word/path separator —
 grep for `\*/` inside comment bodies specifically after editing any
 comment that discusses glob-style or path-style class name patterns.
 
-## 2026-07-29 — `document.documentElement.scrollWidth` can be a false positive for horizontal overflow when `position:fixed` + `transform`-animated elements are present in this tool
+## 2026-07-29 — `document.documentElement.scrollWidth` can be a false positive for horizontal overflow when `position:fixed` + `transform`-animated elements are present in this tool [harvested 2026-07-30]
 
 Tags: #browser-verification #css-overflow
 
@@ -545,7 +545,7 @@ forced `scrollTo` (does the viewport actually move?) and (2) a full
 indicate overflow — `scrollWidth` alone is not trustworthy in this tool
 whenever `position:fixed`-animated elements are on the page.
 
-## 2026-07-30 — Correction to the above: `window.innerWidth` itself is unreliable whenever a `position:fixed` element is in the DOM in this tool; use `document.documentElement.clientWidth` as ground truth instead [harvest-candidate]
+## 2026-07-30 — Correction to the above: `window.innerWidth` itself is unreliable whenever a `position:fixed` element is in the DOM in this tool; use `document.documentElement.clientWidth` as ground truth instead [harvested 2026-07-30]
 
 Tags: #browser-verification #css-overflow
 
@@ -586,7 +586,7 @@ pixel readout. When a computed-style number looks off by a suspicious
 ratio (0.8, 1.25, 2, etc.), check `window.devicePixelRatio` first before
 concluding there's a real layout bug.
 
-## 2026-07-30 — Overriding a third-party stylesheet's own `:root` custom properties needs higher specificity than `:root`, not just later source order, when that stylesheet loads dynamically [harvest-candidate]
+## 2026-07-30 — Overriding a third-party stylesheet's own `:root` custom properties needs higher specificity than `:root`, not just later source order, when that stylesheet loads dynamically [harvested 2026-07-30]
 
 Tags: #css #specificity #third-party-widgets
 
