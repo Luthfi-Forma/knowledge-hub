@@ -11,7 +11,11 @@ export interface ScrollytellingSection {
   id: string;
   kicker: string;
   title: string;
-  body: string;
+  // ReactNode, not string: M7/T-64 needs inline cross-links to other posts
+  // inside section prose, and this is plain React (not MDX), so a link is
+  // JSX (<a href="/posts/...">) embedded directly in the value, not a
+  // markdown string to parse.
+  body: ReactNode;
   citations: ScrollytellingCitation[];
   vizCitation?: { fig: string; source: string };
 }

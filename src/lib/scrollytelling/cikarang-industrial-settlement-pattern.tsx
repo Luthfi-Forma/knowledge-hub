@@ -480,7 +480,19 @@ const sections: ScrollytellingSection[] = [
     id: 'problem',
     kicker: 'The tension',
     title: 'Industry and housing are both expanding into the same limited ground.',
-    body: 'Neither land use is static, and neither is contained. Industrial estates push outward for logistics access; residential growth follows the jobs those estates create. Where the two fronts meet is exactly where the earlier building-level analysis found the most friction.',
+    body: (
+      <>
+        Neither land use is static, and neither is contained. Industrial estates push outward for
+        logistics access; residential growth follows the jobs those estates create. Where the two
+        fronts meet is exactly where the earlier building-level analysis found the most friction —
+        the same insistence on measuring a real spatial relationship instead of a convenient
+        administrative proxy that drives{' '}
+        <a href="/posts/jakarta-transit-heritage-explorer" className="text-research underline underline-offset-2 hover:no-underline">
+          Jakarta Transit Heritage Explorer
+        </a>
+        's network-distance routing.
+      </>
+    ),
     citations: [{ label: 'Rahman & Hernanda (2025)', where: 'Introduction ¶4–5, p. 2' }],
   },
   {
@@ -511,7 +523,19 @@ const sections: ScrollytellingSection[] = [
     id: 'finding4',
     kicker: 'Finding 04',
     title: 'Cikarang is densifying, not just spreading.',
-    body: 'Land use grew 15.35% for industry and 9.99% for residential — but building counts grew 50.26% and 61.94% respectively. Buildings are appearing 3–6× faster than the land under them, meaning both new construction on already-classified land and finer subdivision are doing more of the work than outright expansion.',
+    body: (
+      <>
+        Land use grew 15.35% for industry and 9.99% for residential — but building counts grew
+        50.26% and 61.94% respectively. Buildings are appearing 3–6× faster than the land under
+        them, meaning both new construction on already-classified land and finer subdivision are
+        doing more of the work than outright expansion — the same push toward measuring at
+        province scale instead of building-by-building that structures{' '}
+        <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
+          the Jabung sub-region hierarchy study
+        </a>
+        .
+      </>
+    ),
     citations: [{ label: 'Table 2', where: 'Building Growth Analysis, pp. 8–9' }],
     vizCitation: { fig: 'Table 2 · overall growth', source: 'Building Growth Analysis, pp. 8–9' },
   },
@@ -519,7 +543,19 @@ const sections: ScrollytellingSection[] = [
     id: 'conclusion',
     kicker: 'Where this leads',
     title: 'The 2023 footprint is the map a spatial plan has to work with now.',
-    body: "This is the same overlap the building-level thesis flags for buffer requirements and zoning revision — except now it's measured province-scale, across seven years, with numbers a planning document can cite directly. Cikarang Pusat and Cikarang Selatan are the districts where that revision is most overdue.",
+    body: (
+      <>
+        This is the same overlap the building-level thesis flags for buffer requirements and
+        zoning revision — except now it's measured province-scale, across seven years, with
+        numbers a planning document can cite directly. Cikarang Pusat and Cikarang Selatan are the
+        districts where that revision is most overdue — the same instinct, turning measured
+        numbers into something a planning document can act on, that drives{' '}
+        <a href="/posts/rpplh-south-papua" className="text-research underline underline-offset-2 hover:no-underline">
+          the ecosystem-vulnerability inventory in South Papua's RPPLH
+        </a>
+        .
+      </>
+    ),
     citations: [{ label: 'Table 1', where: '2023 composition, discussed pp. 13–17' }],
     vizCitation: { fig: 'Table 1 · 2023 composition', source: 'Discussion & Conclusion, pp. 13–17' },
   },

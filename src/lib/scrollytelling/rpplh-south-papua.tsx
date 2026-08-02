@@ -402,7 +402,21 @@ const sections: ScrollytellingSection[] = [
     id: 'problem',
     kicker: 'The overlap',
     title: 'Food Estate and customary land occupy the same ground.',
-    body: 'The Food Estate program targets 1.2 million hectares across six districts — Merauke, Tanah Miring, Semangga, Kurik, Janggebob, and Malind — part of a national push toward food self-sufficiency (Asta Cita 2). None of that land is empty: it sits inside a landscape already organized around sago groves, sacred sites, and customary conservation areas that predate the program by generations.',
+    body: (
+      <>
+        The Food Estate program targets 1.2 million hectares across six districts — Merauke,
+        Tanah Miring, Semangga, Kurik, Janggebob, and Malind — part of a national push toward food
+        self-sufficiency (Asta Cita 2). None of that land is empty: it sits inside a landscape
+        already organized around sago groves, sacred sites, and customary conservation areas that
+        predate the program by generations — the same kind of remote-sensing-derived land
+        classification that{' '}
+        <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
+          the Cikarang industrial-settlement study
+        </a>{' '}
+        runs on Google Earth Engine, applied here to ecosystem services instead of building
+        footprints.
+      </>
+    ),
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Background, slide 5' }],
   },
   {
@@ -416,7 +430,21 @@ const sections: ScrollytellingSection[] = [
     id: 'finding1',
     kicker: 'Finding 01',
     title: 'The land best suited to grow food is also the land richest in biodiversity.',
-    body: '74.63% of the 2.3-million-hectare study area scores class-4 (high) for food-provisioning ecosystem services — exactly what makes it attractive for Food Estate. But 67.88% of that same area also scores class-5 (very high) for biodiversity and habitat support, meaning the most food-productive land is simultaneously the most ecologically irreplaceable and the most vulnerable to conversion.',
+    body: (
+      <>
+        74.63% of the 2.3-million-hectare study area scores class-4 (high) for food-provisioning
+        ecosystem services — exactly what makes it attractive for Food Estate. But 67.88% of that
+        same area also scores class-5 (very high) for biodiversity and habitat support, meaning
+        the most food-productive land is simultaneously the most ecologically irreplaceable and
+        the most vulnerable to conversion — the same ordinal-tier classification, from a weighted
+        score down to a small number of ranked classes, that sorts kecamatan into Hierarki 1/2/3
+        in{' '}
+        <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
+          the Jabung sub-region hierarchy study
+        </a>
+        .
+      </>
+    ),
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Food-Provisioning & Biodiversity-Support Ecosystem Services, slides 15–16' }],
     vizCitation: { fig: 'Ecosystem-service score', source: 'KLHK (2022) data processing, slides 15–16' },
   },
@@ -440,7 +468,21 @@ const sections: ScrollytellingSection[] = [
     id: 'conclusion',
     kicker: 'Where this leads',
     title: 'The people already living there have a 1,000-day answer.',
-    body: 'Orang Asli Papua communities in the area already practice Sasi — a customary ritual, observed by every marga and its chief, that restricts resource extraction from a site for up to 1,000 days to let wildlife and vegetation regenerate. The RPPLH’s DPSIR "Response" stage points to documenting and folding that local knowledge into Food Estate planning directly, rather than treating conservation and development as a choice the program makes without it.',
+    body: (
+      <>
+        Orang Asli Papua communities in the area already practice Sasi — a customary ritual,
+        observed by every marga and its chief, that restricts resource extraction from a site for
+        up to 1,000 days to let wildlife and vegetation regenerate. The RPPLH's DPSIR "Response"
+        stage points to documenting and folding that local knowledge into Food Estate planning
+        directly, rather than treating conservation and development as a choice the program makes
+        without it — the same shift, from a one-off report to a tool a planning team keeps
+        using, that{' '}
+        <a href="/posts/bontang-poverty-mapping" className="text-research underline underline-offset-2 hover:no-underline">
+          Kalimantan Timur's poverty mapping
+        </a>{' '}
+        is making with its own live web GIS follow-up.
+      </>
+    ),
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Orang Asli Papua as a Bio-Cultural Community, slide 20' }],
     vizCitation: { fig: 'Village development status (IDM) within the Food Estate area', source: 'IDM (2018) data processing, slide 17' },
   },

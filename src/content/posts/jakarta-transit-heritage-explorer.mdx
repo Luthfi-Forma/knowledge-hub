@@ -8,6 +8,11 @@ project: jakarta-transit-heritage-explorer
 repo: "https://github.com/Luthfi-Forma/Jakarta_Transit_Heritage_Explorer"
 cover: ./jakarta-transit-heritage-explorer-cover.png
 coordinates: "06°08'S 106°49'E"
+impact:
+  - label: "Nodes"
+    value: "3"
+  - label: "Reference route"
+    value: "1,802 m"
 draft: false
 ---
 
@@ -17,11 +22,15 @@ from the question a transit rider actually has: *I just got off at this
 station — what's worth walking to from here?*
 
 Jakarta Transit Heritage Explorer starts from that question instead of from
-a destination search. Get off the KRL at Jakarta Kota, or the MRT at Blok M,
-and the app hands you nearby heritage buildings, museums, and cafés, the
-walking route between them, short historical context for each stop, and a
-lightweight passport to stamp as you go — no account, no app install beyond
-adding it to your home screen.
+a destination search. Get off the KRL at Jakarta Kota, or the MRT at Blok M
+— the same stations mapped in
+[Jabodetabek-Connect](/posts/jabodetabek-connect)'s transit diagram, and
+built up over the 35-year timeline in
+[CDMP-Jabodetabek](/posts/cdmp-jabodetabek) — and the app hands you nearby
+heritage buildings, museums, and cafés, the walking route between them,
+short historical context for each stop, and a lightweight passport to
+stamp as you go — no account, no app install beyond adding it to your
+home screen.
 
 ## Three nodes, three different problems
 
@@ -75,6 +84,11 @@ radius around each station would have been actively misleading in a district
 as dense as Kota Tua. So "reachable within X minutes" filtering uses real
 network walking distance from OSRM, precomputed once per node — buffer
 circles are used only as a last-resort visual fallback, never for filtering.
+The same preference for a measured relationship over a naive geometric one
+drives
+[the kernel-density approach in the Cikarang settlement-pattern study](/posts/cikarang-industrial-settlement-pattern):
+straight-line proximity isn't the same as the thing you're actually trying
+to measure.
 
 ## Shipping bugs are still bugs
 

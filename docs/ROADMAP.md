@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-30 (M6 selesai — S1–S5, T-45–T-62; M7 dimulai — T-63 selesai)
+- Updated: 2026-07-30 (M6 + M7 selesai total — T-45–T-65)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -14,7 +14,7 @@
 | M4 | Interaktivitas (Astro Islands) | ADR-002; carousel drag di Featured Projects; 4 post `research` jadi scrollytelling React island (full-replace, bukan append) — Cikarang, Kaltim/Bontang, Jabung Lampung, RPPLH Papua Selatan | done |
 | M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
 | M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | done |
-| M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | in progress (T-63 selesai; T-64–T-65 tersisa) |
+| M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | done** |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -22,6 +22,12 @@ macet di polling, API PSI kena rate-limit dari dua jalur berbeda, dicoba
 dua kali di sesi yang berbeda), dan user secara eksplisit menunda ini
 (2026-07-28). Pengganti sementara (berat transfer produksi nyata via
 `curl`, bukan skor Lighthouse resmi) tercatat di `docs/TESTING.md`.
+
+\*\* 8 dari 11 post mencapai ≥3 cross-link; 4 sengaja di bawah itu (2
+masing-masing) — `jabodetabek-connect` dan tiga foto Tanggamus, karena
+kandidat cross-link nyata untuk post-post itu memang cuma 2, bukan
+dipaksakan jadi 3+ dengan tautan yang dikarang-karang. Detail di
+`docs/TASK.md` Done, entri T-64.
 
 Custom domain dan arsip repo lama (awalnya bagian M3) ditunda eksplisit oleh
 user — lihat T-20/T-21 di TASK.md Backlog.
@@ -34,10 +40,12 @@ di `docs/design/atlas/`, arah+konsekuensi di
 [ADR-004](decisions/ADR-004-atlas-single-identity.md) — tutup lewat S1
 (Fondasi, T-45–T-49) → S2 (Komponen inti, T-50–T-52) → S3 (IA & route,
 T-53–T-58) → S4 (Aksesibilitas & search, T-59–T-60) → S5 (Aset & penutupan,
-T-61–T-62), 19 commit bersih di `main`, **sudah di-push**. **M7 — lapisan
-editorial** dimulai: T-63 (20 definisi topik) selesai. T-64 (cross-link
-inline per post) dan T-65 (angka `impact`) masih menunggu input yang cuma
-bisa ditulis pemilik situs — lihat "Phase detail" di bawah.
+T-61–T-62), sudah di-push. **M7 — lapisan editorial selesai total**: T-63
+(20 definisi topik, 17 dari user + 5 fakta teknologi objektif), T-64
+(cross-link inline — 8/11 post ≥3, 4 post sengaja 2 karena kandidat nyata
+memang cuma segitu), T-65 (6 angka `impact`, semuanya dikutip dari konten
+post yang sudah terbit). Tidak ada milestone aktif — lihat "Phase detail"
+untuk riwayat lengkap.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
@@ -165,9 +173,13 @@ bukan diturunkan dari kode.
 - [x] 20 definisi topik 1 kalimat → `src/content/topics/*.md` (T-63, 2026-07-30
   — 17 dari user, 5 fakta teknologi objektif ditulis langsung karena bukan
   konten personal, lihat TASK.md Done).
-- [ ] 3–5 cross-link inline per post di body MDX — hari ini **nol** di seluruh repo,
-  sehingga rail marginalia M6 lahir kosong.
-- [ ] Angka `impact` untuk sebagian post → tampil di stamp lembar.
+- [x] 3–5 cross-link inline per post di body MDX (T-64, 2026-07-30 — 8/11
+  post ≥3, 4 post sengaja 2 karena kandidat nyata memang cuma segitu;
+  `ScrollytellingSection.body` diubah `string`→`ReactNode` supaya 4 modul
+  scrollytelling juga bisa membawa tautan, bukan cuma 7 post MDX biasa).
+- [x] Angka `impact` untuk sebagian post → tampil di stamp lembar (T-65,
+  2026-07-30 — 6 post, tiap angka dikutip dari konten post yang sudah
+  terbit, bukan dikarang).
 
 ## Icebox
 

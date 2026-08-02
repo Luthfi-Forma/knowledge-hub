@@ -475,7 +475,21 @@ const sections: ScrollytellingSection[] = [
     id: 'method',
     kicker: 'Method',
     title: 'Two tracks: where they are, and what their lives look like.',
-    body: 'Sasaran 1 digitized every P3KE individual as a point on the road network, joined to their household attributes, then ran kernel density estimation to turn scattered points into a concentration surface. Sasaran 2 ran a separate characteristic-cluster analysis across 19 P3KE indicators — gender, work, education, housing materials, utilities, aid-program enrollment, and child stunting risk — to explain what a hotspot is actually made of.',
+    body: (
+      <>
+        Sasaran 1 digitized every P3KE individual as a point on the road network, joined to their
+        household attributes, then ran kernel density estimation to turn scattered points into a
+        concentration surface — the same technique{' '}
+        <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
+          the Cikarang industrial-settlement study
+        </a>{' '}
+        uses to turn scattered building footprints into a concentration surface, applied here to
+        people instead of buildings. Sasaran 2 ran a separate characteristic-cluster analysis
+        across 19 P3KE indicators — gender, work, education, housing materials, utilities,
+        aid-program enrollment, and child stunting risk — to explain what a hotspot is actually
+        made of.
+      </>
+    ),
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Sasaran 1 & 2 Method, slides 9–14' }],
   },
   {
@@ -498,7 +512,20 @@ const sections: ScrollytellingSection[] = [
     id: 'finding3',
     kicker: 'Finding 03',
     title: 'One kelurahan, up close: Tanjung Laut Indah.',
-    body: 'Of Bontang’s dozens of kelurahan profiled under Sasaran 2, Tanjung Laut Indah (Kecamatan Bontang Selatan, 590 KK sampled) shows what the 19-indicator layer adds: half the sampled households rent rather than own, 69% report no savings, valuables, or livestock to fall back on, and 60% of children sit in the middle stunting-risk band. None of this shows up in a raw headcount — it’s exactly the texture a program needs to decide whether to lead with housing, livelihood, or health support.',
+    body: (
+      <>
+        Of Bontang's dozens of kelurahan profiled under Sasaran 2, Tanjung Laut Indah (Kecamatan
+        Bontang Selatan, 590 KK sampled) shows what the 19-indicator layer adds — the same
+        indicator count, coincidentally, that scores each kecamatan in{' '}
+        <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
+          the Jabung sub-region hierarchy study
+        </a>
+        : half the sampled households rent rather than own, 69% report no savings, valuables, or
+        livestock to fall back on, and 60% of children sit in the middle stunting-risk band. None
+        of this shows up in a raw headcount — it's exactly the texture a program needs to decide
+        whether to lead with housing, livelihood, or health support.
+      </>
+    ),
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Kelurahan Tanjung Laut Indah, slide 58' }],
     vizCitation: { fig: 'Kelurahan characteristics infographic', source: 'Kecamatan Bontang Selatan, slide 58' },
   },
@@ -506,7 +533,20 @@ const sections: ScrollytellingSection[] = [
     id: 'conclusion',
     kicker: 'Where this leads',
     title: 'Bontang is the template. Nine kabupaten/kota are still the to-do list.',
-    body: 'The same P3KE pipeline that mapped Bontang now has a working, repeatable shape — the province’s task is running it nine more times. The study also became more than a static report: a live web GIS tool now lets planners query individual-level characteristics by location directly, the same per-individual data this analysis draws on, without waiting for the next paparan deck.',
+    body: (
+      <>
+        The same P3KE pipeline that mapped Bontang now has a working, repeatable shape — the
+        province's task is running it nine more times. The study also became more than a static
+        report: a live web GIS tool now lets planners query individual-level characteristics by
+        location directly, the same per-individual data this analysis draws on, without waiting
+        for the next paparan deck — the same shift, from one-off report to a live tool a planning
+        team keeps using, that closes{' '}
+        <a href="/posts/rpplh-south-papua" className="text-research underline underline-offset-2 hover:no-underline">
+          South Papua's RPPLH
+        </a>
+        .
+      </>
+    ),
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Follow-up, slide 60' }],
     vizCitation: { fig: 'Follow-up status, 10 kab/kota', source: 'Follow-up, slide 60' },
   },

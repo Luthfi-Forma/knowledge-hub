@@ -14,6 +14,15 @@ the project starts tagging releases.
 
 ### Added
 
+- **Editorial layer** (M7, T-63–T-65), completing Atlas's knowledge-graph
+  scaffolding from M6: all 20 `/topics/[topic]` pages now show a real
+  one-sentence definition instead of the graceful-empty state; every post
+  gained 2–5 inline cross-links to related posts in its own body prose
+  (`ScrollytellingSection.body` moved from `string` to `ReactNode` so the
+  4 scrollytelling modules could carry links too, not just the 7 plain-MDX
+  posts); 6 posts gained an `impact` stamp (station/line counts, hectares
+  mapped, indicator counts) sourced from numbers already published in that
+  post's own content.
 - **Atlas — one visual identity** (M6, T-45–T-62), replacing M5's dual-mode
   mechanism. Design tokens: 9 roled colors (`--color-research`/`-project`/
   `-flag` split apart what one `--color-accent` used to do, `--color-line-

@@ -8,6 +8,11 @@ project: cdmp-jabodetabek
 repo: "https://github.com/Luthfi-Forma/CDMP-Jabodetabek"
 cover: ./cdmp-jabodetabek-cover.png
 coordinates: "06°18'S 106°39'E"
+impact:
+  - label: "Projects mapped"
+    value: "14"
+  - label: "Span"
+    value: "1989–2027"
 draft: false
 ---
 
@@ -22,7 +27,12 @@ slider along the bottom. Drag it across the years and development projects
 fade in and out based on when they were actually built — MRT lines,
 toll roads, new districts, transit landmarks — turning three and a half
 decades of scattered infrastructure history into something you can scrub
-through in a few seconds.
+through in a few seconds. It's one of three Jabodetabek-focused maps built
+here — [Jabodetabek-Connect](/posts/jabodetabek-connect) draws the
+*operating* transit network as a Mini Metro-style diagram, and
+[Jakarta Transit Heritage Explorer](/posts/jakarta-transit-heritage-explorer)
+turns transit stops into a walking companion for heritage sites — but this
+one is the only one about *when*, not *where*.
 
 ## Fourteen projects, four kinds of growth
 
@@ -35,7 +45,10 @@ transit/infrastructure landmarks (the Whoosh high-speed rail terminus at
 Halim, Soekarno–Hatta's Terminal 3, Jakarta International Stadium). Clicking
 any project — a line or a marker — opens a detail card with its name, type,
 year range, and a short description. There's no backend behind any of it:
-the whole dataset is one GeoJSON file checked into the repo.
+the whole dataset is one GeoJSON file checked into the repo — the same
+file-based, no-live-queries approach used throughout this site's mapping
+work, including
+[the building-footprint detection behind the Cikarang study](/posts/cikarang-industrial-settlement-pattern).
 
 ## Borrowing a visual direction, not a screenshot
 

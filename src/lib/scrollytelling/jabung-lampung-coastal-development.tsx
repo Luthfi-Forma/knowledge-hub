@@ -306,7 +306,20 @@ const sections: ScrollytellingSection[] = [
     id: 'intro',
     kicker: 'Setting the scene',
     title: 'Twelve sub-districts, one coastal planning area — but not one role each.',
-    body: 'East Lampung Regency’s Jabung sub-region and its coastal strip span twelve kecamatan, from inland agricultural land to fishing ports on the Java Sea. The regency wanted two development models running at once — agropolitan zoning inland, minapolitan zoning along the coast — but pursuing both everywhere at once would have meant no real center for either.',
+    body: (
+      <>
+        East Lampung Regency's Jabung sub-region and its coastal strip span twelve kecamatan, from
+        inland agricultural land to fishing ports on the Java Sea. The regency wanted two
+        development models running at once — agropolitan zoning inland, minapolitan zoning along
+        the coast — but pursuing both everywhere at once would have meant no real center for
+        either — the same problem of sorting many sub-units by underlying capacity rather than
+        administrative label that runs through{' '}
+        <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
+          the Cikarang industrial-settlement study
+        </a>
+        .
+      </>
+    ),
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Background, Chapter I' }],
   },
   {
@@ -321,7 +334,20 @@ const sections: ScrollytellingSection[] = [
     id: 'method',
     kicker: 'Method',
     title: 'Skalogram Analysis — not a gravity model.',
-    body: 'The actual method scores each kecamatan against 19 facility and service indicators, weights them, and produces a Skalogram hierarchy score — the higher the score, the more developed the sub-district’s service base, and the stronger its case to anchor growth rather than depend on a neighboring center.',
+    body: (
+      <>
+        The actual method scores each kecamatan against 19 facility and service indicators,
+        weights them, and produces a Skalogram hierarchy score — the higher the score, the more
+        developed the sub-district's service base, and the stronger its case to anchor growth
+        rather than depend on a neighboring center. Nineteen is also the exact indicator count
+        behind{' '}
+        <a href="/posts/bontang-poverty-mapping" className="text-research underline underline-offset-2 hover:no-underline">
+          the P3KE characteristic clustering in Kalimantan Timur's poverty mapping
+        </a>
+        — a coincidence of scope, not method, but the same instinct to score against many
+        indicators at once rather than one proxy variable.
+      </>
+    ),
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Skalogram Analysis, pp. 56–57' }],
   },
   {
@@ -344,7 +370,19 @@ const sections: ScrollytellingSection[] = [
     id: 'finding3',
     kicker: 'Finding 03',
     title: 'The hierarchy becomes two zones: Agropolitan and Minapolitan.',
-    body: 'Bandar Sribhawono — corn, cassava, rice, rubber, and palm oil, sitting on the province’s Feeder Road corridor — anchors the Agropolitan zone. Labuhan Maringgai and Pasir Sakti, with three working fishing ports and a growing crab-processing trade, anchor Minapolitan. Neither label was applied uniformly across the coastline — each traces back to a specific kecamatan’s Skalogram profile.',
+    body: (
+      <>
+        Bandar Sribhawono — corn, cassava, rice, rubber, and palm oil, sitting on the province's
+        Feeder Road corridor — anchors the Agropolitan zone. Labuhan Maringgai and Pasir Sakti,
+        with three working fishing ports and a growing crab-processing trade, anchor Minapolitan —
+        a working coastline not unlike{' '}
+        <a href="/posts/tanggamus-boat" className="text-research underline underline-offset-2 hover:no-underline">
+          the fishing boats further south on Lampung's Tanggamus coast
+        </a>
+        . Neither label was applied uniformly across the coastline — each traces back to a
+        specific kecamatan's Skalogram profile.
+      </>
+    ),
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Agropolitan & Minapolitan Concept, pp. 76–79' }],
     vizCitation: { fig: 'Area development concept', source: 'Chapter V.2, pp. 76–79' },
   },
