@@ -15,9 +15,6 @@
 pengukuran pendukung:
 `C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
 
-- [ ] T-66: SOP `docs/design/COVER_ART.md` + `scripts/generate-cover.mjs`
-  permanen + regenerate 3 cover project (palet M5 mati) + `Plate.astro`
-  `aspect-ratio: 16/10` menggantikan `height: 100%` (M8)
 - [ ] T-69: pass skill `humanizer` di seluruh prosa situs (11 post, 4 modul
   scrollytelling, summary, chrome, 5 definisi topik tulisan Claude) —
   cross-link M7 wajib selamat, `building-knowledge-hub.mdx` ditulis ulang
@@ -37,6 +34,73 @@ pengukuran pendukung:
 
 ## Done
 
+- [x] T-66: SOP cover art + regenerate 3 cover project + perbaikan akar
+  cropping di `Plate.astro`. **Akar masalah** (diukur, bukan ditebak): 10
+  cover pada index (`≥480px`) punya tinggi kotak **berbeda-beda per plate**
+  (401/561/583/294px terhadap lebar tetap 104px, rasio 0.18–0.38) padahal
+  sumber aslinya 0.80–1.72 — `.plate-cover`'s `height: 100%` membuat
+  tingginya mengikuti panjang teks tetangganya, bukan rasio gambarnya
+  sendiri; ~16% lebar cover art landscape yang benar-benar terlihat.
+  Diperparah 3 cover project (`cdmp-jabodetabek`,
+  `jabodetabek-connect`, `jakarta-transit-heritage-explorer`) masih
+  memakai palet mati: dua tanah krem `#f5efe1` (Reading Mode M5), satu
+  tanah nyaris-hitam `#18140f` (Immersive Mode M5) — keduanya dibongkar
+  total di M6/ADR-004, itu sebabnya CDMP muncul sebagai strip gelap di
+  antara plate krem pada laporan pemilik situs. **Perbaikan `Plate.astro`**
+  — `aspect-ratio: 16/10` menggantikan `height: 100%`, di-scope KHUSUS ke
+  dalam `@media (min-width: 480px)` (bukan unconditional) supaya perilaku
+  `<480px` yang sudah benar (T-55 menumpuk cover di bawah teks, rasio
+  sumber asli, nol crop) tidak ikut teregresi — dikonfirmasi lewat
+  pengukuran ulang di 375px persis identik sebelum/sesudah. **Dua bug
+  tersembunyi ditemukan lewat pengujian, bukan dibaca dari kode**: (1)
+  urutan sumber CSS — aturan dasar `img{height:auto}` (ditulis di bagian
+  bawah file) menang atas override media query `img{height:100%}`
+  (ditulis di bagian atas) karena spesifisitas sama dan cascade hanya
+  peduli urutan sumber, bukan lokasi `@media`; diperbaiki dengan
+  memindahkan aturan dasar ke ATAS media query dalam file — sekarang
+  override benar-benar menang di breakpoint yang dituju; (2) grid item
+  punya `min-height: auto` bawaan (content-based) yang membuat kotak
+  cover tetap mengembang melebihi `aspect-ratio` untuk gambar yang lebih
+  "tinggi" dari 16:10 (mis. foto Tanggamus 0,80) — ditambah
+  `min-height: 0` eksplisit untuk mematikannya. Tanpa kedua perbaikan ini,
+  hasil awal HANYA benar untuk cover yang kebetulan sudah 16:10 (3 cover
+  project generated), gagal diam-diam untuk 7 cover foto lainnya.
+  **`--plate-cover-width` standar** dinaikkan 104px → 168px (168×65 pada
+  16:10 terlalu kecil untuk terbaca). **SOP baru** `docs/design/
+  COVER_ART.md`: rasio kanonik 16:10/1600×1000, palet token Atlas wajib
+  (nol tanah gelap), tipografi dari `src/lib/og-fonts/` (bukan variable
+  font situs — Satori/resvg tidak menangani woff2/sumbu `wdth`, kendala
+  sama dengan T-61), aturan "tiap cover mengkodekan fakta `impact` nyata",
+  `type: photo` dikecualikan, batas berat berkas. **`scripts/
+  generate-cover.mjs`** (baru, di-commit — beda dari T-33 yang membuang
+  skripnya setelah sekali pakai, karena regenerasi memang perlu terulang
+  saat identitas visual berganti): Satori menyusun teks jadi vector path
+  (menghindari resvg perlu resolve nama font TTF fontsource yang tidak
+  konsisten, mis. `archivo-800.ttf` bernama internal "Archivo SemiBold
+  ExtraBold") + `@resvg/resvg-js` merasterisasi — pipeline identik dengan
+  `src/lib/og-image.ts`. 3 motif bespoke ditulis tangan (nol sistem
+  auto-chart generik, konsisten dengan `src/lib/scrollytelling/*.tsx`):
+  diagram transit oktilinear (jabodetabek-connect, "128 · 13"), 3 rute
+  jalan kaki dari hub transit ke situs heritage bertriangle
+  (jakarta-transit-heritage-explorer, "3 · 1.802 m"), timeline slider 14
+  tanda proyek (cdmp-jabodetabek, "14 · 1989–2027") — ketiga angka dikutip
+  dari field `impact` post masing-masing. **Sengaja tidak disentuh**: 4
+  cover research (foto lapangan asli dari portfolio lama, T-13 — mengganti
+  foto dokumenter dengan diagram membuang materi nyata) dan 3 foto
+  Tanggamus (`type: photo`, foto ITU kontennya). **DEBT baru dicatat**
+  (#3, di luar scope task ini): 3 foto Tanggamus 15–20MB per berkas
+  ditemukan saat pengukuran, melanggar batas berat SOP baru — perbaikannya
+  task tersendiri. Diverifikasi lewat `astro preview` sungguhan di 375/
+  768/1280px: `≥480px` — **semua 10 cover kini identik 168×105
+  (`aspect-ratio: 16/10`)**, termasuk 7 foto yang sebelumnya melebar
+  mengikuti rasio native (dikonfirmasi lewat `getComputedStyle` dan
+  `getBoundingClientRect` pada `.plate-cover` DAN elemen `img`-nya, bukan
+  cuma satu); `<480px` — rasio kotak kembali bervariasi 0,80–1,72 mengikuti
+  sumber persis seperti sebelum T-66 (nol regresi); screenshot homepage
+  mengonfirmasi CDMP kini menampilkan diagram timeline penuh, bukan strip
+  gelap. Nol overflow horizontal di ketiga viewport, nol console error.
+  `npm run build` hijau, 44 halaman, Pagefind 2225 kata (tidak berubah —
+  T-66 murni gambar+layout, nol teks tersentuh) (M8) — 2026-08-04
 - [x] T-68: collar mobile — header 305px di layar 375px turun ke 147px.
   Akar masalah terukur, bukan ditebak: `.collar-row-1`/`.collar-row-2` di
   `Header.astro` memakai padding horizontal `48px`/`8px` **tanpa syarat**

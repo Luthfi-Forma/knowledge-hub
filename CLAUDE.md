@@ -74,6 +74,7 @@ available: `/code-quality-review`.
 | `docs/CHANGELOG.md` | What changed, per version | every user-visible change |
 | `docs/decisions/` | ADRs — why things are the way they are | a structural decision is made |
 | `docs/design/atlas/` | Handoff desain "Atlas" dari Claude Design — sumber kebenaran nilai visual M6 (`README.md` = spek; `.dc.html` = reference, bukan kode) | a new design handoff arrives |
+| `docs/design/COVER_ART.md` | SOP cover art project (rasio, palet, cara jalankan `scripts/generate-cover.mjs`) | a new project cover is made/regenerated |
 | `docs/memory/STATE.md` | Session snapshot — where we are | see memory rules |
 | `docs/memory/DEBT.md` | Shortcuts taken, to be repaid | see memory rules |
 | `docs/memory/LESSONS.md` | Hard-won knowledge | see memory rules |

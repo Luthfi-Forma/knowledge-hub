@@ -31,7 +31,7 @@ interface Props {
   size: PlateSize;
   /** 1-indexed position in whatever sequence the caller is rendering — not derived here, since plate numbering is a page-level layout decision (T-55+). */
   plateNumber: number;
-  /** Cover thumbnail width in px, lead/standard only. Defaults to 300 (lead) / 104 (standard) per the handoff's own two lead-width contexts ("1fr 300px (Hi-Fi) / 1fr 148px (kompak)"); pass 148 for a lead squeezed into a narrower slot. */
+  /** Cover thumbnail width in px, lead/standard only. Defaults to 300 (lead) / 168 (standard, T-66 — up from the original 104, which produced a 104x65 thumbnail on the 16:10 aspect-ratio box below: too small to read); pass 148 for a lead squeezed into a narrower slot. */
   coverWidth?: number;
   headingLevel?: 'h2' | 'h3';
 }
@@ -46,7 +46,7 @@ const isInteractive = presentation === 'scrollytelling';
 // text-only) — smallest anatomy, room for notation + title + stamp only.
 const showCover = size !== 'compact' && Boolean(cover);
 const showSummary = size !== 'compact';
-const resolvedCoverWidth = coverWidth ?? (size === 'lead' ? 300 : 104);
+const resolvedCoverWidth = coverWidth ?? (size === 'lead' ? 300 : 168);
 
 const number = String(plateNumber).padStart(2, '0');
 const notationLabel = size === 'lead' ? `${TYPE_LABEL[type]} · Plate ${number}` : `${TYPE_LABEL[type]} · ${number}`;
@@ -158,6 +158,19 @@ const Heading = headingLevel;
     padding: 12px;
   }
 
+  /* Base cover-image sizing — kept ABOVE the >=480px media query below on
+     purpose (T-66): both rules target the identical selector
+     (`.plate-cover img`, same specificity), so with equal specificity
+     the one later in source wins regardless of which media query it's
+     in. Putting the override after its base means the cascade actually
+     matches the breakpoint intent instead of the base always winning. */
+  .plate-cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
   /* Fixed-px cover columns (--plate-cover-width, e.g. 300px for a lead
      plate) don't fit a narrow viewport — 1fr + 300px overflows well
      before 375px. Below 480px the cover stacks under the text instead of
@@ -170,6 +183,36 @@ const Heading = headingLevel;
     .plate-standard.plate-with-cover {
       grid-template-columns: 1fr var(--plate-cover-width);
       align-items: center;
+    }
+
+    /* T-66: the actual cropping bug lived only here. `height: 100%` on
+       .plate-cover let the cover column's height follow whatever the
+       sibling text column needed (title + summary length), not the
+       image's own shape — measured boxes ranged 0.18-0.38 (401, 561,
+       583, 294px tall against a fixed 104px width) while every cover
+       image is natively 0.80-1.72, so only ~16% of a landscape cover's
+       width was ever visible, and two plates in the same grid row could
+       show different cover heights purely because their titles were
+       different lengths. aspect-ratio: 16/10 matches the cover art SOP's
+       canonical export ratio (docs/design/COVER_ART.md), so generated
+       covers now crop to nothing; photographic covers get a light,
+       CONSISTENT crop instead of an erratic one — and every plate in a
+       grid row is now the same height.
+
+       `min-height: 0` is required alongside aspect-ratio: grid items get
+       an implicit `min-height: auto` (content-based) by default, which
+       otherwise let a tall-relative-to-16:10 source image (e.g. a
+       portrait-ish 0.80 ratio photo) force the box taller than its
+       aspect-ratio anyway — measured directly: without this, images
+       taller than 16:10 grew the box to their own native height instead
+       of being cropped, defeating the fix for exactly the photos it
+       mattered most for. */
+    .plate-cover {
+      aspect-ratio: 16 / 10;
+      min-height: 0;
+    }
+    .plate-cover :global(img) {
+      height: 100%;
     }
   }
 
@@ -249,13 +292,4 @@ const Heading = headingLevel;
     font-size: 11px;
   }
 
-  .plate-cover {
-    height: 100%;
-  }
-  .plate-cover :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 </style>
