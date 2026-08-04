@@ -621,7 +621,7 @@ stylesheet is loaded on-demand (lazy search UIs, embedded players, chat
 widgets, map libraries) rather than up front alongside the site's own
 CSS.
 
-## 2026-08-04 — Two rules targeting the same selector at different specificity-ties resolve by SOURCE ORDER, not by which one is inside a `@media` block [harvest-candidate]
+## 2026-08-04 — Two rules targeting the same selector at different specificity-ties resolve by SOURCE ORDER, not by which one is inside a `@media` block [harvested 2026-08-05]
 
 Tags: #css #specificity #media-queries
 
@@ -651,7 +651,7 @@ CSS output (`grep` the built `.css` file for the selector), not just
 correctly overridden, others not) can look like full success if you only
 check the properties that happen to have no conflicting base declaration.
 
-## 2026-08-04 — CSS Grid/Flex items' implicit `min-height: auto` (content-based) can silently override `aspect-ratio` [harvest-candidate]
+## 2026-08-04 — CSS Grid/Flex items' implicit `min-height: auto` (content-based) can silently override `aspect-ratio` [harvested 2026-08-05]
 
 Tags: #css #grid #aspect-ratio
 
@@ -689,7 +689,7 @@ DATA SET with varied intrinsic sizes (not just one or two samples) —
 a single test image that happens to already match the target ratio
 will show a false pass.
 
-## 2026-08-04 — An editing policy from the immediately-previous task can bleed into the next one when the next task's content looks similar but has the opposite rule [harvest-candidate]
+## 2026-08-04 — An editing policy from the immediately-previous task can bleed into the next one when the next task's content looks similar but has the opposite rule [harvested 2026-08-05]
 
 Tags: #content-editing #process
 
