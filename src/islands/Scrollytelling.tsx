@@ -262,8 +262,16 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
         reduceMotion={reduceMotion}
       />
 
-      {/* Hero — no horizontal padding/max-w of its own: the caller (post
-          detail page) already constrains width via its .max-w-(--container-shell) */}
+      {/* Hero — no horizontal padding/max-w of its own: for scrollytelling
+          posts the caller (pages/posts/[slug].astro) opts .post-body out
+          of the default var(--container-prose) 1fr split (T-67) so
+          .post-main spans the full .post-detail width, up to
+          --container-shell (1240px) — this component assumes that width.
+          From T-57 to T-67 that assumption was silently wrong: .post-main
+          was constrained to 680px instead, which is why the 6/6 columns
+          below used to squeeze text to ~316px (~38ch/line). Don't wrap
+          this component in a narrower container without updating both
+          sides again. */}
       <section className="flex flex-col items-center justify-center py-16 text-center">
         <p className="mb-4 text-xs tracking-[0.35em] text-research uppercase">{eyebrow}</p>
         <h2 className="font-display max-w-3xl text-4xl leading-[1.1] font-extrabold text-ink sm:text-5xl">{title}</h2>
@@ -283,8 +291,13 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
       {/* Body — same width-inheriting rule as the hero above */}
       <div ref={containerRef} className="pb-16">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
-          {/* Text column */}
-          <div className="lg:col-span-6">
+          {/* Text column — 5/12, not 6/12: an even split inside a 680px
+              caller (the T-57 bug above) left prose at ~316px / ~38
+              characters per line, well under the ~55-75ch reading target.
+              5/7 (this vs. the viz column below) measured out to ~480px —
+              inside the target range — once .post-main actually gets the
+              full container-shell width. */}
+          <div className="lg:col-span-5">
             {sections.map((s, i) => (
               <section key={s.id} id={`sec-${s.id}`} className="flex min-h-[70vh] flex-col justify-center py-14 first:pt-0">
                 <div className="mb-3 flex items-center gap-3">
@@ -292,14 +305,14 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
                   <span className="text-xs tracking-[0.3em] text-ink-muted uppercase">{s.kicker}</span>
                 </div>
                 <h3 className="font-display text-2xl leading-[1.2] text-ink sm:text-3xl">{s.title}</h3>
-                <p className="mt-4 text-base leading-relaxed text-ink-muted">{s.body}</p>
+                <p className="mt-4 max-w-[54ch] text-base leading-relaxed text-ink-muted">{s.body}</p>
                 <CitationBlock citations={s.citations} sectionNumber={i + 1} />
               </section>
             ))}
           </div>
 
-          {/* Sticky viz (desktop) */}
-          <div className="hidden lg:col-span-6 lg:block">
+          {/* Sticky viz (desktop) — 7/12, the other half of the 5/7 split above */}
+          <div className="hidden lg:col-span-7 lg:block">
             <div className="sticky top-20 flex h-[calc(100vh-6rem)] flex-col justify-center gap-3">
               <div className="relative h-[68vh] w-full overflow-hidden border border-line bg-paper-raised">
                 <div className="absolute inset-x-0 top-0 z-10 h-[2px] bg-line">
@@ -338,9 +351,19 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
           </div>
         </div>
 
-        {/* Mobile viz — fixed dock, only while the reader is inside this section */}
+        {/* Mobile viz — fixed dock, only while the reader is inside this
+            section. Height (28vh) is coupled to each section's
+            min-h-[70vh] above: 100vh - 28vh = 72vh of reading room, a 2vh
+            margin over what the section demands. At the old 38vh, the
+            deficit (100-38=62vh available vs. 70vh demanded) meant
+            justify-center centered the text against the FULL viewport,
+            not the visible reading area — so text routinely sat behind
+            the dock (T-67, measured). Tailwind's JIT needs a static class
+            string, so this 28vh and the spacer's 28vh just below can't
+            share a JS constant — change both together, and re-check the
+            margin against min-h-[70vh] if either changes. */}
         {withinViewport && (
-          <div className="fixed inset-x-0 bottom-0 z-30 h-[38vh] border-t border-line bg-paper-raised lg:hidden">
+          <div className="fixed inset-x-0 bottom-0 z-30 h-[28vh] border-t border-line bg-paper-raised lg:hidden">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
@@ -355,7 +378,7 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
             </AnimatePresence>
           </div>
         )}
-        <div className="h-[38vh] lg:hidden" />
+        <div className="h-[28vh] lg:hidden" />
       </div>
     </div>
   );

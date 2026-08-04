@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-07-30 (M6 + M7 selesai total — T-45–T-65)
+- Updated: 2026-08-04 (M8 dibuka — T-66–T-69)
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).
@@ -10,13 +10,26 @@
 
 ## Now
 
+**M8 — Perbaikan visual & suara editorial** (dibuka 2026-08-04, dipicu
+`Masukan untuk Knowledge Hub.md` dari pemilik situs). Rencana penuh +
+pengukuran pendukung:
+`C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
+
+- [ ] T-68: collar mobile — header 305px di 375px turun ke ≤160px, nav tetap
+  4 item penuh (M8)
+- [ ] T-66: SOP `docs/design/COVER_ART.md` + `scripts/generate-cover.mjs`
+  permanen + regenerate 3 cover project (palet M5 mati) + `Plate.astro`
+  `aspect-ratio: 16/10` menggantikan `height: 100%` (M8)
+- [ ] T-69: pass skill `humanizer` di seluruh prosa situs (11 post, 4 modul
+  scrollytelling, summary, chrome, 5 definisi topik tulisan Claude) —
+  cross-link M7 wajib selamat, `building-knowledge-hub.mdx` ditulis ulang
+  sungguhan (M8)
+
 **M6 — Atlas: selesai** (S1–S5, T-45–T-62, lihat Done — di-push). Spesifikasi:
 `docs/design/atlas/README.md`. Keputusan:
 [ADR-004](decisions/ADR-004-atlas-single-identity.md).
 
-**M7 — lapisan editorial: selesai** (T-63–T-65, lihat Done). Tidak ada task
-aktif — sesi berikutnya menunggu arah baru dari user (M8 belum ada di
-ROADMAP, atau kerja pemeliharaan/Backlog di bawah).
+**M7 — lapisan editorial: selesai** (T-63–T-65, lihat Done).
 
 ## Backlog
 
@@ -26,6 +39,49 @@ ROADMAP, atau kerja pemeliharaan/Backlog di bawah).
 
 ## Done
 
+- [x] T-67: lebar & proporsi scrollytelling, membuka M8. Dipicu masukan
+  pemilik situs (`Masukan untuk Knowledge Hub.md`, 2026-08-04) — "porsi
+  konten tidak seimbang" pada post `presentation: scrollytelling`.
+  **Desktop**: akar masalahnya diukur langsung di `astro preview`, bukan
+  dibaca dari kode — T-57 memindahkan **seluruh** `/posts/[slug]` ke grid
+  `680px 1fr`, tapi island scrollytelling punya grid 6/6 internal sendiri;
+  terukur kolom teks & viz cuma 316px masing-masing (~38 karakter/baris,
+  jauh di bawah target 55–75) dan rail marginalia (416px) justru lebih
+  lebar dari kolom teks island sendiri (316px). Diperbaiki dua sisi:
+  `pages/posts/[slug].astro` — `.post-body` dapat modifier
+  `post-body-wide` untuk `isScrollytelling`, melepaskan split
+  `var(--container-prose) 1fr` supaya `.post-main` memakai penuh
+  `--container-shell` (1240px); rail pindah ke bawah island (bukan di
+  sebelahnya — alasan desain, bukan cuma lebar: island sudah py narasi
+  2-kolom sendiri, kolom ketiga di sebelahnya salah secara desain) sebagai
+  grid `auto-fit minmax(220px,1fr)` horizontal. `islands/Scrollytelling.tsx`
+  — kolom `lg:col-span-6/6` → `5/7` (teks lebih sempit dari viz) +
+  `max-w-[54ch]` pada prosa; komentar basi baris ~265 yang mengklaim
+  caller sudah memberi `--container-shell` (padahal sejak T-57 salah)
+  ditulis ulang menjelaskan kenapa sekarang benar. **Mobile** (temuan baru,
+  belum pernah terdeteksi sebelumnya): dock viz `fixed bottom` 38vh (309px)
+  menutupi bagian bawah layar sementara tiap section scrollytelling
+  `min-height: 70vh` disentrasikan terhadap viewport **penuh**, bukan area
+  baca yang tersisa — akibatnya teks section jatuh di belakang dock.
+  Diperbaiki dengan menurunkan dock (dan spacer-nya) dari `h-[38vh]` ke
+  `h-[28vh]`, membiarkan `min-h-[70vh]` section apa adanya — 100vh−28vh=72vh
+  tersisa untuk baca, memberi margin 2vh di atas yang diminta section
+  (bukan pas-pasan). Nilai `28vh` sengaja diulang literal di dua tempat
+  (dock + spacer) alih-alih custom property JS, karena Tailwind v4 JIT
+  butuh string kelas statis untuk pemindaian — didokumentasikan lewat
+  komentar yang menghubungkan ketiganya, supaya tidak diubah sebelah pihak.
+  Diverifikasi lewat `astro preview` sungguhan di 375/1280px:
+  `getBoundingClientRect` di 1280px mengonfirmasi `postBodyCols` jadi satu
+  kolom 1144px penuh, rail benar-benar di bawah island (`railTop` 4652 >
+  `mainBottom` 4612), kolom island 449/647px (rasio 5/7 persis); di 375px
+  setelah scroll ke tengah section, `textParagraph.bottom` (564px) berada
+  **sebelum** `dockTop` (585px) — nol overlap, dikonfirmasi lewat DOM bukan
+  screenshot. Post non-scrollytelling (`jabodetabek-connect`) dicek
+  **tidak berubah**: `680px 416px` di 1280px, `335.2px` satu kolom di
+  375px, persis seperti sebelum T-67 — regresi nol. Nol console error di
+  kedua post & kedua viewport. `npm run build` hijau, 44 halaman, Pagefind
+  2225 kata (tidak berubah — T-67 murni layout, nol teks tersentuh) (M8) —
+  2026-08-04
 - [x] T-65: angka `impact` untuk 6 post, menutup M7. `impact: [{label, value}]` ditambah ke frontmatter `jabodetabek-connect` (Stations 128, Lines 13), `cdmp-jabodetabek` (Projects mapped 14, Span 1989–2027), `jakarta-transit-heritage-explorer` (Nodes 3, Reference route 1,802 m), `jabung-lampung-coastal-development` (Sub-districts 12), `rpplh-south-papua` (Cultural space mapped 471,026 ha, Of Food Estate footprint 1.2M ha), `bontang-poverty-mapping` (Characteristic indicators 19) — keenam angka dikutip persis dari konten post yang sudah terbit sendiri (bukan dikarang), sudah dikonfirmasi cocok di worksheet Artifact T-63/T-64/T-65 sebelum diimplementasi di sini; 5 post lain (Cikarang, Building knowledge-hub, 3 foto Tanggamus) sengaja dibiarkan tanpa `impact` — bukan gap, field itu memang tidak cocok untuk konten itu. Diverifikasi lewat `astro preview` sungguhan: stamp lembar `/posts/jabodetabek-connect` merender persis "Stations: 128" + "Lines: 13", nol console error. `npm run build` hijau, 44 halaman, Pagefind 2172→2185 kata (label impact baru terindeks) — 2026-07-30
 - [x] T-64: 3–5 cross-link inline per post, menutup M7 total. **Perubahan tipe**: `ScrollytellingSection.body` di `islands/Scrollytelling.tsx` diubah dari `string` ke `ReactNode` — satu-satunya pemakaian (`<p>{s.body}</p>`) sudah kompatibel tanpa perubahan lain, karena 4 modul scrollytelling menulis prosa di React (bukan MDX), jadi tautan di sana adalah JSX `<a href>` langsung, bukan sintaks markdown untuk diparse. **11/11 post** dapat tautan (link berwarna `--color-research` + underline, kelas `text-research underline underline-offset-2 hover:no-underline` dipakai konsisten di keempat modul scrollytelling; MDX biasa mewarisi style `.prose-content a` yang sudah ada sejak awal). Kandidat dipilih dari peringkat shared-tag yang sama persis dengan `getRelatedPosts()` (worksheet Artifact T-63 sudah menghitungnya) — 8 dari 11 post mencapai 3 tautan; **4 post sengaja di bawah 3** karena kandidat asli memang tidak ada/tipis, bukan dipaksakan: `jabodetabek-connect` (2 — cuma `cdmp-jabodetabek` dan `jakarta-transit-heritage-explorer` yang punya overlap tag nyata) dan ketiga foto Tanggamus (2 masing-masing — cuma 2 saudara foto yang ada untuk saling ditautkan). `building-knowledge-hub` (nol kandidat shared-tag di worksheet) mendapat 3 tautan kontekstual (bukan tag-driven) yang mencontohkan tipe project/research/photo lewat instance nyata. Beberapa tautan sengaja dibuat resiprokal (mis. Cikarang↔RPPLH, Cikarang↔Jabung, Bontang↔Jabung — paralel metodologis nyata seperti "19 indikator" yang muncul persis di Bontang DAN Jabung, atau kernel-density di Cikarang DAN Bontang) bukan satu arah. Diverifikasi lewat teknik `docs/memory/LESSONS.md` (`client:load` + `useState(ids[N])` sementara untuk modul scrollytelling, karena `IntersectionObserver` tidak fire di tooling sesi ini) + `astro preview` langsung untuk MDX biasa: `building-knowledge-hub` (3 tautan `.prose-content a`), `tanggamus-wave` (2 tautan), `cikarang` section "problem" (1 tautan ke Jakarta Transit Heritage Explorer, warna `rgb(44,70,48)` = `--color-research` terkonfirmasi `getComputedStyle`, underline benar), `rpplh` (tautan ke Cikarang + Bontang terkonfirmasi di section intro/conclusion) — semua nol console error. `git diff` pada kedua file yang di-hardcode sementara dikonfirmasi bersih sebelum rebuild final (pola yang sama dengan T-59). `npm run build` hijau, 44 halaman, Pagefind 2185→2225 kata (prosa cross-link baru terindeks) (M7) — 2026-07-30
 - [x] T-63: 20 definisi topik 1 kalimat → `src/content/topics/*.md`, membuka M7. Sumber: 17 dari 20 ditulis user (Bahasa Indonesia, diserahkan lewat file `worksheet.txt` merespons worksheet Artifact sesi ini) — **diterjemahkan ke English** per konvensi `docs/RULES.md` "konten publik English, docs Indonesia" (topik adalah konten publik, dirender di `/topics/[topic]`), diterjemahkan sedekat mungkin ke definisi asli user, bukan ditulis ulang bebas. 5 sisanya (`maplibre`, `python`, `coastal-planning`, `d3`, `mdx`) tidak disuplai user (dua terakhir cuma diisi nama teknologinya sendiri, bukan definisi) — **ditulis sendiri** karena kelimanya fakta objektif tentang teknologi publik (bukan opini/pengalaman pribadi pemilik situs), mengikuti pola definisi user yang sudah ada (kalimat faktual singkat, bukan personal); ditandai eksplisit di sini supaya user tahu persis mana yang perlu ditinjau ulang. `title` tiap file = slug tag itu sendiri (sesuai skema `content.config.ts`), `aliases`/`related` dibiarkan default `[]` — tidak ada override manual hari ini. `.gitkeep` di direktori dihapus (sudah tidak perlu, direktori tidak lagi kosong). Diverifikasi lewat `astro preview` sungguhan: `/topics/gis` merender definisi persis seperti ditulis, notasi "Topic · 6 plates · 2 project · 4 research" tetap benar (tidak berubah dari T-56); `/topics` index 20 chip tetap benar; nol console error. `npm run build` hijau, 44 halaman, Pagefind naik 2126→2172 kata (definisi baru terindeks, sesuai ekspektasi — bukan regresi). T-64/T-65 belum dikerjakan (M7) — 2026-07-30

@@ -85,7 +85,7 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
       {!isScrollytelling && <p class="post-dek">{summary}</p>}
     </header>
 
-    <div class="post-body">
+    <div class:list={['post-body', isScrollytelling && 'post-body-wide']}>
       <div class="post-main">
         {
           !isScrollytelling && cover &&
@@ -267,8 +267,15 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
     grid-template-columns: 1fr;
     gap: 32px;
   }
+  /* Scrollytelling posts (.post-body-wide) skip this split — T-67. The
+     island already owns a 5/7 internal grid (Scrollytelling.tsx) sized
+     for the full --container-shell width; splitting .post-main down to
+     --container-prose (680px) on top of that squeezed its columns to
+     ~316px each (~38ch/line, measured) and left the rail (416px) wider
+     than the island's own text column. Non-scrollytelling posts are
+     unaffected — they still want the 680px prose measure. */
   @media (min-width: 1024px) {
-    .post-body {
+    .post-body:not(.post-body-wide) {
       grid-template-columns: var(--container-prose) 1fr;
       gap: 48px;
       align-items: start;
@@ -313,6 +320,31 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
     .post-rail {
       border-left: 1px solid var(--color-line);
       padding-left: 24px;
+    }
+  }
+
+  /* Scrollytelling posts: the rail sits BELOW the island, full width, not
+     beside it (T-67) — the island already has its own 2-column narrative
+     (text + sticky viz); a third column squeezed alongside it is the
+     actual design mistake, not just a width shortage (measured: the rail
+     at 416px was wider than the island's own former text column at
+     316px). A horizontal divider replaces the vertical one, and the rail
+     blocks lay out side by side across the full width instead of
+     stacking, matching the layout's real proportions. */
+  .post-body-wide .post-rail {
+    border-left: none;
+    padding-left: 0;
+  }
+  @media (min-width: 1024px) {
+    .post-body-wide .post-rail {
+      border-left: none;
+      padding-left: 0;
+      border-top: 1px solid var(--color-line);
+      padding-top: 24px;
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
     }
   }
 
