@@ -3,121 +3,117 @@
 <!-- SNAPSHOT file: overwrite it, do not append. Updated at every session close
      by /project-status, grounded in git log — not recall. -->
 
-- Updated: 2026-07-30
-- Milestone: **M1–M7 semuanya selesai.** M6 "Atlas" (S1–S5, T-45–T-62) dan
-  M7 lapisan editorial (T-63–T-65) keduanya tutup dan sudah di-push. Tidak
-  ada milestone aktif — lihat "Next steps" untuk backlog tersisa (bukan
-  milestone baru).
+- Updated: 2026-08-04
+- Milestone: **M1–M8 semuanya selesai.** M8 "Perbaikan visual & suara
+  editorial" (T-66–T-69) dibuka dan ditutup dalam satu sesi, dipicu
+  langsung oleh pemilik situs membuka situs live sendiri. Tidak ada
+  milestone aktif — M9 (3 artikel naratif baru) menunggu materi dari
+  pemilik situs (lihat "Next steps").
 
 ## Current status
 
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Semua
-sudah di-push**, situs live menyajikan Atlas + lapisan editorial penuh.
+(public) terhubung ke Vercel. **4 commit M8 belum di-push** — `main` lokal
+4 commit di depan `origin/main` (keputusan push tetap menunggu user,
+konsisten dengan pola sesi-sesi sebelumnya). Situs live saat ini masih
+menyajikan build M7 (Atlas + lapisan editorial), belum menyajikan
+perbaikan M8.
 
-Situs sekarang punya **satu identitas visual, "Atlas"** — dual-mode
-Reading/Immersive (M5) sudah dibongkar total (ADR-004). 9 token warna
-berperan ketat, tipografi Archivo (self-hosted, sumbu `wdth`) + IBM Plex
-Mono untuk notasi, radius nol di seluruh sistem, satu wadah konten `Plate`
-(3 ukuran), rail legenda 224px permanen (`LegendRail`+`TopicChip`) yang
-jadi drawer di <1024px, collar 2-baris, dan search sungguhan (dialog
-Pagefind, token Atlas, buka lewat tombol/`/`, tutup `Esc`).
+**M8 dipicu masukan konkret** (`Masukan untuk Knowledge Hub.md` dari
+pemilik situs, 2026-08-04) — 3 dari 4 masalah yang dilaporkan terbukti
+nyata lewat pengukuran `astro preview` sungguhan, dan verifikasi
+menemukan 1 masalah tambahan yang belum pernah dilaporkan:
 
-**Lapisan editorial (M7) sekarang terisi penuh** — struktur M6 tidak lagi
-kosong:
-- **20/20 topik** punya definisi 1-kalimat di `/topics/[topic]` (17 dari
-  pemilik situs, 5 fakta teknologi objektif ditulis langsung).
-- **11/11 post** punya cross-link inline di body-nya sendiri (mulai dari
-  nol) — 8 post mencapai ≥3 tautan lewat kandidat shared-tag berperingkat;
-  4 post (`jabodetabek-connect` + 3 foto Tanggamus) sengaja di 2 tautan
-  karena kandidat nyata memang cuma segitu, bukan dipaksakan.
-- **6 post** punya stamp `impact` (Stations/Lines, Projects mapped,
-  Nodes, Sub-districts, Cultural space mapped, Characteristic indicators)
-  — tiap angka dikutip dari konten post yang sudah terbit, bukan dikarang.
-  5 post lain (Cikarang, Building knowledge-hub, 3 foto) sengaja tanpa
-  `impact` — field itu memang tidak cocok untuk kontennya.
+- **T-67 — scrollytelling timpang, dua akar berbeda**: desktop, grid
+  `680px 1fr` T-57 tidak sengaja ikut membungkus post scrollytelling,
+  menyempitkan kolom teks internalnya ke ~316px (~38 karakter/baris);
+  diperbaiki dengan `post-body-wide` yang melepas post scrollytelling ke
+  lebar penuh `--container-shell` + rail pindah ke bawah island + kolom
+  internal jadi 5/7 (bukan 6/6). Mobile: dock viz 38vh menutupi teks
+  section karena `min-height` section dihitung terhadap viewport penuh,
+  bukan area baca tersisa; diperbaiki dengan menurunkan dock ke 28vh
+  (memberi margin 2vh, bukan pas-pasan).
+- **T-68 — collar mobile 305px → 147px**: ditemukan saat verifikasi T-67,
+  bukan dilaporkan user. Padding horizontal 48px/8px tanpa syarat di
+  semua viewport; restrukturisasi markup (wordmark/nav/search jadi 3
+  saudara langsung, bukan nav+search bersarang dalam satu wrapper) + flex
+  `order` di `<640px` supaya nav tetap 4 link penuh (bukan hamburger).
+- **T-66 — cropping cover**: akar masalah `.plate-cover { height: 100% }`
+  membuat tinggi cover ikut panjang teks tetangganya, bukan rasio
+  gambarnya — diganti `aspect-ratio: 16/10`, di-scope ke `≥480px` saja
+  (perilaku `<480px` sudah benar sejak T-55, sengaja tidak disentuh). Dua
+  bug tersembunyi ditemukan lewat pengujian (bukan kelihatan dari kode):
+  urutan CSS source membuat override media query kalah dari aturan dasar;
+  grid item `min-height: auto` bawaan membuat kotak tetap mengembang
+  untuk gambar lebih tinggi dari 16:10. 3 cover project di-regenerate
+  (dua masih pakai tanah krem Reading Mode M5, satu masih tanah gelap
+  Immersive Mode M5 — keduanya sudah mati sejak ADR-004) lewat
+  `scripts/generate-cover.mjs` baru (di-commit permanen, beda dari
+  generator T-33 M5 yang dibuang sekali pakai) + SOP baru
+  `docs/design/COVER_ART.md`.
+- **T-69 — pass humanizer, menutup M8**: kosakata AI generik (testament,
+  vibrant, tapestry, dst.) nol match di seluruh prosa — situs sudah
+  spesifik dan bervariasi. Satu-satunya pola bervolume nyata: em/en dash
+  penghubung narasi (0–41 per file), diganti titik/koma/titik-dua/kurung.
+  `building-knowledge-hub.mdx` ditulis ulang sungguhan (bukan cuma
+  dihaluskan — isi lama teks benih) dari fakta `PROJECT_BRIEF.md` +
+  riwayat milestone nyata. Cross-link M7 (T-64) dikonfirmasi selamat
+  100% lewat hitung ulang.
 
-IA final: **Index** (`/`, Sheet Index) · **Topics** (`/topics` +
-`/topics/[topic]`, semuanya terisi) · **Projects** (`/projects/[name]`) ·
-**About** (`/about`, Dossier). `/posts/[slug]` tidak berubah URL-nya.
-`vercel.json` menangani 3 redirect 308, sudah berlaku di produksi.
-
-Aksesibilitas: skip-link, `aria-current="page"`, ring fokus
-`2px solid var(--color-research)`, kontrol+chip ≥44px, 15 chart Recharts
-dengan tabel data `sr-only`, `useReducedMotion()` di 28 fungsi `Viz*`.
-
-**Sengaja mati** (dicatat ADR-004): registration seam (M5/T-42), carousel
-drag Featured Projects (M4/T-24), toggle mode.
+**Belum berubah dari sebelumnya** (masih berlaku): identitas visual
+Atlas (9 token warna, Archivo+IBM Plex Mono, radius nol, `Plate`,
+`LegendRail`, collar 2-baris, search Pagefind); lapisan editorial M7 (20
+definisi topik, 11/11 post cross-link, 6 post `impact`); IA final Index/
+Topics/Projects/About; aksesibilitas (skip-link, `aria-current`, ring
+fokus, kontrol ≥44px, tabel `sr-only`, `useReducedMotion()`).
 
 **Aksi tersisa untuk user (bukan kode):**
-1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
+1. **Push 4 commit M8** ke `origin/main` bila sudah puas dengan hasilnya
+   (situs live belum menyajikan perbaikan M8 sampai di-push).
+2. Materi untuk M9 (3 artikel naratif baru) — lihat "Next steps".
+3. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
    M3 — toggle akun, tidak bisa disentuh dari kode).
-2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
+4. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli, atau berikan API key PSI. Lihat "Blockers" di bawah.
-3. Verifikasi pasca-deploy: redirect 308 + 20 halaman topik baru di domain
-   live sungguhan (belum pernah diuji nyata, cuma lokal sebelum push).
-4. **Arahan berikutnya** — M6/M7 keduanya tutup; tidak ada task aktif.
-   Beri tahu milestone/task baru, atau item Backlog (T-36/T-20/T-21) yang
-   ingin dikerjakan.
 
-## Sesi ini (M6 push + M7 T-63/T-64/T-65, 2026-07-30)
+## Sesi ini (M8 — T-66–T-69, 2026-08-04)
 
-Sesi panjang menutup M6 sepenuhnya lalu langsung membuka dan menutup M7:
+Dibuka lewat lampiran `Masukan untuk Knowledge Hub.md` pemilik situs (4
+poin: cropping cover, scrollytelling timpang, teks terasa AI, 3 artikel
+baru). Poin ke-4 sengaja dipisah jadi M9 (butuh materi user). Sebelum
+menulis rencana, tiap keluhan diukur langsung lewat `astro preview` +
+`getBoundingClientRect`/`getComputedStyle` di 375/768/1280px — bukan
+ditebak dari kode. Urutan eksekusi: T-67 (paling terisolasi) → T-68
+(ditemukan saat verifikasi T-67) → T-66 (SOP + generator + regenerate +
+fix) → T-69 (humanizer, terakhir supaya diverifikasi di layout final).
 
-1. **Push M6** — `git push origin main`, 19 commit, `1fd6cd2..d39c524`.
-2. **Worksheet Artifact** disiapkan untuk M7 — menghitung post-count per
-   topik, kandidat cross-link berperingkat shared-tag (skema sama dengan
-   `getRelatedPosts()`), dan 6 kandidat `impact` yang dikonfirmasi cocok
-   dengan konten post yang sudah terbit. Font asli situs (Archivo + IBM
-   Plex Mono) di-embed base64 supaya worksheet terasa seperti bagian dari
-   sistem Atlas, bukan dokumen generik.
-3. **T-63** — user menyerahkan 17/20 definisi topik (Bahasa Indonesia)
-   merespons worksheet; diterjemahkan ke English (konten publik, per
-   `docs/RULES.md`); 5 sisanya (istilah teknologi objektif) ditulis
-   langsung. Push: `d39c524..37b8d6c`.
-4. **T-64** — `ScrollytellingSection.body` diubah `string`→`ReactNode`
-   supaya 4 modul scrollytelling bisa membawa tautan JSX, bukan cuma 7
-   post MDX biasa. Semua 11 post dapat cross-link inline (8 mencapai ≥3,
-   4 sengaja di 2 — kandidat nyata memang cuma segitu, tidak dipaksakan).
-   Beberapa tautan resiprokal dengan paralel metodologis nyata (mis. "19
-   indikator" muncul persis di Bontang DAN Jabung; kernel-density di
-   Cikarang DAN Bontang).
-5. **T-65** — 6 blok `impact` frontmatter, tiap angka dikutip dari konten
-   post sendiri (Jabodetabek-Connect summary, CDMP body heading, Jakarta
-   Transit Heritage Explorer body, data modul scrollytelling Jabung/RPPLH/
-   Bontang).
-6. **STATE.md fixup kecil** (`5b26d3b`) — koreksi status push sebelum T-63
-   sempat di-commit.
+4 commit lokal (`0b2b385`, `bff1c2b`, `b4529f9`, `fac39d3`), **belum
+di-push**. Tiap task diverifikasi lewat `astro preview` sungguhan di
+ketiga viewport, nol console error, `npm run build` hijau tiap kali (44
+halaman). DEBT #3 baru dicatat (di luar scope M8): 3 foto Tanggamus
+15–20MB per berkas ditemukan saat pengukuran cover, melanggar batas berat
+berkas SOP `COVER_ART.md`.
 
-Diverifikasi lewat `astro preview` sungguhan di tiap langkah + teknik
-`client:load`/`useState(ids[N])` sementara untuk modul scrollytelling
-(`docs/memory/LESSONS.md`, `IntersectionObserver` tidak fire di tooling
-sesi ini) — `git diff` dikonfirmasi bersih sebelum tiap rebuild final.
-`npm run build` hijau di setiap task, 44 halaman. Nol console error di
-semua halaman yang diuji.
+## Last session (M7 T-63–T-65, 2026-08-02)
 
-## Last session (M6 Atlas — S4+S5 penutup, T-59–T-62, 2026-07-29/30)
-
-4 commit (T-59, T-60, T-61 kode; T-62 dokumentasi), menutup M6 total.
-Detail penuh di `docs/TASK.md` Done. Ringkasan: `useReducedMotion()` +
-tabel data `sr-only` di 4 modul scrollytelling (T-59); dialog search
-Pagefind token Atlas (T-60, menutup DEBT #1); OG image ikut Atlas (T-61);
-14 item verification checklist + remeasurement + 6 dokumen diperbarui
-(T-62). 2 lesson baru — `window.innerWidth` tidak bisa dipercaya di
-tooling ini saat elemen `position:fixed` ada di DOM, dan spesifisitas
-`html:root` vs `:root` untuk widget pihak ketiga lazy-loaded.
+3 commit menutup M7 total (dibuka dan ditutup di sesi yang sama): T-63
+(20 definisi topik), T-64 (cross-link inline 11/11 post), T-65 (6 blok
+`impact`). Detail penuh di `docs/TASK.md` Done.
 
 ## Next steps
 
-1. **Tidak ada task aktif** — M6 dan M7 keduanya tutup. Tunggu arahan user
-   untuk milestone/task berikutnya (M8 belum ada di ROADMAP).
-2. Verifikasi pasca-deploy: cek redirect 308 + halaman topik baru di
-   domain live sungguhan.
+1. **M9 — 3 artikel naratif baru.** Butuh materi dari pemilik situs
+   dulu — apa isinya, dan (karena murni narasi tanpa data, tidak bisa
+   pakai format scrollytelling yang dibatasi `type: research` lewat
+   `.refine()` di `content.config.ts`) mungkin butuh format editorial
+   baru. Skill `emil-design-eng` relevan untuk merancang format itu.
+2. User memutuskan kapan push 4 commit M8 ke `origin/main`.
 3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+4. DEBT #3 (3 foto Tanggamus 15–20MB) — task tersendiri, tidak mendesak.
+5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 

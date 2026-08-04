@@ -620,3 +620,71 @@ third-party widget's CSS-custom-property API when that widget's own
 stylesheet is loaded on-demand (lazy search UIs, embedded players, chat
 widgets, map libraries) rather than up front alongside the site's own
 CSS.
+
+## 2026-08-04 — Two rules targeting the same selector at different specificity-ties resolve by SOURCE ORDER, not by which one is inside a `@media` block [harvest-candidate]
+
+Tags: #css #specificity #media-queries
+
+T-66's first attempt at fixing `Plate.astro`'s cover-image cropping wrote
+the `@media (min-width: 480px)` override (`.plate-cover img { height:
+100% }`) physically ABOVE a same-selector base rule (`.plate-cover img {
+height: auto }`) later in the file. Both compile to the identical selector
+at identical specificity (Astro's scoped-style hash applies equally to
+both), so at `>=480px`, where the media query legitimately matches, the
+base rule still won every time — because it appeared LATER in the
+compiled stylesheet's source order, and `@media` grants zero extra
+cascade priority over an unlayered rule outside it. The bug was silent:
+`getComputedStyle` on the wrapper div correctly showed the media query's
+`aspect-ratio` taking effect (that property had no competing base-rule
+declaration), which made it look like the whole override was live, while
+the coupled `height` property quietly kept losing.
+
+**Fix**: physically place the base (unconditional) rule BEFORE the
+breakpoint override in the source file, so the override — which only
+applies when its `@media` condition matches — is also the LATER rule for
+that selector when both are in play, and therefore wins on the tie.
+**Generalized rule**: when writing a `@media`-scoped override for a
+selector that also has an unconditional base rule, always put the base
+rule first in the file and the override after. Verify with the compiled
+CSS output (`grep` the built `.css` file for the selector), not just
+`getComputedStyle` on one property — a partial win (some properties
+correctly overridden, others not) can look like full success if you only
+check the properties that happen to have no conflicting base declaration.
+
+## 2026-08-04 — CSS Grid/Flex items' implicit `min-height: auto` (content-based) can silently override `aspect-ratio` [harvest-candidate]
+
+Tags: #css #grid #aspect-ratio
+
+Same T-66 fix, second layer of the same bug: even after correcting the
+cascade-order issue above, cover images whose native aspect ratio was
+"taller" than the target 16:10 (e.g. a 0.80-ratio portrait-oriented
+photo) still rendered at their own native height instead of the
+`aspect-ratio: 16/10`-constrained one, while images at or wider than
+16:10 rendered correctly. Root cause: `.plate-cover` is a grid item
+(inside `.plate-lead.plate-with-cover`/`.plate-standard.plate-with-cover`'s
+`grid-template-columns: 1fr var(--plate-cover-width)`), and grid/flex
+items get an implicit `min-height: auto` by default — meaning the browser
+won't shrink the item below its content's own intrinsic minimum size,
+even when `aspect-ratio` on the same element says it should be shorter.
+The `<img>` inside, sized via `height: auto` at that point in the fix,
+still carried its own native-ratio height as "content," and for
+taller-than-16:10 images that content height exceeded what `aspect-ratio`
+implied, so the grid's auto-min-size protection kept the box tall instead
+of letting it clip. Confirmed by comparing `.plate-cover`'s
+`getBoundingClientRect()` across all 10 covers on the same page: exactly
+the images with native ratio below 1.6 (i.e., taller than 16:10) were the
+ones still showing their own uncropped height; every image at or above
+1.6 coincidentally already satisfied `aspect-ratio` on its own and looked
+fine, which is what made the bug easy to miss on a partial spot-check.
+
+**Fix**: add `min-height: 0` explicitly to the grid-item selector
+alongside `aspect-ratio`. **Generalized rule**: `aspect-ratio` on a
+flex/grid item is not a hard guarantee by itself — it competes with
+that item's automatic content-based minimum size, which wins whenever
+the content (directly, or a child sized with `height: 100%`/`auto`
+against it) is intrinsically taller/wider than the ratio would produce.
+Always pair `aspect-ratio` with `min-height: 0` (row axis) and/or
+`min-width: 0` (column axis) on grid/flex items, and verify across a
+DATA SET with varied intrinsic sizes (not just one or two samples) —
+a single test image that happens to already match the target ratio
+will show a false pass.
