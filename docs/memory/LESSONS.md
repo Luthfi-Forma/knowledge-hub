@@ -688,3 +688,37 @@ Always pair `aspect-ratio` with `min-height: 0` (row axis) and/or
 DATA SET with varied intrinsic sizes (not just one or two samples) —
 a single test image that happens to already match the target ratio
 will show a false pass.
+
+## 2026-08-04 — An editing policy from the immediately-previous task can bleed into the next one when the next task's content looks similar but has the opposite rule [harvest-candidate]
+
+Tags: #content-editing #process
+
+T-69 (same session) ran a humanizer pass removing narrative em/en dashes
+from every site-authored prose file. T-70, immediately after, transcribed
+3 finished personal essays the site owner handed over verbatim, with an
+explicit decision already made (and stated back to the user) to preserve
+the owner's own punctuation/voice exactly, not edit it. Despite that
+explicit decision, the first draft of 2 of the 3 files still quietly
+replaced several of the owner's own em dashes with commas/periods while
+typing them out, the exact edit T-69 had just spent an entire task
+applying everywhere else — a stale editing reflex from the task
+immediately prior carried over into a task with the opposite rule,
+without any conscious decision to break the stated policy.
+
+Caught only by deliberately counting dash occurrences in the source
+(read from the conversation's own tool-result content) and diffing
+against `grep -o "—\|–" file | wc -l` on the written file — a plain
+correctness read-through of the new files did not catch it, because the
+altered sentences still read perfectly naturally (a removed em dash
+becoming a comma rarely looks "wrong" on inspection, it just isn't what
+the source said).
+
+**Generalized rule**: when a task's content-handling policy is the
+*opposite* of the immediately-preceding task's (edit vs. preserve-
+verbatim, translate vs. keep-original, summarize vs. quote-exactly), do
+not trust a normal proofread to catch policy bleed — the output can be
+fluent and self-consistent while still silently disagreeing with the
+source. Verify with an object comparison against the actual source
+(character/substring counts, diff, or line-by-line match), not a
+read-through, whenever the new task's rule is "preserve X exactly" and
+the previous task's rule was "change X everywhere."

@@ -10,12 +10,13 @@
 
 ## Now
 
+**M9 — 3 artikel naratif baru: selesai** (T-70, lihat Done — dibuka+
+ditutup 2026-08-04). Tidak ada task aktif.
+
 **M8 — Perbaikan visual & suara editorial: selesai** (T-66–T-69, lihat
 Done — dibuka+ditutup 2026-08-04, dipicu `Masukan untuk Knowledge Hub.md`
 dari pemilik situs). Rencana penuh + pengukuran pendukung:
 `C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
-Tidak ada task aktif — M9 (3 artikel naratif baru) menunggu materi dari
-pemilik situs.
 
 **M6 — Atlas: selesai** (S1–S5, T-45–T-62, lihat Done — di-push). Spesifikasi:
 `docs/design/atlas/README.md`. Keputusan:
@@ -31,6 +32,67 @@ pemilik situs.
 
 ## Done
 
+- [x] T-70: publish 3 artikel naratif baru `type: article`, membuka dan
+  menutup M9 dalam satu sesi. Materi diserahkan langsung oleh pemilik
+  situs dari vault pribadi Obsidian (bukan ditulis untuk situs ini).
+  **Bahasa Indonesia** — deviasi eksplisit dari `docs/RULES.md` "konten
+  publik English" dicatat di file yang sama (keputusan user: risiko salah
+  nuansa menerjemahkan esai berkutipan tokoh publik lebih besar daripada
+  manfaat konsistensi bahasa). **Nol kalimat baru ditambahkan ke prosa
+  siapa pun** — hanya adaptasi struktural minimal: level heading
+  dinormalisasi untuk `TableOfContents` (`### `→`## ` di satu artikel
+  yang H3-nya tidak punya H2 induk), satu baris kosong ditambah sebelum
+  satu heading yang di sumber aslinya menempel langsung ke paragraf
+  sebelumnya, bagian "Reference:" kosong di satu artikel dihapus (nol
+  isi untuk ditampilkan, konsisten dengan aturan "nol placeholder"
+  situs). **Dash prosa asli (em/en dash) sengaja TIDAK disentuh** —
+  berbeda dari T-69: itu pass humanizer untuk teks yang ditulis untuk
+  situs ini, sedangkan ketiga artikel ini teks jadi milik user sendiri,
+  jadi voice aslinya (termasuk gaya dash) dipertahankan persis. **Bug
+  ditemukan & diperbaiki sebelum commit**: draf pertama dua dari tiga
+  file secara tidak sengaja mengganti sebagian dash prosa jadi koma/titik
+  (refleks dari kerja T-69 sebelumnya di sesi yang sama) — ditemukan
+  lewat `grep` hitung dash per file dibanding count manual dari sumber
+  asli, diperbaiki di 4 titik sebelum build final; artikel ketiga
+  ditranskripsi lebih hati-hati sejak awal dan dash-nya cocok
+  sempurna dengan sumber pada percobaan pertama (11 dash, semuanya
+  legitimate — 7 prosa penghubung + 4 rentang tahun). **3 post**:
+  "Data Spasial dan Pengambilan Keputusan dalam Perencanaan Wilayah"
+  (slug `data-spasial-perencanaan-wilayah`, tags `gis`+`urban-planning`
+  — keduanya tag existing, nol tag baru); "Ketika Denial Presiden
+  Berbuah Ancaman Krisis" (slug `denial-presiden-krisis-ekonomi`, tag
+  baru `economic-policy` — domain kebijakan ekonomi/fiskal, nol tag
+  existing yang cocok); "Paradoks Prioritas Transportasi Indonesia"
+  (slug `paradoks-transportasi-indonesia`, tags `transportation`+
+  `urban-planning`, existing, plus daftar referensi akademik/berita
+  ~30 entri dipertahankan utuh sebagai bagian `## Referensi`). **Topik
+  baru** `economic-policy.md` ditulis langsung (definisi faktual netral
+  satu kalimat tentang bidang studi, mengikuti pola 5 definisi objektif
+  T-63 — bukan opini pribadi, jadi aman ditulis langsung, bukan
+  menunggu user). Semua `type: article` (bukan `research`) — cocok
+  dengan `.prose-article`'s treatment drop-cap + pull-quote yang sudah
+  ada sejak T-23, nol komponen baru dibutuhkan. **Sengaja tidak
+  diberi**: `cover` (opsional, matching `building-knowledge-hub`'s
+  precedent — teks tanpa aset visual sumber), `impact` (field itu
+  berarti hasil terukur dari SEBUAH KARYA, bukan sekadar angka yang
+  disebut dalam esai — dipaksakan akan salah semantik), `coordinates`
+  (topik nasional/lintas-negara, bukan satu lokasi nyata), cross-link
+  inline manual (menyisipkan tautan baru ke dalam kalimat milik user
+  akan berarti mengedit prosa mereka — dibiarkan mengalir lewat rail
+  "Related plates" otomatis via shared tags, bukan diedit tangan).
+  `date: 2026-08-04` untuk ketiganya (tanggal publish ke situs, bukan
+  tanggal ditulis di vault pribadi — sama dengan konvensi
+  `building-knowledge-hub`). Diverifikasi lewat `astro preview`
+  sungguhan: `/posts/paradoks-transportasi-indonesia` — 8 H2 (TOC) + 6
+  H3 nested benar, `.prose-article` aktif; `/posts/denial-presiden-
+  krisis-ekonomi` — 9 section TOC, kutipan blockquote render benar;
+  homepage — breadcrumb "Sheet index · 14 plates · 21 topics", ketiga
+  post baru muncul sebagai 3 plate terbaru; `/topics/economic-policy` —
+  definisi + 1 artikel terkait render benar. Nol overflow horizontal di
+  375px pada artikel terpanjang, nol console error di semua halaman
+  yang diuji. `npm run build` hijau, 44→48 halaman (3 post + 1 halaman
+  topik baru), Pagefind 2271→4016 kata (wajar — 3 esai panjang baru)
+  (M9) — 2026-08-04
 - [x] T-69: pass skill `humanizer` di seluruh prosa situs, menutup M8.
   **Diagnosis dulu, bukan asumsi**: grep pola kosakata AI (testament,
   vibrant, tapestry, delve, crucial, boasts, showcase, dst.) di seluruh

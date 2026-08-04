@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-08-04 (M8 selesai total — T-66–T-69)
+- Updated: 2026-08-04 (M9 selesai total — T-70)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -16,6 +16,7 @@
 | M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | done |
 | M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | done** |
 | M8 | Perbaikan visual & suara editorial | Cover index tinggi konsisten (`aspect-ratio` menggantikan crop erratic); scrollytelling desktop 5/7 + rail di bawah island, mobile dock tidak lagi menutupi teks; collar mobile 305px→147px; nol em/en dash naratif di seluruh prosa situs | done |
+| M9 | 3 artikel naratif baru | 3 post `type: article` ter-publish dari materi pemilik situs (14 post total); 1 tag baru `economic-policy`; nol kalimat prosa milik user diedit | done |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -54,8 +55,11 @@ T-68 (collar mobile 305px→147px), T-66 (SOP cover art +
 `Plate.astro`), T-69 (pass `humanizer` di seluruh prosa situs, nol
 fakta/cross-link berubah). Rencana penuh + pengukuran pendukung:
 `C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
-Tidak ada milestone aktif — M9 (3 artikel naratif baru) menunggu materi
-dari pemilik situs. Lihat "Phase detail" untuk riwayat lengkap.
+**M9 — 3 artikel naratif baru selesai total** (T-70, dibuka+ditutup di
+sesi yang sama, 2026-08-04): materi diserahkan langsung dari vault
+pribadi pemilik situs, dipublish Bahasa Indonesia (deviasi dicatat
+`docs/RULES.md`), nol kalimat prosa milik user diedit. Tidak ada
+milestone aktif. Lihat "Phase detail" untuk riwayat lengkap.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
@@ -218,6 +222,19 @@ mobile) yang belum pernah dilaporkan.
   bervolume nyata adalah em/en dash naratif, diganti titik/koma/titik-
   dua/kurung; `building-knowledge-hub.mdx` ditulis ulang sungguhan dari
   fakta `PROJECT_BRIEF.md`; nol cross-link M7 hilang).
+
+### M9 — 3 artikel naratif baru
+
+Dibuka dan ditutup dalam satu sesi (2026-08-04) — pemilik situs
+menyerahkan 3 artikel jadi dari vault Obsidian pribadi langsung setelah
+M8 tutup.
+
+- [x] 3 post `type: article` ter-publish (T-70, 2026-08-04 — "Data
+  Spasial dan Pengambilan Keputusan dalam Perencanaan Wilayah",
+  "Ketika Denial Presiden Berbuah Ancaman Krisis", "Paradoks Prioritas
+  Transportasi Indonesia"; Bahasa Indonesia, deviasi dicatat
+  `docs/RULES.md`; nol kalimat prosa milik user diedit — hanya adaptasi
+  struktural heading; 1 tag baru `economic-policy`).
 
 ## Icebox
 

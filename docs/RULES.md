@@ -13,6 +13,7 @@ where this project deliberately deviates from an OS standard, and why.
 
 | OS rule (file + rule) | This project does | Why / ADR |
 |---|---|---|
+| `CLAUDE.md` — "Konten publik fill language: **English**" | 3 post M9 (`data-spasial-perencanaan-wilayah`, `denial-presiden-krisis-ekonomi`, `paradoks-transportasi-indonesia`) diterbitkan **Bahasa Indonesia**, bukan diterjemahkan | Keputusan eksplisit user (2026-08-04): artikel esai analitis panjang dengan kutipan tokoh publik dan angka spesifik — risiko salah nuansa kalau diterjemahkan tanpa review manual lebih besar daripada manfaat konsistensi bahasa. Ketiga artikel ini juga suara asli penulis (dari vault pribadi), bukan konten yang ditulis untuk situs ini — sama seperti 17 definisi topik T-63 yang tidak disentuh karena "sudah suara aslinya" |
 | `hooks/profiles/standard.json` — OS's default profile also includes `data_validation_check.py` and (in `strict`) `perf_reminder.py` | Only `commit_message_gate.py` + `code_quality_reminder.py` wired | No JSON/GeoJSON data files exist anywhere in this project, and no map/render-sensitive components exist (this is a content blog, not a map app) — those two hooks would never fire, so they're omitted rather than wired inert. |
 
 ## Known limitation (not a deviation to fix ad-hoc)
