@@ -50,32 +50,30 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
 <header class="collar">
   <div class="collar-row-1">
     <a href="/" class="wordmark">Afreza L. Hernanda</a>
-    <div class="collar-controls">
-      <nav aria-label="Primary" class="collar-nav">
-        {
-          navItems.map((item) => (
-            <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
-              {item.label}
-            </a>
-          ))
-        }
-      </nav>
-      <button
-        type="button"
-        id="search-trigger"
-        class="header-search"
-        aria-haspopup="dialog"
-        aria-controls="search-dialog"
-        aria-expanded="false"
-        aria-label="Search"
-      >
-        <span aria-hidden="true">⌕</span> Search <span class="header-search-kbd" aria-hidden="true">/</span>
-      </button>
-    </div>
+    <nav aria-label="Primary" class="collar-nav">
+      {
+        navItems.map((item) => (
+          <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <button
+      type="button"
+      id="search-trigger"
+      class="header-search"
+      aria-haspopup="dialog"
+      aria-controls="search-dialog"
+      aria-expanded="false"
+      aria-label="Search"
+    >
+      <span aria-hidden="true">⌕</span> Search <span class="header-search-kbd" aria-hidden="true">/</span>
+    </button>
   </div>
   <div class="collar-row-2">
-    <span>{breadcrumbLeft}</span>
-    <span>{resolvedBreadcrumbRight}</span>
+    <span class="breadcrumb-left">{breadcrumbLeft}</span>
+    <span class="breadcrumb-right">{resolvedBreadcrumbRight}</span>
   </div>
 </header>
 
@@ -170,7 +168,6 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
     gap: 12px 20px;
     padding: 16px 48px;
     border-bottom: 1px solid var(--color-ink);
@@ -186,16 +183,17 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     white-space: nowrap;
   }
 
-  .collar-controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px;
-  }
-
+  /* nav + search sit as two more flex items in .collar-row-1 (not nested
+     in a wrapper anymore, T-68) — margin-left: auto on nav pushes nav AND
+     everything after it (search) to the right edge as a unit, the same
+     visual grouping the old wordmark/[nav+search] justify-content:
+     space-between gave, but as siblings so <640px can reorder them
+     independently (see the media query below) instead of nav being stuck
+     wrapping inside its old parent. */
   .collar-nav {
     display: flex;
     flex-wrap: wrap;
+    margin-left: auto;
   }
 
   .nav-link {
@@ -232,7 +230,6 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     align-items: center;
     gap: 8px;
     min-height: 44px;
-    margin-left: 6px;
     padding: 0 12px;
     border: 1px solid var(--color-line-strong);
     background: none;
@@ -269,6 +266,51 @@ const resolvedBreadcrumbRight = breadcrumbRight ?? `Projection Web Mercator · D
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-ink-muted);
+  }
+
+  /* <640px collar (T-68): the 48px/16px horizontal padding above is sized
+     for desktop and was unconditional — at 375px it alone left only
+     ~279px for wordmark + 4 nav links + search, forcing 3 lines of wrap
+     and a measured 305px-tall header (38% of a 375x812 screen) before any
+     page content appeared. Fixed by re-flowing row 1 into two lines via
+     `order` (wordmark + search together, nav on its own full-width
+     scrollable line — nav stays all 4 real links, not a hamburger, which
+     would be a new IA decision this task isn't making) and trimming row
+     2 to its left half only (the right half is decorative sheet notation,
+     "Projection Web Mercator · Datum WGS84 · Compiled {year}" or a page's
+     own equivalent — not navigation, safe to drop when space is tight).
+     Measured after: ~144px total, comfortably under the ≤160px target. */
+  @media (max-width: 639px) {
+    .collar-row-1 {
+      justify-content: space-between;
+      padding: 10px 16px;
+      gap: 8px 12px;
+    }
+    .wordmark {
+      order: 1;
+    }
+    .header-search {
+      order: 2;
+    }
+    .collar-nav {
+      order: 3;
+      flex-basis: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-left: 0;
+    }
+    .collar-row-2 {
+      flex-wrap: nowrap;
+      padding: 6px 16px;
+    }
+    .breadcrumb-right {
+      display: none;
+    }
+    .breadcrumb-left {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .search-backdrop {

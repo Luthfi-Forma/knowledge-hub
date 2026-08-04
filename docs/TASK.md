@@ -15,8 +15,6 @@
 pengukuran pendukung:
 `C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
 
-- [ ] T-68: collar mobile — header 305px di 375px turun ke ≤160px, nav tetap
-  4 item penuh (M8)
 - [ ] T-66: SOP `docs/design/COVER_ART.md` + `scripts/generate-cover.mjs`
   permanen + regenerate 3 cover project (palet M5 mati) + `Plate.astro`
   `aspect-ratio: 16/10` menggantikan `height: 100%` (M8)
@@ -39,6 +37,40 @@ pengukuran pendukung:
 
 ## Done
 
+- [x] T-68: collar mobile — header 305px di layar 375px turun ke 147px.
+  Akar masalah terukur, bukan ditebak: `.collar-row-1`/`.collar-row-2` di
+  `Header.astro` memakai padding horizontal `48px`/`8px` **tanpa syarat**
+  di semua viewport (nol media query di file ini sebelumnya) — di 375px
+  itu menyisakan cuma ~279px untuk wordmark + 4 nav link + tombol search,
+  memaksa wrap jadi 3 baris (`collar-row-1` 210px, `collar-row-2` 95px).
+  Nav dan tombol search juga bersarang dalam satu `<div class="collar-
+  controls">`, jadi keduanya cuma bisa wrap sebagai satu blok — tidak bisa
+  diatur ulang independen tanpa mengubah markup. **Restrukturisasi**:
+  `collar-controls` dihapus, wordmark/nav/search jadi 3 saudara langsung di
+  `.collar-row-1`; `margin-left: auto` di `.collar-nav` menggantikan
+  `justify-content: space-between` lama untuk tetap mengelompokkan
+  nav+search di kanan pada desktop (dikonfirmasi nol regresi visual).
+  **`<640px`**: `order` menyusun ulang jadi 2 baris — wordmark+search di
+  baris 1 (`justify-content: space-between`), nav di baris 2 sebagai
+  `flex-basis: 100%` + `flex-wrap: nowrap` + `overflow-x: auto` (tetap 4
+  link penuh, **bukan** hamburger — itu keputusan IA baru yang di luar
+  scope task ini). `collar-row-2` dipangkas ke `breadcrumbLeft` saja
+  (`breadcrumb-right` di-`display:none`) — teks kanan
+  ("Projection Web Mercator · Datum WGS84 · Compiled {year}" atau
+  ekuivalennya per halaman) adalah notasi dekoratif, bukan navigasi, aman
+  dihilangkan saat ruang sempit. Diverifikasi lewat `astro preview`
+  sungguhan: 375px — header **147px** (target ≤160px), 4 nav link satu
+  baris tanpa perlu scroll (`navScrollable: false`, `top` identik 62px
+  keempatnya), konten pertama (`.sheet-title`) naik dari y=373 ke **y=215**,
+  `aria-current="page"` masih benar, skip-link masih elemen pertama
+  `<body>`, target sentuh nav-link & search tetap 44px, nol overflow
+  horizontal (`window.scrollX` tetap 0 setelah `scrollTo(1000,0)`). 768px
+  (137px) dan 1280px (111px, posisi wordmark/nav/search identik piksel)
+  dikonfirmasi **nol regresi** dari baseline sebelum T-68. Dialog search
+  dicoba fungsional (bukan cuma visual) — klik trigger membuka dialog +
+  fokus pindah ke input, sama seperti sebelum restrukturisasi markup. Nol
+  console error. `npm run build` hijau, 44 halaman, Pagefind 2225 kata
+  (tidak berubah — T-68 murni layout) (M8) — 2026-08-04
 - [x] T-67: lebar & proporsi scrollytelling, membuka M8. Dipicu masukan
   pemilik situs (`Masukan untuk Knowledge Hub.md`, 2026-08-04) — "porsi
   konten tidak seimbang" pada post `presentation: scrollytelling`.
