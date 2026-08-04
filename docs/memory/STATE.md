@@ -13,10 +13,9 @@
 Situs live di
 [knowledge-hub-inky.vercel.app](https://knowledge-hub-inky.vercel.app), repo
 [github.com/Luthfi-Forma/knowledge-hub](https://github.com/Luthfi-Forma/knowledge-hub)
-(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **M8 (5
-commit) sudah di-push**; **M9 (T-70) belum di-push** — situs live saat ini
-menyajikan M8 (perbaikan cover/scrollytelling/collar/humanizer) tapi
-belum menyajikan 3 artikel baru M9.
+(public) terhubung ke Vercel — tiap push ke `main` auto-deploy. **Semua
+sudah di-push** (M8 5 commit + M9 1 commit) — situs live menyajikan
+perbaikan M8 dan 3 artikel baru M9 begitu Vercel selesai auto-deploy.
 
 **M8** memperbaiki 3 masalah nyata yang dilaporkan pemilik situs
 (cropping cover, scrollytelling timpang, teks terasa AI) plus 1 masalah
@@ -47,13 +46,11 @@ warna, Archivo+IBM Plex Mono, radius nol, `Plate`, `LegendRail`, collar
 `useReducedMotion()`).
 
 **Aksi tersisa untuk user (bukan kode):**
-1. **Push T-70 (M9)** ke `origin/main` bila sudah puas — situs live
-   belum menyajikan 3 artikel baru sampai di-push.
-2. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
+1. Aktifkan Web Analytics manual di dashboard Vercel (belum berubah sejak
    M3 — toggle akun, tidak bisa disentuh dari kode).
-3. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
+2. T-36 (baseline Lighthouse resmi) — jalankan PageSpeed Insights dari
    browser asli, atau berikan API key PSI. Lihat "Blockers" di bawah.
-4. DEBT #3 (3 foto Tanggamus 15–20MB per berkas) — task tersendiri,
+3. DEBT #3 (3 foto Tanggamus 15–20MB per berkas) — task tersendiri,
    tidak mendesak.
 
 ## Sesi ini (M8 T-66–T-69 + M9 T-70, 2026-08-04)
@@ -91,11 +88,10 @@ horizontal di 375/768/1280px di semua halaman yang diuji.
 
 1. **Tidak ada task aktif.** Tunggu arahan user untuk milestone/task
    berikutnya, atau item Backlog di bawah.
-2. User memutuskan kapan push commit M9 (T-70) ke `origin/main`.
-3. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
+2. T-36 (baseline Lighthouse resmi) masih di Backlog — perlu user
    menjalankan PageSpeed Insights dari browser asli, atau memberi API key.
-4. DEBT #3 (3 foto Tanggamus 15–20MB) — task tersendiri, tidak mendesak.
-5. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
+3. DEBT #3 (3 foto Tanggamus 15–20MB) — task tersendiri, tidak mendesak.
+4. T-20/T-21 (custom domain, arsip repo lama) masih di Backlog.
 
 ## Blockers
 
