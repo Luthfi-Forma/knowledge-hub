@@ -98,7 +98,7 @@ function VizProblem() {
         </motion.div>
       ))}
       <div className="mt-2 text-center text-[10px] text-ink-muted italic">
-        Four RTRW tiers — but which one is actually fit to lead growth?
+        Four RTRW tiers, but which one is actually fit to lead growth?
       </div>
     </div>
   );
@@ -134,7 +134,7 @@ function VizFinding1() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Capital candidates — IPD score &amp; facility-type count (of 19)</div>
+      <div className="mb-3 text-sm text-ink-muted">Capital candidates: IPD score &amp; facility-type count (of 19)</div>
       <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={CAPITAL_CANDIDATES} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
@@ -147,7 +147,7 @@ function VizFinding1() {
         </ResponsiveContainer>
       </div>
       <table className="sr-only">
-        <caption>Capital candidates — IPD score and facility-type count (of 19)</caption>
+        <caption>Capital candidates: IPD score and facility-type count (of 19)</caption>
         <thead>
           <tr>
             <th scope="col">Kecamatan</th>
@@ -210,7 +210,7 @@ function VizFinding2() {
         {HIERARCHY_TIERS.map((t, i) => (
           <div key={t.name} className="flex items-center gap-2">
             <span className="h-2.5 w-2.5" style={{ background: [ACCENT, SECOND, 'var(--color-line)'][i] }} />
-            {t.name} — {t.value} kecamatan
+            {t.name} · {t.value} kecamatan
           </div>
         ))}
       </div>
@@ -252,7 +252,7 @@ function VizConclusion() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Three planning scenarios — % final achievement</div>
+      <div className="mb-3 text-sm text-ink-muted">Three planning scenarios: % final achievement</div>
       <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={SCENARIOS} margin={{ left: 0, right: 20, top: 10, bottom: 10 }}>
@@ -265,7 +265,7 @@ function VizConclusion() {
         </ResponsiveContainer>
       </div>
       <table className="sr-only">
-        <caption>Planning scenarios — % final achievement</caption>
+        <caption>Planning scenarios: % final achievement</caption>
         <thead>
           <tr>
             <th scope="col">Scenario</th>
@@ -305,15 +305,15 @@ const sections: ScrollytellingSection[] = [
   {
     id: 'intro',
     kicker: 'Setting the scene',
-    title: 'Twelve sub-districts, one coastal planning area — but not one role each.',
+    title: 'Twelve sub-districts, one coastal planning area, but not one role each.',
     body: (
       <>
         East Lampung Regency's Jabung sub-region and its coastal strip span twelve kecamatan, from
         inland agricultural land to fishing ports on the Java Sea. The regency wanted two
-        development models running at once — agropolitan zoning inland, minapolitan zoning along
-        the coast — but pursuing both everywhere at once would have meant no real center for
-        either — the same problem of sorting many sub-units by underlying capacity rather than
-        administrative label that runs through{' '}
+        development models running at once (agropolitan zoning inland, minapolitan zoning along
+        the coast), but pursuing both everywhere at once would have meant no real center for
+        either. That is the same problem of sorting many sub-units by underlying capacity rather
+        than administrative label that runs through{' '}
         <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
           the Cikarang industrial-settlement study
         </a>
@@ -326,25 +326,25 @@ const sections: ScrollytellingSection[] = [
     id: 'problem',
     kicker: 'The gap',
     title: 'RTRW already sorts kecamatan into four tiers. It doesn’t say which one should lead.',
-    body: 'The regency’s existing spatial plan (RTRW 2011–2031) already classifies each kecamatan as a Pusat Kegiatan Lokal, Promosi, Kawasan, or Lingkungan center — a policy label, not a ranking. Deciding which sub-districts had the underlying capacity to anchor real growth needed a method that scored them against each other, not just against an administrative category.',
+    body: 'The regency’s existing spatial plan (RTRW 2011–2031) already classifies each kecamatan as a Pusat Kegiatan Lokal, Promosi, Kawasan, or Lingkungan center: a policy label, not a ranking. Deciding which sub-districts had the underlying capacity to anchor real growth needed a method that scored them against each other, not just against an administrative category.',
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.3 Service Center System, p. 56' }],
     vizCitation: { fig: 'Table IV.3', source: 'Service Center System, p. 56' },
   },
   {
     id: 'method',
     kicker: 'Method',
-    title: 'Skalogram Analysis — not a gravity model.',
+    title: 'Skalogram Analysis, not a gravity model.',
     body: (
       <>
         The actual method scores each kecamatan against 19 facility and service indicators,
-        weights them, and produces a Skalogram hierarchy score — the higher the score, the more
+        weights them, and produces a Skalogram hierarchy score. The higher the score, the more
         developed the sub-district's service base, and the stronger its case to anchor growth
         rather than depend on a neighboring center. Nineteen is also the exact indicator count
         behind{' '}
         <a href="/posts/bontang-poverty-mapping" className="text-research underline underline-offset-2 hover:no-underline">
           the P3KE characteristic clustering in Kalimantan Timur's poverty mapping
         </a>
-        — a coincidence of scope, not method, but the same instinct to score against many
+        , a coincidence of scope, not method, but the same instinct to score against many
         indicators at once rather than one proxy variable.
       </>
     ),
@@ -353,8 +353,8 @@ const sections: ScrollytellingSection[] = [
   {
     id: 'finding1',
     kicker: 'Finding 01',
-    title: 'Way Jepara scores highest — and becomes a candidate for a new district capital.',
-    body: 'Way Jepara lands at Hierarki 1 with an IPD score of 32.73 and 13 of 19 facility types present — the strongest service base in the study area. Labuhan Maringgai, at Hierarki 2, actually carries more facility types (17 of 19) and a strategic coastal position, making both kecamatan candidates should Lampung Timur ever split into a new regency.',
+    title: 'Way Jepara scores highest, and becomes a candidate for a new district capital.',
+    body: 'Way Jepara lands at Hierarki 1 with an IPD score of 32.73 and 13 of 19 facility types present, the strongest service base in the study area. Labuhan Maringgai, at Hierarki 2, actually carries more facility types (17 of 19) and a strategic coastal position, making both kecamatan candidates should Lampung Timur ever split into a new regency.',
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.4 Skalogram Analysis Results, pp. 56–62' }],
     vizCitation: { fig: 'Table IV.4', source: 'Area Skalogram Analysis Results, pp. 56–62' },
   },
@@ -362,7 +362,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding2',
     kicker: 'Finding 02',
     title: 'One main center, four secondary, seven hinterland.',
-    body: 'Sorting all twelve kecamatan by their Skalogram hierarchy produces a clear shape: Way Jepara alone as the main growth pole, four kecamatan (Labuhan Maringgai, Sekampung Udik, Pasir Sakti, Mataram Baru) as secondary centers, and the remaining seven classified as hinterland — areas the plan supports rather than expects to lead.',
+    body: 'Sorting all twelve kecamatan by their Skalogram hierarchy produces a clear shape: Way Jepara alone as the main growth pole, four kecamatan (Labuhan Maringgai, Sekampung Udik, Pasir Sakti, Mataram Baru) as secondary centers, and the remaining seven classified as hinterland, areas the plan supports rather than expects to lead.',
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table IV.4 Skalogram Analysis Results, pp. 56–62' }],
     vizCitation: { fig: 'Table IV.4', source: 'Area Skalogram Analysis Results, pp. 56–62' },
   },
@@ -372,14 +372,14 @@ const sections: ScrollytellingSection[] = [
     title: 'The hierarchy becomes two zones: Agropolitan and Minapolitan.',
     body: (
       <>
-        Bandar Sribhawono — corn, cassava, rice, rubber, and palm oil, sitting on the province's
-        Feeder Road corridor — anchors the Agropolitan zone. Labuhan Maringgai and Pasir Sakti,
-        with three working fishing ports and a growing crab-processing trade, anchor Minapolitan —
+        Bandar Sribhawono (corn, cassava, rice, rubber, and palm oil, sitting on the province's
+        Feeder Road corridor) anchors the Agropolitan zone. Labuhan Maringgai and Pasir Sakti,
+        with three working fishing ports and a growing crab-processing trade, anchor Minapolitan,
         a working coastline not unlike{' '}
         <a href="/posts/tanggamus-boat" className="text-research underline underline-offset-2 hover:no-underline">
           the fishing boats further south on Lampung's Tanggamus coast
         </a>
-        . Neither label was applied uniformly across the coastline — each traces back to a
+        . Neither label was applied uniformly across the coastline: each traces back to a
         specific kecamatan's Skalogram profile.
       </>
     ),
@@ -389,8 +389,8 @@ const sections: ScrollytellingSection[] = [
   {
     id: 'conclusion',
     kicker: 'Where this leads',
-    title: 'Three futures, same map — the difference is how much of it actually gets built.',
-    body: 'The plan carries three delivery scenarios: optimistic (100% of planned area and infrastructure development realized), moderate (80%), and pessimistic (50%) — each tied directly to whether economic growth, the human development index, and infrastructure provisioning hit, undershoot, or badly miss the plan’s targets. The hierarchy and zoning are fixed; how much of them materializes isn’t.',
+    title: 'Three futures, same map. The difference is how much of it actually gets built.',
+    body: 'The plan carries three delivery scenarios: optimistic (100% of planned area and infrastructure development realized), moderate (80%), and pessimistic (50%), each tied directly to whether economic growth, the human development index, and infrastructure provisioning hit, undershoot, or badly miss the plan’s targets. The hierarchy and zoning are fixed; how much of them materializes isn’t.',
     citations: [{ label: 'Bappeda Lampung Timur (2024)', where: 'Table V.1 Scenario Comparison, p. 80' }],
     vizCitation: { fig: 'Table V.1', source: 'Planning Scenario Comparison, p. 80' },
   },
@@ -402,7 +402,7 @@ export default function JabungLampungCoastalDevelopmentScrollytelling() {
       eyebrow="A data-driven reading of Bappeda Lampung Timur's coastal area plan"
       title={
         <>
-          One coastline, <em className="text-research not-italic">two centers</em> — sorted by the numbers.
+          One coastline, <em className="text-research not-italic">two centers</em>, sorted by the numbers.
         </>
       }
       dek="How a settlement-hierarchy analysis across twelve East Lampung sub-districts identified one main growth pole, four secondary centers, and the case for one Agropolitan and one Minapolitan zone."

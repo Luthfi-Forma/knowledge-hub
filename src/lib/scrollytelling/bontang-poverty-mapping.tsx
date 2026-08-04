@@ -225,7 +225,7 @@ function VizFinding1() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Mapping progress per kabupaten/kota — June 2023</div>
+      <div className="mb-3 text-sm text-ink-muted">Mapping progress per kabupaten/kota: June 2023</div>
       <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={PROGRESS_BY_REGION} margin={{ left: 0, right: 20, top: 10, bottom: 50 }}>
@@ -311,7 +311,7 @@ function VizFinding3() {
   const tenureTotal = TLI_TENURE.reduce((s, d) => s + d.value, 0);
   return (
     <div className="flex h-full w-full flex-col gap-4 overflow-y-auto p-4">
-      <div className="text-sm text-ink-muted">Kelurahan Tanjung Laut Indah, Kec. Bontang Selatan — 590 KK</div>
+      <div className="text-sm text-ink-muted">Kelurahan Tanjung Laut Indah, Kec. Bontang Selatan: 590 KK</div>
       <div>
         <div className="mb-1.5 text-xs text-ink-muted">Housing tenure status</div>
         {TLI_TENURE.map((d) => (
@@ -437,7 +437,7 @@ function VizConclusion() {
         {ROLLOUT_STATUS.map((r, i) => (
           <div key={r.name} className="flex items-center gap-2">
             <span className="h-2.5 w-2.5" style={{ background: [ACCENT, SECOND, 'var(--color-line)'][i] }} />
-            {r.name} — {r.value} kab/kota
+            {r.name} · {r.value} kab/kota
           </div>
         ))}
       </div>
@@ -460,14 +460,14 @@ const sections: ScrollytellingSection[] = [
     id: 'intro',
     kicker: 'Setting the scene',
     title: 'Kalimantan Timur knows roughly how many of its people are extremely poor. It didn’t know where.',
-    body: 'Presidential Instruction No. 4/2022 tasked every governor with coordinating and updating extreme-poverty target data toward a 0% national rate by 2024. Kalimantan Timur has the 10th-lowest poverty rate in Indonesia — but 6.31% of its population, up 0.04 points from the prior period, still meant close to a quarter-million individuals flagged extremely poor across the province’s ten kabupaten/kota.',
+    body: 'Presidential Instruction No. 4/2022 tasked every governor with coordinating and updating extreme-poverty target data toward a 0% national rate by 2024. Kalimantan Timur has the 10th-lowest poverty rate in Indonesia, but 6.31% of its population, up 0.04 points from the prior period, still meant close to a quarter-million individuals flagged extremely poor across the province’s ten kabupaten/kota.',
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Background, slide 6' }],
   },
   {
     id: 'problem',
     kicker: 'The gap',
     title: 'P3KE is a list. A planning team needs a map.',
-    body: 'P3KE — Indonesia’s national extreme-poverty registry — already holds per-individual, address-level records for every province. What it doesn’t provide is any built-in way to see where those households cluster. Kutai Kartanegara alone carries 65,380 flagged individuals, nine times Bontang’s 7,297 — a gap invisible in a spreadsheet, and the whole reason this mapping study exists.',
+    body: 'P3KE, Indonesia’s national extreme-poverty registry, already holds per-individual, address-level records for every province. What it doesn’t provide is any built-in way to see where those households cluster. Kutai Kartanegara alone carries 65,380 flagged individuals, nine times Bontang’s 7,297, a gap invisible in a spreadsheet, and the whole reason this mapping study exists.',
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Map of Extreme-Poor Individuals (P3KE), slide 8' }],
     vizCitation: { fig: 'P3KE map by kabupaten/kota', source: 'Data source, slide 8' },
   },
@@ -479,14 +479,14 @@ const sections: ScrollytellingSection[] = [
       <>
         Sasaran 1 digitized every P3KE individual as a point on the road network, joined to their
         household attributes, then ran kernel density estimation to turn scattered points into a
-        concentration surface — the same technique{' '}
+        concentration surface. That is the same technique{' '}
         <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
           the Cikarang industrial-settlement study
         </a>{' '}
         uses to turn scattered building footprints into a concentration surface, applied here to
         people instead of buildings. Sasaran 2 ran a separate characteristic-cluster analysis
-        across 19 P3KE indicators — gender, work, education, housing materials, utilities,
-        aid-program enrollment, and child stunting risk — to explain what a hotspot is actually
+        across 19 P3KE indicators (gender, work, education, housing materials, utilities,
+        aid-program enrollment, and child stunting risk) to explain what a hotspot is actually
         made of.
       </>
     ),
@@ -496,7 +496,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding1',
     kicker: 'Finding 01',
     title: 'Of ten kabupaten/kota, exactly one had finished both tracks: Bontang.',
-    body: 'By this report’s cut-off, Bontang was the only region at 100% on both the concentration map and the characteristic clustering. Mahakam Ulu and Penajam Paser Utara had only the hotspot map done; Kutai Barat was 75% through it; the remaining six — including Samarinda and Kutai Kartanegara, the two largest poor populations in the province — hadn’t started either track yet. Bontang’s comparatively small caseload, second-smallest of the ten, made it the tractable place to prove the method first.',
+    body: 'By this report’s cut-off, Bontang was the only region at 100% on both the concentration map and the characteristic clustering. Mahakam Ulu and Penajam Paser Utara had only the hotspot map done; Kutai Barat was 75% through it; the remaining six (including Samarinda and Kutai Kartanegara, the two largest poor populations in the province) hadn’t started either track yet. Bontang’s comparatively small caseload, second-smallest of the ten, made it the tractable place to prove the method first.',
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Work Progress, slide 16' }],
     vizCitation: { fig: 'Progress table by kabupaten/kota', source: 'Work progress, slide 16' },
   },
@@ -504,7 +504,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding2',
     kicker: 'Finding 02',
     title: 'A hotspot map isn’t the same as a headcount.',
-    body: 'Bontang’s two output maps — raw point distribution and kernel-density concentration — show the same households from two angles: one where poverty reads as scattered dots across the city, the other where kernel density collapses those dots into a small number of dense pockets. That distinction is the entire point of the method: a scattered spread and a concentrated pocket carrying the same headcount call for different interventions.',
+    body: 'Bontang’s two output maps (raw point distribution and kernel-density concentration) show the same households from two angles: one where poverty reads as scattered dots across the city, the other where kernel density collapses those dots into a small number of dense pockets. That distinction is the entire point of the method: a scattered spread and a concentrated pocket carrying the same headcount call for different interventions.',
     citations: [{ label: 'Bappeda Kaltim (2023)', where: 'Characteristic Mapping Progress, Kota Bontang, slide 18' }],
     vizCitation: { fig: 'Distribution map vs. kernel density', source: 'Kota Bontang, slide 18' },
   },
@@ -515,14 +515,14 @@ const sections: ScrollytellingSection[] = [
     body: (
       <>
         Of Bontang's dozens of kelurahan profiled under Sasaran 2, Tanjung Laut Indah (Kecamatan
-        Bontang Selatan, 590 KK sampled) shows what the 19-indicator layer adds — the same
+        Bontang Selatan, 590 KK sampled) shows what the 19-indicator layer adds. That is the same
         indicator count, coincidentally, that scores each kecamatan in{' '}
         <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
           the Jabung sub-region hierarchy study
         </a>
         : half the sampled households rent rather than own, 69% report no savings, valuables, or
         livestock to fall back on, and 60% of children sit in the middle stunting-risk band. None
-        of this shows up in a raw headcount — it's exactly the texture a program needs to decide
+        of this shows up in a raw headcount. It's exactly the texture a program needs to decide
         whether to lead with housing, livelihood, or health support.
       </>
     ),
@@ -535,12 +535,12 @@ const sections: ScrollytellingSection[] = [
     title: 'Bontang is the template. Nine kabupaten/kota are still the to-do list.',
     body: (
       <>
-        The same P3KE pipeline that mapped Bontang now has a working, repeatable shape — the
+        The same P3KE pipeline that mapped Bontang now has a working, repeatable shape. The
         province's task is running it nine more times. The study also became more than a static
         report: a live web GIS tool now lets planners query individual-level characteristics by
         location directly, the same per-individual data this analysis draws on, without waiting
-        for the next paparan deck — the same shift, from one-off report to a live tool a planning
-        team keeps using, that closes{' '}
+        for the next paparan deck. That is the same shift, from one-off report to a live tool a
+        planning team keeps using, that closes{' '}
         <a href="/posts/rpplh-south-papua" className="text-research underline underline-offset-2 hover:no-underline">
           South Papua's RPPLH
         </a>
@@ -558,7 +558,7 @@ export default function BontangPovertyMappingScrollytelling() {
       eyebrow="A data-driven reading of Bappeda Kaltim's poverty mapping study"
       title={
         <>
-          Ten regions, <em className="text-research not-italic">one method</em> — proven in Bontang first.
+          Ten regions, <em className="text-research not-italic">one method</em>, proven in Bontang first.
         </>
       }
       dek="How a province-wide poverty mapping initiative in Kalimantan Timur turned raw P3KE household records into hotspot maps and characteristic profiles, with Bontang as the first city to see it through."

@@ -8,13 +8,41 @@ repo: "https://github.com/Luthfi-Forma/knowledge-hub"
 draft: false
 ---
 
-This is the first real post in `posts`, seeded to prove the content
-collection schema works end to end: a valid frontmatter block passes
-validation, and the page builds.
+My work was scattered before this: a GitHub repo per project, demos on
+whatever hosting each one landed on, photos in a folder, research write-ups
+as documents nobody but me had a link to. None of it pointed at anything
+else. Find one project and you had no way to see the others, or the work
+that connected them.
 
-The site itself is a static Astro build — MDX files in, validated content
-out. No backend, no database. Every new project — like
-[Jabodetabek-Connect](/posts/jabodetabek-connect) — research note — like
-[the Cikarang industrial-settlement study](/posts/cikarang-industrial-settlement-pattern)
-— or photograph — like [an evening at Tanggamus](/posts/tanggamus-pier) —
-starts as a file here.
+The old portfolio, a static site I'd built on GitHub Pages, didn't fix
+that. It listed finished projects and stopped there, with no process notes,
+no easy way to add a new article without hand-editing HTML, and nothing
+that grew as I kept working. It was a dead end, not an index.
+
+This site replaces it with one rule: everything is a "post," validated by
+the same schema whether it's a software project, a research write-up, a
+photograph, or an article like this one. A `type` field, tags, and an
+optional `project` reference do the organizing instead of separate folders
+or hand-built navigation. Source code still lives in each project's own
+GitHub repo; live demos stay on their own hosting; this site is the index
+that connects them, not a copy of them.
+[Jabodetabek-Connect](/posts/jabodetabek-connect), the research note on
+[Cikarang's industrial-settlement pattern](/posts/cikarang-industrial-settlement-pattern),
+and a photograph from [an evening at Tanggamus](/posts/tanggamus-pier) all
+start the same way now: one file in `posts`.
+
+Under the hood it's Astro, building to static HTML with no backend and no
+database. Frontmatter is validated with Zod at build time, so a typo in a
+post's metadata fails the build instead of shipping quietly broken. I kept
+the list of new tools small on purpose: I was building this solo, still a
+beginner with Astro itself, while Tailwind, MDX, and Vercel were already
+familiar, so Astro was the one genuinely new piece to learn.
+
+The visual identity has changed more than once since launch. The first
+version had its own look, then I tried a two-mode design where the whole
+site could switch between a paper-like "Reading" identity and a dark
+cartographic "Immersive" one. That experiment eventually got cut:
+maintaining two full identities cost more than it gave back, and the site
+now runs on one system, Atlas, built around the same survey-sheet language
+the Immersive mode had introduced. One identity has been easier to reason
+about, and easier to keep consistent as the site keeps growing.

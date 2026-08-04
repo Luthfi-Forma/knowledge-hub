@@ -78,7 +78,7 @@ const breadcrumbRight = 'Neighbours computed from co-occurring tags';
       {
         neighbourTopics.length > 0 && (
           <div class="topic-neighbours">
-            <p class="topic-neighbours-heading">Neighbouring topics — appear alongside {tag}</p>
+            <p class="topic-neighbours-heading">Neighbouring topics · appear alongside {tag}</p>
             <div class="topic-neighbours-list">
               {neighbourTopics.map(({ tag: neighbourTag, count }) => (
                 <a href={`/topics/${neighbourTag}`} class="neighbour-chip">

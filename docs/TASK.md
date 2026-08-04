@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-08-04 (M8 dibuka — T-66–T-69)
+- Updated: 2026-08-04 (M8 selesai total — T-66–T-69)
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).
@@ -10,15 +10,12 @@
 
 ## Now
 
-**M8 — Perbaikan visual & suara editorial** (dibuka 2026-08-04, dipicu
-`Masukan untuk Knowledge Hub.md` dari pemilik situs). Rencana penuh +
-pengukuran pendukung:
+**M8 — Perbaikan visual & suara editorial: selesai** (T-66–T-69, lihat
+Done — dibuka+ditutup 2026-08-04, dipicu `Masukan untuk Knowledge Hub.md`
+dari pemilik situs). Rencana penuh + pengukuran pendukung:
 `C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
-
-- [ ] T-69: pass skill `humanizer` di seluruh prosa situs (11 post, 4 modul
-  scrollytelling, summary, chrome, 5 definisi topik tulisan Claude) —
-  cross-link M7 wajib selamat, `building-knowledge-hub.mdx` ditulis ulang
-  sungguhan (M8)
+Tidak ada task aktif — M9 (3 artikel naratif baru) menunggu materi dari
+pemilik situs.
 
 **M6 — Atlas: selesai** (S1–S5, T-45–T-62, lihat Done — di-push). Spesifikasi:
 `docs/design/atlas/README.md`. Keputusan:
@@ -34,6 +31,61 @@ pengukuran pendukung:
 
 ## Done
 
+- [x] T-69: pass skill `humanizer` di seluruh prosa situs, menutup M8.
+  **Diagnosis dulu, bukan asumsi**: grep pola kosakata AI (testament,
+  vibrant, tapestry, delve, crucial, boasts, showcase, dst.) di seluruh
+  `src/content/posts` menghasilkan **nol match** — prosa situs sudah
+  spesifik dan bervariasi (detail teknis nyata: bug CSS `.maplibregl-map
+  { position: relative }`, rasio detour OSRM 1,06×–2,85×), bukan generik.
+  Satu-satunya pola AI yang benar-benar terukur skala besar: **em/en dash**
+  (§14 skill humanizer, "hard constraint") — 0–41 kemunculan per file,
+  terkonsentrasi di 6 post project/photo (jabodetabek-connect 21,
+  cdmp-jabodetabek 24, jakarta-transit-heritage-explorer 20) dan 4 modul
+  scrollytelling (cikarang 41, jabung 34, rpplh 31, bontang 24). **Cakupan
+  aktual**: 11 summary frontmatter, body 6 post MDX non-scrollytelling,
+  prosa (title/body/dek/eyebrow, bukan komentar kode) di 4 modul
+  `src/lib/scrollytelling/*.tsx`, bio+expertise+experience di
+  `pages/about.astro`, dek `SheetIndex.astro`, label
+  `pages/topics/[topic].astro`. **Dipertahankan sebagai konvensi
+  tipografi sah, bukan diubah**: en-dash rentang tahun/halaman ("2016 –
+  2023", "pp. 56–62"), en-dash nama majemuk/rute ("Soekarno–Hatta",
+  "Jakarta–Cikampek"), em-dash pemisah judul situs-lebar ("{Title} —
+  Afreza Hernanda", dipakai konsisten di 9+ file, konvensi tab-judul yang
+  sudah ada sebelum AI), dan dash di dalam data CV terstruktur
+  (`about.astro`'s field `role`/`dates`) — hanya dash PENGHUBUNG NARASI
+  yang diganti titik/koma/titik-dua/kurung sesuai urutan preferensi skill.
+  **5 definisi topik tulisan Claude** (maplibre/python/coastal-planning/
+  d3/mdx) **sengaja tidak disentuh** — nol dash, nol kosakata AI, register
+  ensiklopedis pendek memang sudah suara manusia yang benar untuk konten
+  referensi (aturan eksplisit skill humanizer). **17 definisi topik
+  tulisan pemilik situs** (T-63) juga tidak disentuh — itu sudah suara
+  aslinya. **`building-knowledge-hub.mdx` ditulis ulang sungguhan**
+  (bukan cuma dihaluskan) — isi lama cuma teks benih ("seeded to prove the
+  content collection schema works"). Ditulis pakai fakta nyata dari
+  `docs/PROJECT_BRIEF.md` (masalah: karya tersebar GitHub/Vercel/foto
+  tanpa pintu masuk; portfolio lama `Website_Portfolio` statis GitHub
+  Pages cuma menampilkan hasil akhir; solusi: satu `type` content
+  collection tervalidasi Zod menggantikan folder kaku) dan riwayat
+  milestone nyata (M5 dual-mode Reading/Immersive yang dibongkar di M6,
+  ADR-004) — bukan dikarang. Ketiga cross-link kontekstual asli T-64
+  dipertahankan (project/research/photo: jabodetabek-connect, Cikarang,
+  Tanggamus). **Nol fakta/angka/tanggal berubah** di file manapun —
+  dikonfirmasi lewat pembacaan ulang tiap edit sebelum diterapkan, bukan
+  cuma diasumsikan aman. **Cross-link M7 (T-64) dikonfirmasi selamat**:
+  dihitung ulang lewat grep `](/posts/...)` + `href="/posts/..."` di
+  seluruh 11 post — 7 post di 3 tautan, 4 post (jabodetabek-connect + 3
+  foto Tanggamus) di 2 tautan, persis cocok dengan tiap kasus bernama di
+  catatan T-64 (angka ringkasan "8 dari 11" di catatan T-64 sendiri
+  ternyata tidak match totalnya 4+7=11 — dicatat di sini sebagai
+  penyimpangan aritmetika pada dokumen lama, bukan sesuatu yang
+  diperkenalkan sesi ini). Diverifikasi lewat `astro preview` sungguhan:
+  `building-knowledge-hub` dan `rpplh-south-papua` dibaca utuh di
+  browser, prosa mengalir alami tanpa dash tersisa; stamp lembar
+  `jabodetabek-connect` masih persis "Stations: 128" + "Lines: 13"
+  (angka `impact` tidak tersentuh); nol overflow horizontal di 375px; nol
+  console error. `npm run build` hijau, 44 halaman, Pagefind 2225→2271
+  kata (naik — `building-knowledge-hub` yang tadinya ~50 kata sekarang
+  ~350 kata prosa nyata, bukan regresi) (M8) — 2026-08-04
 - [x] T-66: SOP cover art + regenerate 3 cover project + perbaikan akar
   cropping di `Plate.astro`. **Akar masalah** (diukur, bukan ditebak): 10
   cover pada index (`≥480px`) punya tinggi kotak **berbeda-beda per plate**

@@ -322,11 +322,11 @@ function VizFinding3() {
       <div className="grid grid-cols-2 gap-3">
         <div className="border border-line bg-paper px-3 py-3 text-center">
           <div className="text-sm text-ink">Rice</div>
-          <div className="mt-1 text-[10px] text-ink-muted">Desa Telaga Sari — irrigation &amp; water pumps already built</div>
+          <div className="mt-1 text-[10px] text-ink-muted">Desa Telaga Sari: irrigation &amp; water pumps already built</div>
         </div>
         <div className="border border-line bg-paper px-3 py-3 text-center">
           <div className="text-sm text-ink">Sugarcane</div>
-          <div className="mt-1 text-[10px] text-ink-muted">Distrik Kurik — bioethanol cluster, near KTM Salor</div>
+          <div className="mt-1 text-[10px] text-ink-muted">Distrik Kurik: bioethanol cluster, near KTM Salor</div>
         </div>
       </div>
     </div>
@@ -371,7 +371,7 @@ function VizConclusion() {
         {data.map((d, i) => (
           <div key={d.name} className="flex items-center gap-2">
             <span className="h-2.5 w-2.5" style={{ background: [SECOND, ACCENT, 'var(--color-line)', 'var(--color-ink-muted)'][i] }} />
-            {d.name} — {d.value} villages
+            {d.name} · {d.value} villages
           </div>
         ))}
       </div>
@@ -395,7 +395,7 @@ const sections: ScrollytellingSection[] = [
     id: 'intro',
     kicker: 'Setting the scene',
     title: 'A megabiodiverse province, splitting off, planning a 1.2-million-hectare food program at the same time.',
-    body: 'South Papua became Indonesia’s newest province under Law No. 14/2022. As one of its first statutory obligations, it needed an RPPLH — an Environmental Protection and Management Plan — precisely as the national Food Estate program began staking out land inside it. Indonesia is megabiodiverse and already exposed to the triple planetary crisis (climate change, pollution, biodiversity loss); a new province writing its first environmental plan while a large land-conversion program moves in is not a routine timing.',
+    body: 'South Papua became Indonesia’s newest province under Law No. 14/2022. As one of its first statutory obligations, it needed an RPPLH (an Environmental Protection and Management Plan) precisely as the national Food Estate program began staking out land inside it. Indonesia is megabiodiverse and already exposed to the triple planetary crisis (climate change, pollution, biodiversity loss); a new province writing its first environmental plan while a large land-conversion program moves in is not a routine timing.',
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Background, slides 3–4' }],
   },
   {
@@ -404,11 +404,11 @@ const sections: ScrollytellingSection[] = [
     title: 'Food Estate and customary land occupy the same ground.',
     body: (
       <>
-        The Food Estate program targets 1.2 million hectares across six districts — Merauke,
-        Tanah Miring, Semangga, Kurik, Janggebob, and Malind — part of a national push toward food
+        The Food Estate program targets 1.2 million hectares across six districts (Merauke,
+        Tanah Miring, Semangga, Kurik, Janggebob, and Malind), part of a national push toward food
         self-sufficiency (Asta Cita 2). None of that land is empty: it sits inside a landscape
         already organized around sago groves, sacred sites, and customary conservation areas that
-        predate the program by generations — the same kind of remote-sensing-derived land
+        predate the program by generations. That is the same kind of remote-sensing-derived land
         classification that{' '}
         <a href="/posts/cikarang-industrial-settlement-pattern" className="text-research underline underline-offset-2 hover:no-underline">
           the Cikarang industrial-settlement study
@@ -423,7 +423,7 @@ const sections: ScrollytellingSection[] = [
     id: 'method',
     kicker: 'Method',
     title: 'DPSIR, plus an ecosystem-service inventory to make the vulnerability concrete.',
-    body: 'The RPPLH is structured around the DPSIR framework — Driver, Pressure, State, Impact, Response — the standard planning lens for tracing how a development driver turns into environmental pressure and, eventually, a policy response. On top of it, KLHK’s 2022 ecosystem-service scoring gives that framework real numbers: how much of the Food Estate footprint is high-value for food production versus biodiversity support.',
+    body: 'The RPPLH is structured around the DPSIR framework (Driver, Pressure, State, Impact, Response), the standard planning lens for tracing how a development driver turns into environmental pressure and, eventually, a policy response. On top of it, KLHK’s 2022 ecosystem-service scoring gives that framework real numbers: how much of the Food Estate footprint is high-value for food production versus biodiversity support.',
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'DPSIR Framework, slide 2; Inventory, slides 15–16' }],
   },
   {
@@ -433,12 +433,12 @@ const sections: ScrollytellingSection[] = [
     body: (
       <>
         74.63% of the 2.3-million-hectare study area scores class-4 (high) for food-provisioning
-        ecosystem services — exactly what makes it attractive for Food Estate. But 67.88% of that
+        ecosystem services, exactly what makes it attractive for Food Estate. But 67.88% of that
         same area also scores class-5 (very high) for biodiversity and habitat support, meaning
         the most food-productive land is simultaneously the most ecologically irreplaceable and
-        the most vulnerable to conversion — the same ordinal-tier classification, from a weighted
-        score down to a small number of ranked classes, that sorts kecamatan into Hierarki 1/2/3
-        in{' '}
+        the most vulnerable to conversion. That is the same ordinal-tier classification, from a
+        weighted score down to a small number of ranked classes, that sorts kecamatan into
+        Hierarki 1/2/3 in{' '}
         <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
           the Jabung sub-region hierarchy study
         </a>
@@ -452,7 +452,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding2',
     kicker: 'Finding 02',
     title: '471,026 hectares of indicative cultural space sit inside the Food Estate footprint.',
-    body: 'Seven categories of customary and sacred space were mapped inside the development area — sacred sites alone account for 158,514 hectares, sago groves (a subsistence and cultural staple) for 110,358, customary conservation areas for 85,857, water sources, ancestral pathways, ancestor resting places, and old/sacred kampung for the rest. None of these were incidental findings; each was digitized and measured against the Food Estate boundary specifically.',
+    body: 'Seven categories of customary and sacred space were mapped inside the development area: sacred sites alone account for 158,514 hectares, sago groves (a subsistence and cultural staple) for 110,358, customary conservation areas for 85,857, water sources, ancestral pathways, ancestor resting places, and old/sacred kampung for the rest. None of these were incidental findings; each was digitized and measured against the Food Estate boundary specifically.',
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Indicative Cultural Space, slide 19' }],
     vizCitation: { fig: 'Indicative cultural-space table', source: 'WWF data processing, slide 19' },
   },
@@ -460,7 +460,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding3',
     kicker: 'Finding 03',
     title: 'The ground is already moving faster than the paperwork.',
-    body: 'Field verification found rice already planted at Desa Telaga Sari, with irrigation infrastructure under construction, and sugarcane at Distrik Kurik feeding a bioethanol cluster near Kota Terpadu Mandiri Salor. Two hundred excavators landed at a closed former fishing port at Wanam to start road works — a planned 140-km, 35-meter-wide route between Ilwayab, Wanam, Ngguti, and Muting, of which only 5 km carries environmental permits (UKL/UPL) and 135 km has no AMDAL at all. In the deep swamp sections, clearing has already spread to roughly a kilometer wide.',
+    body: 'Field verification found rice already planted at Desa Telaga Sari, with irrigation infrastructure under construction, and sugarcane at Distrik Kurik feeding a bioethanol cluster near Kota Terpadu Mandiri Salor. Two hundred excavators landed at a closed former fishing port at Wanam to start road works, a planned 140-km, 35-meter-wide route between Ilwayab, Wanam, Ngguti, and Muting, of which only 5 km carries environmental permits (UKL/UPL) and 135 km has no AMDAL at all. In the deep swamp sections, clearing has already spread to roughly a kilometer wide.',
     citations: [{ label: 'RPPLH Papua Selatan (2024)', where: 'Field Findings, slides 21–22' }],
     vizCitation: { fig: 'Field findings', source: 'Field visit, slides 21–22' },
   },
@@ -470,12 +470,12 @@ const sections: ScrollytellingSection[] = [
     title: 'The people already living there have a 1,000-day answer.',
     body: (
       <>
-        Orang Asli Papua communities in the area already practice Sasi — a customary ritual,
+        Orang Asli Papua communities in the area already practice Sasi, a customary ritual,
         observed by every marga and its chief, that restricts resource extraction from a site for
         up to 1,000 days to let wildlife and vegetation regenerate. The RPPLH's DPSIR "Response"
         stage points to documenting and folding that local knowledge into Food Estate planning
         directly, rather than treating conservation and development as a choice the program makes
-        without it — the same shift, from a one-off report to a tool a planning team keeps
+        without it. That is the same shift, from a one-off report to a tool a planning team keeps
         using, that{' '}
         <a href="/posts/bontang-poverty-mapping" className="text-research underline underline-offset-2 hover:no-underline">
           Kalimantan Timur's poverty mapping
@@ -497,7 +497,7 @@ export default function RpplhSouthPapuaScrollytelling() {
           One landscape, <em className="text-research not-italic">two claims</em> on the same ground.
         </>
       }
-      dek="How South Papua's first Environmental Protection and Management Plan measured what a 1.2-million-hectare Food Estate program would actually displace — ecologically and culturally — before the land was fully converted."
+      dek="How South Papua's first Environmental Protection and Management Plan measured what a 1.2-million-hectare Food Estate program would actually displace (ecologically and culturally) before the land was fully converted."
       meta="Papua Selatan · 2024"
       sections={sections}
       viz={viz}

@@ -308,7 +308,7 @@ function VizFinding3() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col p-4">
-      <div className="mb-3 text-sm text-ink-muted">Hectares added per phase — watch the lines cross</div>
+      <div className="mb-3 text-sm text-ink-muted">Hectares added per phase: watch the lines cross</div>
       <div className="flex-1" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={PHASES} margin={{ left: 10, right: 30, top: 20, bottom: 20 }}>
@@ -365,7 +365,7 @@ function VizFinding4() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col justify-center gap-8 p-6">
-      <div className="text-sm text-ink-muted">Growth 2016 → 2023 — land vs. buildings</div>
+      <div className="text-sm text-ink-muted">Growth 2016 → 2023: land vs. buildings</div>
       {TOTAL_BUILDINGS_GROWTH.map((r) => (
         <div key={r.name} className="space-y-2">
           <div className="text-sm font-medium" style={{ color: r.name === 'Industrial' ? IND : RES }}>
@@ -409,7 +409,7 @@ function VizFinding4() {
         </div>
       ))}
       <div className="border border-line bg-paper p-3 text-xs leading-relaxed text-ink-muted">
-        Buildings grow ~3–6× faster than land — Cikarang is densifying, not just spreading.
+        Buildings grow ~3–6× faster than land. Cikarang is densifying, not just spreading.
       </div>
     </div>
   );
@@ -471,7 +471,7 @@ const sections: ScrollytellingSection[] = [
     id: 'intro',
     kicker: 'Setting the scene',
     title: 'Cikarang is one parcel of land with two things growing on it at once.',
-    body: 'Between 2016 and 2023, Cikarang added both factory floor and family homes — often on the same stretch of ground, with very little formal separation between them. The same corridor was earlier studied at the building level in an undergraduate thesis; this section re-tells the province-scale numbers instead, drawn from that thesis’s published follow-up paper.',
+    body: 'Between 2016 and 2023, Cikarang added both factory floor and family homes, often on the same stretch of ground, with very little formal separation between them. The same corridor was earlier studied at the building level in an undergraduate thesis; this section re-tells the province-scale numbers instead, drawn from that thesis’s published follow-up paper.',
     citations: [
       { label: 'Rahman & Hernanda (2025)', where: 'Abstract, p. 1' },
     ],
@@ -484,9 +484,9 @@ const sections: ScrollytellingSection[] = [
       <>
         Neither land use is static, and neither is contained. Industrial estates push outward for
         logistics access; residential growth follows the jobs those estates create. Where the two
-        fronts meet is exactly where the earlier building-level analysis found the most friction —
-        the same insistence on measuring a real spatial relationship instead of a convenient
-        administrative proxy that drives{' '}
+        fronts meet is exactly where the earlier building-level analysis found the most friction.
+        That is the same insistence on measuring a real spatial relationship instead of a
+        convenient administrative proxy that drives{' '}
         <a href="/posts/jakarta-transit-heritage-explorer" className="text-research underline underline-offset-2 hover:no-underline">
           Jakarta Transit Heritage Explorer
         </a>
@@ -498,8 +498,8 @@ const sections: ScrollytellingSection[] = [
   {
     id: 'finding1',
     kicker: 'Finding 01',
-    title: 'Industrial land grew faster than residential land — by hectares, not just percent.',
-    body: 'Industrial land use rose from 4,477.99 to 5,570.68 hectares — an addition of 687.45 hectares. Residential land grew by 622.9 hectares over the same period, from 6,236.05 to 7,328.73 hectares. Industry starts from a smaller base but adds more raw ground.',
+    title: 'Industrial land grew faster than residential land, by hectares, not just percent.',
+    body: 'Industrial land use rose from 4,477.99 to 5,570.68 hectares, an addition of 687.45 hectares. Residential land grew by 622.9 hectares over the same period, from 6,236.05 to 7,328.73 hectares. Industry starts from a smaller base but adds more raw ground.',
     citations: [{ label: 'Table 1', where: 'Land Use Change Analysis, p. 5' }],
     vizCitation: { fig: 'Table 1 · sub-totals', source: 'Land Use Change Analysis, p. 5' },
   },
@@ -507,7 +507,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding2',
     kicker: 'Finding 02',
     title: "Growth isn't even across Cikarang's five districts.",
-    body: 'Cikarang Pusat added the most industrial land (285.83 ha) while Cikarang Selatan added the most residential land (205.26 ha) — the two fastest-growing districts are growing in opposite directions, which is exactly the kind of divergence a district-blind average would hide.',
+    body: 'Cikarang Pusat added the most industrial land (285.83 ha) while Cikarang Selatan added the most residential land (205.26 ha). The two fastest-growing districts are growing in opposite directions, which is exactly the kind of divergence a district-blind average would hide.',
     citations: [{ label: 'Table 1', where: 'Industrial/Residential Land Use by District, pp. 5–6' }],
     vizCitation: { fig: 'Table 1 · district deltas', source: 'Industrial/Residential Land Use by District, pp. 5–6' },
   },
@@ -515,7 +515,7 @@ const sections: ScrollytellingSection[] = [
     id: 'finding3',
     kicker: 'Finding 03',
     title: 'The pace of growth flipped between the two study periods.',
-    body: 'From 2016–2019, residential land (323.13 ha) grew faster than industrial land (259.05 ha). From 2019–2023, industry overtook it — 428.39 ha of industrial growth against 299.77 ha of residential growth. Industrial expansion accelerated in the second period; residential growth slowed.',
+    body: 'From 2016–2019, residential land (323.13 ha) grew faster than industrial land (259.05 ha). From 2019–2023, industry overtook it: 428.39 ha of industrial growth against 299.77 ha of residential growth. Industrial expansion accelerated in the second period; residential growth slowed.',
     citations: [{ label: 'Body text', where: 'Temporal Pattern (2016-2019 vs 2019-2023), p. 7' }],
     vizCitation: { fig: 'Body text · temporal split', source: 'Temporal Pattern (2016-2019 vs 2019-2023), p. 7' },
   },
@@ -525,10 +525,10 @@ const sections: ScrollytellingSection[] = [
     title: 'Cikarang is densifying, not just spreading.',
     body: (
       <>
-        Land use grew 15.35% for industry and 9.99% for residential — but building counts grew
+        Land use grew 15.35% for industry and 9.99% for residential, but building counts grew
         50.26% and 61.94% respectively. Buildings are appearing 3–6× faster than the land under
         them, meaning both new construction on already-classified land and finer subdivision are
-        doing more of the work than outright expansion — the same push toward measuring at
+        doing more of the work than outright expansion. That is the same push toward measuring at
         province scale instead of building-by-building that structures{' '}
         <a href="/posts/jabung-lampung-coastal-development" className="text-research underline underline-offset-2 hover:no-underline">
           the Jabung sub-region hierarchy study
@@ -546,9 +546,9 @@ const sections: ScrollytellingSection[] = [
     body: (
       <>
         This is the same overlap the building-level thesis flags for buffer requirements and
-        zoning revision — except now it's measured province-scale, across seven years, with
+        zoning revision, except now it's measured province-scale, across seven years, with
         numbers a planning document can cite directly. Cikarang Pusat and Cikarang Selatan are the
-        districts where that revision is most overdue — the same instinct, turning measured
+        districts where that revision is most overdue. That is the same instinct, turning measured
         numbers into something a planning document can act on, that drives{' '}
         <a href="/posts/rpplh-south-papua" className="text-research underline underline-offset-2 hover:no-underline">
           the ecosystem-vulnerability inventory in South Papua's RPPLH
@@ -570,7 +570,7 @@ export default function CikarangIndustrialSettlementScrollytelling() {
           Two land uses, <em className="text-research not-italic">one corridor</em>.
         </>
       }
-      dek="How Cikarang added 687 hectares of factory and 623 hectares of home in seven years — mapped, counted, and re-told from the published paper."
+      dek="How Cikarang added 687 hectares of factory and 623 hectares of home in seven years, mapped, counted, and re-told from the published paper."
       meta="Cikarang · Bekasi · 2016 – 2023"
       sections={sections}
       viz={viz}

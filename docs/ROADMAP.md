@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-07-30 (M6 + M7 selesai total — T-45–T-65)
+- Updated: 2026-08-04 (M8 selesai total — T-66–T-69)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -15,6 +15,7 @@
 | M5 | DATUM — dual-mode visual overhaul | Etalase berfungsi (repo/demo hidup, project hub bisa diklik, cover nyata); identitas kedua "Immersive" aktif via toggle token remap di Home/`/explore`/`/about` — termasuk 4 post scrollytelling — tanpa satu pun edit React; registration seam bisa diseret & dioperasikan keyboard; aturan motion tercatat di RULES.md | done* |
 | M6 | Atlas — satu identitas | Dual-mode hilang total (`grep data-mode` nol); satu wadah `Plate` menggantikan PostCard+PostListItem; rail legenda 224px permanen jadi filter; nav 4 item semuanya halaman nyata, nol orphan; `/topics/**` hidup dengan topik bertetangga terhitung; 14 item verification checklist handoff lolos | done |
 | M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | done** |
+| M8 | Perbaikan visual & suara editorial | Cover index tinggi konsisten (`aspect-ratio` menggantikan crop erratic); scrollytelling desktop 5/7 + rail di bawah island, mobile dock tidak lagi menutupi teks; collar mobile 305px→147px; nol em/en dash naratif di seluruh prosa situs | done |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -34,9 +35,9 @@ user — lihat T-20/T-21 di TASK.md Backlog.
 
 ## Current focus
 
-**M1–M6 selesai** (M5 dengan satu pengecualian tercatat, lihat catatan
-tabel milestone). M6 "Atlas" — perombakan visual dari handoff Claude Design
-di `docs/design/atlas/`, arah+konsekuensi di
+**M1–M8 semuanya selesai** (M5 dengan satu pengecualian tercatat, lihat
+catatan tabel milestone). M6 "Atlas" — perombakan visual dari handoff
+Claude Design di `docs/design/atlas/`, arah+konsekuensi di
 [ADR-004](decisions/ADR-004-atlas-single-identity.md) — tutup lewat S1
 (Fondasi, T-45–T-49) → S2 (Komponen inti, T-50–T-52) → S3 (IA & route,
 T-53–T-58) → S4 (Aksesibilitas & search, T-59–T-60) → S5 (Aset & penutupan,
@@ -44,8 +45,17 @@ T-61–T-62), sudah di-push. **M7 — lapisan editorial selesai total**: T-63
 (20 definisi topik, 17 dari user + 5 fakta teknologi objektif), T-64
 (cross-link inline — 8/11 post ≥3, 4 post sengaja 2 karena kandidat nyata
 memang cuma segitu), T-65 (6 angka `impact`, semuanya dikutip dari konten
-post yang sudah terbit). Tidak ada milestone aktif — lihat "Phase detail"
-untuk riwayat lengkap.
+post yang sudah terbit). **M8 — perbaikan visual & suara editorial selesai
+total**, dipicu masukan langsung pemilik situs setelah membuka situs
+sendiri (`Masukan untuk Knowledge Hub.md`, 2026-08-04): T-67 (lebar &
+proporsi scrollytelling, desktop dan mobile — dua akar masalah berbeda),
+T-68 (collar mobile 305px→147px), T-66 (SOP cover art +
+`scripts/generate-cover.mjs` permanen + perbaikan akar cropping di
+`Plate.astro`), T-69 (pass `humanizer` di seluruh prosa situs, nol
+fakta/cross-link berubah). Rencana penuh + pengukuran pendukung:
+`C:\Users\Luthfi\.claude\plans\jelaskan-state-saat-ini-frolicking-lemur.md`.
+Tidak ada milestone aktif — M9 (3 artikel naratif baru) menunggu materi
+dari pemilik situs. Lihat "Phase detail" untuk riwayat lengkap.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
@@ -180,6 +190,34 @@ bukan diturunkan dari kode.
 - [x] Angka `impact` untuk sebagian post → tampil di stamp lembar (T-65,
   2026-07-30 — 6 post, tiap angka dikutip dari konten post yang sudah
   terbit, bukan dikarang).
+
+### M8 — Perbaikan visual & suara editorial
+
+Dipicu langsung oleh pemilik situs setelah membuka situs live sendiri
+(`Masukan untuk Knowledge Hub.md`, 2026-08-04) — 3 dari 4 masalah yang
+dilaporkan terbukti nyata lewat pengukuran browser sungguhan, bukan
+sekadar selera; verifikasi juga menemukan 1 masalah tambahan (collar
+mobile) yang belum pernah dilaporkan.
+
+- [x] Lebar & proporsi scrollytelling, desktop dan mobile (T-67,
+  2026-08-04 — dua akar berbeda: desktop kolom teks 316px/~38
+  karakter-baris karena grid `680px 1fr` T-57 tidak sengaja mencakup post
+  scrollytelling; mobile dock viz 38vh menutupi teks section karena
+  `min-height` section dihitung terhadap viewport penuh, bukan area baca
+  tersisa).
+- [x] Collar mobile 305px → 147px (T-68, 2026-08-04 — padding horizontal
+  48px/8px tanpa syarat di semua viewport, ditemukan saat verifikasi
+  T-67, bukan dilaporkan user).
+- [x] SOP `docs/design/COVER_ART.md` + `scripts/generate-cover.mjs`
+  permanen + regenerate 3 cover project + perbaikan akar cropping
+  `Plate.astro` (T-66, 2026-08-04 — `height: 100%` diganti
+  `aspect-ratio: 16/10`, di-scope ke `≥480px` saja supaya perilaku
+  `<480px` yang sudah benar sejak T-55 tidak teregresi).
+- [x] Pass skill `humanizer` di seluruh prosa situs (T-69, 2026-08-04,
+  menutup M8 — kosakata AI generik nol match; satu-satunya pola
+  bervolume nyata adalah em/en dash naratif, diganti titik/koma/titik-
+  dua/kurung; `building-knowledge-hub.mdx` ditulis ulang sungguhan dari
+  fakta `PROJECT_BRIEF.md`; nol cross-link M7 hilang).
 
 ## Icebox
 
