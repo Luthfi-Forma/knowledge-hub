@@ -824,3 +824,43 @@ scaffolding, but when the component's job is to display a real figure, seed it
 with the real figure and animate away from it — not toward it. Verify by
 grepping the built output, not the browser, because the browser hides the bug
 the moment hydration succeeds.
+
+## 2026-08-09 — Props passed to Astro's `<Content />` never reach the MDX body, so frontmatter and MDX prose cannot be interleaved
+
+Tags: #astro #mdx #content-collections #architecture
+
+Planning the story framework assumed a component used inside an MDX body could
+read the post's frontmatter, letting structure live in validated YAML while
+prose stayed markdown. Measured against a real build, it cannot:
+
+- `{JSON.stringify(Astro.props.x)}` inside an MDX body fails the build with
+  `ReferenceError: Astro is not defined`.
+- `<Content probe={{...}} />` with `{typeof probe !== 'undefined' ? ... : 'UNDEFINED'}`
+  in the MDX body renders `UNDEFINED`.
+
+Two consequences follow, and they are architectural rather than cosmetic:
+
+1. **A component used inside MDX can only see its own attributes.** Anything it
+   renders must be authored in the MDX file itself.
+2. **A component wrapping `<Content />` cannot inject anything into it.** Slot
+   content is rendered to an HTML string before the parent sees it, so the
+   parent can neither introspect nor interleave. Doing it through a React
+   island does not help either — children arrive as opaque pre-rendered HTML in
+   an `<astro-slot>`, not as inspectable React children.
+
+So the dividing line is forced: **what renders INSIDE a repeated content block
+must live in that block's own markup; only what is aggregated ACROSS blocks can
+live in frontmatter.** Trying to split it any other way produces either
+duplicated data in two files or a build-time assertion that cannot be written.
+
+A useful side effect of accepting that line: it exposed that the old shell
+rendered every citation twice — once inline per section, once in the sources
+panel, from one array. Being forced to pick one home for the data revealed
+redundancy that had gone unnoticed while both were cheap.
+
+**Also worth knowing**: an HTML comment (`<!-- -->`) in an Astro component's
+template is emitted to the browser, once per render. In a component that
+renders per scene/item, an explanatory note ships N times. Put notes in the
+`---` frontmatter block, where they are stripped. Found by counting `<h1`
+occurrences in built output and getting 7 for a page with one heading — six of
+them were the word `<h1>` inside a comment about heading order.

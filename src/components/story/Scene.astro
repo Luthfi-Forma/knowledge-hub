@@ -1,0 +1,139 @@
+---
+// One scene of a story (M10/T-75, ADR-005) — used inside a post's MDX body:
+//
+//   <Scene id="intro" kicker="Where this starts" title="Fourteen projects.">
+//   Real markdown prose, with real [cross-links](/posts/other).
+//   </Scene>
+//
+// kicker and title are props here rather than frontmatter because nothing
+// inside MDX can read frontmatter (measured in T-75: `Astro.props` is not
+// defined in an MDX body, and a bare prop passed to `<Content />` arrives
+// undefined). Keeping them next to the prose they label is also the better
+// end state — a heading and its paragraph move together.
+//
+// The scene NUMBER is not a prop. It comes from a CSS counter seeded by
+// Story.astro, so inserting or reordering scenes renumbers everything with no
+// edit and no chance of a hand-typed sequence going out of order.
+//
+// The title renders as <h2>: StoryHero now carries the story title as the
+// page's only <h1>. The old React shell used h2 for its hero and h3 here, on
+// a page where [slug].astro suppresses the post's own <h1> — so every
+// scrollytelling post shipped with no h1 at all and a heading order starting
+// at 2.
+//
+// Note for anyone adding notes below: keep them in this frontmatter block.
+// An HTML comment in the template ships to the browser, and this component
+// renders once per scene, so a `<!-- -->` note here is emitted N times per
+// page. (Found exactly that way during T-75 verification.)
+interface Props {
+  /** Must match a `scenes[].id` in the post's `story` frontmatter, which is where this scene's citations live. */
+  id: string;
+  kicker: string;
+  title: string;
+}
+
+const { id, kicker, title } = Astro.props;
+---
+
+<section id={`sec-${id}`} class="story-scene">
+  <p class="story-scene-notation">
+    <span class="story-scene-number" aria-hidden="true"></span>
+    <span class="story-scene-kicker">{kicker}</span>
+  </p>
+  <h2 class="story-scene-title">{title}</h2>
+  <div class="story-scene-body"><slot /></div>
+</section>
+
+<style>
+  /*
+   * min-height 70vh is COUPLED to the mobile stage dock's 28vh in Story.astro:
+   * 100 - 28 = 72vh of reading room, a 2vh margin over what this demands.
+   * T-67 measured what happens when that margin goes negative — `justify-
+   * content: center` centres the text against the full viewport rather than
+   * the visible area, so prose sits behind the dock. Change both together.
+   */
+  .story-scene {
+    display: flex;
+    min-height: 70vh;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px 0;
+    counter-increment: story-scene;
+  }
+  .story-scene:first-child {
+    padding-top: 0;
+  }
+
+  .story-scene-notation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 12px;
+    font-size: 12px;
+  }
+
+  /* decimal-leading-zero gives 01, 02, ... matching the mono plate numbering
+     used everywhere else in Atlas. aria-hidden on the element: the count is
+     decoration for sighted scanning, and a screen reader announcing "zero
+     one" before every kicker is noise. */
+  .story-scene-number::before {
+    content: counter(story-scene, decimal-leading-zero);
+    font-family: var(--font-mono);
+    color: var(--color-research);
+  }
+
+  .story-scene-kicker {
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+
+  .story-scene-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-stretch: 112%;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+  @media (min-width: 640px) {
+    .story-scene-title {
+      font-size: 1.875rem;
+    }
+  }
+
+  /*
+   * :global() throughout — this prose is slotted MDX, so its <p>/<a>/<ul>
+   * carry the MDX file's scope, not this component's (LESSONS 2026-07-29:
+   * an Astro scoped <style> does not reach into slotted or child content).
+   */
+  .story-scene-body {
+    margin-top: 16px;
+    max-width: 54ch;
+    color: var(--color-ink-muted);
+  }
+  .story-scene-body :global(p) {
+    margin: 0 0 1em;
+    font-size: var(--text-body);
+    line-height: 1.65;
+  }
+  .story-scene-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .story-scene-body :global(a) {
+    color: var(--color-research);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .story-scene-body :global(a:hover) {
+    text-decoration: none;
+  }
+  .story-scene-body :global(strong) {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+  .story-scene-body :global(em) {
+    font-style: italic;
+  }
+</style>

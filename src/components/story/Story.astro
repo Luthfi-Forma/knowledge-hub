@@ -1,0 +1,110 @@
+---
+// The static shell for a scrollytelling post (M10/T-75, ADR-005).
+//
+// Everything here is zero-JS except the Sources panel's small Tier-1 script.
+// The only hydrated thing on a story page is the visual stage, which arrives
+// through the `stage` slot — empty until T-76 builds it.
+//
+// Usage, from pages/posts/[slug].astro:
+//
+//   <Story story={post.data.story}>
+//     <Content />                        <!-- the MDX <Scene> blocks -->
+//     <StoryStage slot="stage" ... />    <!-- T-76 -->
+//   </Story>
+import StoryHero from './StoryHero.astro';
+import SourcesPanel from './SourcesPanel.astro';
+
+interface Citation {
+  label: string;
+  where: string;
+  quote?: string;
+}
+
+interface Props {
+  story: {
+    eyebrow: string;
+    title: string;
+    emphasise?: string;
+    dek: string;
+    meta: string;
+    source: { label: string; author: string; work: string; note: string };
+    scenes: { id: string; citations: Citation[]; vizCitation?: { fig: string; source: string } }[];
+  };
+}
+
+const { story } = Astro.props;
+---
+
+<div class="story">
+  <StoryHero
+    eyebrow={story.eyebrow}
+    title={story.title}
+    emphasise={story.emphasise}
+    dek={story.dek}
+    meta={story.meta}
+  >
+    <SourcesPanel slot="sources-trigger" source={story.source} scenes={story.scenes} />
+  </StoryHero>
+
+  <div class="story-body">
+    <div class="story-grid">
+      <div class="story-column"><slot /></div>
+      <div class="story-stage"><slot name="stage" /></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /*
+   * No horizontal padding or max-width of its own. For scrollytelling posts
+   * pages/posts/[slug].astro opts .post-body out of the default
+   * var(--container-prose) 1fr split (T-67), so .post-main spans the full
+   * .post-detail width up to --container-shell (1240px) — this component
+   * assumes that width. Between T-57 and T-67 the assumption was silently
+   * wrong: .post-main was constrained to 680px instead, which squeezed the
+   * text column to ~316px (~38 characters per line). Don't wrap this in a
+   * narrower container without changing both sides together.
+   */
+  .story {
+    border-block: 1px solid var(--color-line);
+  }
+
+  .story-body {
+    padding-bottom: 64px;
+  }
+
+  .story-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  /*
+   * Seeds the counter Scene.astro increments, so scene numbers are positional
+   * rather than hand-typed — reorder or insert a scene and the numbering
+   * follows with no edit.
+   */
+  .story-column {
+    counter-reset: story-scene;
+  }
+
+  .story-stage {
+    display: none;
+  }
+
+  /*
+   * 5/7, not an even 6/6. An even split inside the 680px caller of the T-57
+   * bug left prose at ~38 characters per line, well under the 55–75 target;
+   * 5/7 measures out to ~480px once .post-main actually gets the full shell
+   * width.
+   */
+  @media (min-width: 1024px) {
+    .story-grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 48px;
+    }
+    .story-stage {
+      display: block;
+    }
+  }
+</style>

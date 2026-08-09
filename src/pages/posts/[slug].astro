@@ -22,6 +22,7 @@ import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
+import Story from '../../components/story/Story.astro';
 import { getPublishedPosts, getProjectTitle, getRelatedPosts, TYPE_LABEL } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
 import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
@@ -62,6 +63,12 @@ const formattedDateShort = date.toLocaleDateString('en-US', { month: 'short', da
 const sections = headings.filter((heading) => heading.depth === 2);
 const isArticle = type === 'article';
 const isScrollytelling = post.data.presentation === 'scrollytelling';
+// M10/T-75: a post that carries a `story` frontmatter block renders through
+// the new static shell, with its prose coming from the MDX body. Posts still
+// on the old React shell have no `story` block and keep their hardcoded
+// island branch below until T-79 migrates them.
+const story = post.data.story;
+const usesStoryShell = Boolean(story);
 
 const breadcrumbLeft = `Index / ${TYPE_LABEL[type]} / Plate ${plateNumberLabel}`;
 const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` : formattedDateShort;
@@ -125,10 +132,21 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
           )
         }
 
-        {isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && <CikarangIndustrialSettlementScrollytelling client:visible />}
-        {isScrollytelling && post.id === 'bontang-poverty-mapping' && <BontangPovertyMappingScrollytelling client:visible />}
-        {isScrollytelling && post.id === 'jabung-lampung-coastal-development' && <JabungLampungCoastalDevelopmentScrollytelling client:visible />}
-        {isScrollytelling && post.id === 'rpplh-south-papua' && <RpplhSouthPapuaScrollytelling client:visible />}
+        {
+          /* New static shell (M10/T-75). The MDX body supplies the scenes;
+             Story supplies the hero, layout, and Sources panel. The visual
+             stage slot stays empty until T-76. */
+          usesStoryShell && story && (
+            <Story story={story}>
+              <Content />
+            </Story>
+          )
+        }
+
+        {!usesStoryShell && isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && <CikarangIndustrialSettlementScrollytelling client:visible />}
+        {!usesStoryShell && isScrollytelling && post.id === 'bontang-poverty-mapping' && <BontangPovertyMappingScrollytelling client:visible />}
+        {!usesStoryShell && isScrollytelling && post.id === 'jabung-lampung-coastal-development' && <JabungLampungCoastalDevelopmentScrollytelling client:visible />}
+        {!usesStoryShell && isScrollytelling && post.id === 'rpplh-south-papua' && <RpplhSouthPapuaScrollytelling client:visible />}
       </div>
 
       <aside class="post-rail">

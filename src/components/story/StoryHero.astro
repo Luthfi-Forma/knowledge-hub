@@ -1,0 +1,125 @@
+---
+// A story's opening block (M10/T-75, ADR-005): eyebrow, title, dek, mono
+// meta line, and a slot for the Sources trigger.
+//
+// Ported from the hero in src/islands/Scrollytelling.tsx, which was React
+// purely because it lived inside the island — it has no state, no handlers,
+// and nothing to hydrate. Moving it here removes it from the JS bundle.
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Exact substring of `title` to set in the research colour. */
+  emphasise?: string;
+  dek: string;
+  meta: string;
+}
+
+const { eyebrow, title, emphasise, dek, meta } = Astro.props;
+
+/*
+ * The old shell took `title` as a ReactNode so a post could pass
+ * `<em className="text-research not-italic">one corridor</em>` inline.
+ * Frontmatter can only carry a string, so the accent is expressed as a
+ * substring instead and split here.
+ *
+ * A miss throws rather than degrading quietly: reword the title and forget
+ * the accent, and a silent fallback would ship a hero that lost its emphasis
+ * with nothing to notice it. Frontmatter is validated at build time
+ * everywhere else in this project; this keeps the same standard.
+ */
+let before = title;
+let accent = '';
+let after = '';
+
+if (emphasise) {
+  const at = title.indexOf(emphasise);
+  if (at === -1) {
+    throw new Error(
+      `story.emphasise ${JSON.stringify(emphasise)} does not occur in story.title ${JSON.stringify(title)}`,
+    );
+  }
+  if (title.indexOf(emphasise, at + 1) !== -1) {
+    throw new Error(
+      `story.emphasise ${JSON.stringify(emphasise)} occurs more than once in story.title — it must identify one span`,
+    );
+  }
+  before = title.slice(0, at);
+  accent = emphasise;
+  after = title.slice(at + emphasise.length);
+}
+---
+
+<section class="story-hero">
+  <p class="story-hero-eyebrow">{eyebrow}</p>
+  <h1 class="story-hero-title">
+    {before}{accent && <span class="story-hero-accent">{accent}</span>}{after}
+  </h1>
+  <p class="story-hero-dek">{dek}</p>
+  <div class="story-hero-meta">
+    <span>{meta}</span>
+    <slot name="sources-trigger" />
+  </div>
+</section>
+
+<style>
+  .story-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0;
+    text-align: center;
+  }
+
+  .story-hero-eyebrow {
+    margin: 0 0 16px;
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--color-research);
+  }
+
+  .story-hero-title {
+    margin: 0;
+    max-width: 48rem;
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 800;
+    font-stretch: 118%;
+    line-height: 1.1;
+    color: var(--color-ink);
+  }
+  @media (min-width: 640px) {
+    .story-hero-title {
+      font-size: 3rem;
+    }
+  }
+
+  /* Colour only — `not-italic` in the original markup existed to undo <em>'s
+     default slant, which a <span> never had. */
+  .story-hero-accent {
+    color: var(--color-research);
+  }
+
+  .story-hero-dek {
+    margin: 24px 0 0;
+    max-width: 36rem;
+    font-size: var(--text-body);
+    line-height: 1.65;
+    color: var(--color-ink-muted);
+  }
+
+  .story-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-muted);
+  }
+</style>

@@ -89,23 +89,41 @@ membagi dengan nol di sini tapi tidak di browser asli.
 
 ## Decision
 
-1. **Struktur story di frontmatter, prosa di body MDX.** Skema `posts` mendapat
-   objek `story` opsional (divalidasi zod, JSON-serializable by construction)
-   berisi daftar scene: `id`, `kicker`, `title`, `citations`, `vizCitation`.
-   Prosa tiap scene ditulis sebagai markdown di body MDX, dibungkus
-   `<Scene id="...">`. `Story.astro` mengambil daftar scene dari frontmatter,
-   bukan dari introspeksi children.
+1. **Pembagian ditentukan oleh satu batas teknis: apa yang dirender DI DALAM
+   scene ditulis di MDX; apa yang diagregasi LINTAS scene ditulis di
+   frontmatter.**
 
-   `<Story><Scene>` literal seperti yang konsep bayangkan **tidak bisa dicapai**,
-   dan alasannya perlu dicatat supaya tidak dicoba ulang: parent Astro tidak bisa
-   membaca prop children yang di-slot — konten slot dirender jadi string HTML
-   sebelum parent melihatnya, jadi `Story` tidak akan pernah tahu daftar id
-   scene-nya. Merendernya lewat React juga tidak menolong: children yang masuk ke
-   island tiba sebagai HTML pra-render opaque di `<astro-slot>`, bukan children
-   React yang bisa diintrospeksi. Frontmatter memberi semua manfaat yang
-   diinginkan konsep (prosa jadi markdown, cross-link jadi link markdown, prosa
-   terindeks Pagefind sebagai konten, menambah scene = edit MDX) tanpa melawan
-   model rendering.
+   - **Frontmatter (`story`)**: hero (`eyebrow`, `title`, `emphasise`, `dek`,
+     `meta`), `source`, dan `scenes[]` berisi `id` + `citations` +
+     `vizCitation`.
+   - **Body MDX**: `<Scene id kicker title>` membungkus prosa markdown asli,
+     lengkap dengan cross-link markdown.
+
+   **Draf pertama ADR ini menaruh `kicker` dan `title` di frontmatter juga.
+   Itu tidak bisa dijalankan**, dan alasannya diukur di T-75, bukan
+   disimpulkan: prop yang dikirim ke `<Content />` **tidak sampai** ke scope
+   body MDX — `Astro.props` melempar `ReferenceError: Astro is not defined`
+   di dalam MDX, dan variabel biasa tiba sebagai `undefined`. Jadi komponen
+   yang dipakai di dalam MDX tidak akan pernah bisa membaca frontmatter, dan
+   komponen yang membungkus `<Content />` tidak akan pernah bisa menyisipkan
+   apa pun ke dalamnya. Menganyam chrome frontmatter dengan prosa MDX
+   per-scene **mustahil di model rendering Astro**, bukan sekadar sulit.
+
+   Konsekuensinya diputuskan bersama user (2026-08-09): kicker dan judul
+   pindah ke MDX supaya menempel pada prosa yang mereka labeli — nol
+   duplikasi — dan **blok `<details>` sitasi inline per-scene dihapus**.
+   Itu bukan kehilangan fitur: shell lama merender tiap sitasi **dua kali**,
+   sekali inline dan sekali lagi di panel Sources, dari data yang sama.
+   Sekarang sitasi hidup sekali, di frontmatter, dan tampil sekali, di panel.
+
+   Panel mengelompokkan sitasi per `§NN` tanpa judul scene, karena judulnya
+   ada di MDX — nomornya cocok dengan counter yang tampil di kolom baca.
+
+   Untuk alasan yang sama, **assertion build-time yang mencocokkan id
+   frontmatter dengan `<Scene id>` tidak bisa ditulis** (tidak ada yang bisa
+   membaca MDX yang sudah dirender). Id yang salah ketik membuat sitasi scene
+   itu hilang dari panel, bukan menggagalkan build — konsekuensi yang
+   diterima, bukan yang terlewat.
 
 2. **Shell story statis; satu island saja.** Hero, kolom prosa, blok sitasi, dan
    panel sumber jadi komponen `.astro` — semuanya panel disclosure atau teks
@@ -275,10 +293,13 @@ membagi dengan nol di sini tapi tidak di browser asli.
   kali scene-nya jadi aktif; di bawah stage persisten, tidak. Bisa dibilang lebih
   baik, tapi ini perubahan yang terlihat pada konten terbit yang nol test maupun
   build error akan menangkapnya.
-- (−) **Id scene hidup di dua tempat** (array frontmatter dan atribut `<Scene>`).
-  Typo menghasilkan scene beranchor tanpa prosa, atau prosa tanpa anchor, dan
-  build tetap hijau. Dimitigasi assertion build-time di `Story.astro` — murah,
-  wajib ada sejak task shell, bukan ditambahkan belakangan.
+- (−) **Id scene hidup di dua tempat** (array frontmatter dan atribut `<Scene>`)
+  dan **tidak bisa dicocokkan otomatis** — mitigasi assertion build-time yang
+  draf ADR ini rencanakan ternyata mustahil, karena tidak ada yang bisa membaca
+  MDX yang sudah dirender (keputusan #1). Id yang salah ketik membuat sitasi
+  scene itu hilang dari panel; halaman tetap render dan build tetap hijau.
+  Karena itu id sengaja dibuat pendek, dan T-79 harus mencocokkannya manual
+  saat migrasi tiap post.
 - (−) **Diff migrasi prosa besar dan tidak bisa direview borongan.** LESSONS
   2026-08-04 mencatat kebijakan editing task sebelumnya bocor ke task berikutnya
   dan diam-diam mengubah prosa pemilik situs, ketahuan hanya lewat perbandingan

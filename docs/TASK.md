@@ -150,14 +150,43 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   pemisah ribuan), lalu **kedua file dihapus** dan build kembali 48 halaman.
   Lesson dicatat di `docs/memory/LESSONS.md`. Nol console error nyata (M10)
   — 2026-08-09
-- [ ] T-75: skema `story` di `content.config.ts` + shell Astro statis
-  (`Story.astro`, `Scene.astro`, `StoryHero.astro`, `Citations.astro`,
-  `SourcesPanel.astro`). `SourcesPanel` dan `CitationBlock` jadi markup
-  statis — keduanya panel disclosure (Tier-0); `CitationBlock` bahkan sudah
-  berupa `<details>` yang dirender React tanpa alasan. Termasuk assertion
-  build-time yang menggagalkan build kalau id scene di frontmatter dan id
-  di `<Scene>` menyimpang (typo menghasilkan scene beranchor tanpa prosa
-  dan build tetap hijau). **Terverifikasi penuh — HTML statis, nol JS** (M10)
+- [x] T-75: skema `story` + shell Astro statis — **selesai 2026-08-09**, dan
+  **membatalkan keputusan #1 ADR-005**. Diuji, bukan diasumsikan: prop yang
+  dikirim ke `<Content />` **tidak sampai** ke scope body MDX (`Astro.props`
+  melempar `ReferenceError: Astro is not defined`; variabel biasa tiba
+  `undefined`). Artinya komponen di dalam MDX tidak akan pernah bisa membaca
+  frontmatter, dan komponen pembungkus `<Content />` tidak akan pernah bisa
+  menyisipkan apa pun ke dalamnya — **menganyam chrome frontmatter dengan
+  prosa MDX per-scene mustahil di Astro**, bukan sekadar sulit. Keputusan
+  bersama user: `kicker`+`title` pindah ke atribut `<Scene>` di MDX (menempel
+  pada prosanya, nol duplikasi); sitasi tetap di frontmatter dan tampil di
+  panel Sources saja. Blok `<details>` inline dihapus — **bukan kehilangan
+  fitur**: shell lama merender tiap sitasi dua kali dari data yang sama.
+  Assertion build-time id yang ADR rencanakan **ternyata mustahil** karena
+  alasan yang sama; dicatat sebagai konsekuensi, bukan dilewatkan.
+  **Dibangun**: `Story.astro`, `Scene.astro`, `StoryHero.astro`,
+  `SourcesPanel.astro`, skema `story` zod, dan wiring di `[slug].astro`
+  (`usesStoryShell` — keempat post lama tetap di island lama sampai T-79).
+  **Perbaikan yang ikut terbawa**: (a) post scrollytelling selama ini **nol
+  `<h1>`** — `[slug].astro` menyembunyikan h1 post dan shell lama mulai dari
+  h2; shell baru memakai h1 untuk judul story dan h2 per scene. (b) Panel
+  Sources kini punya handler Escape dan pengembalian fokus ke trigger; panel
+  React lama tidak punya keduanya. (c) Nomor scene dari CSS counter, bukan
+  indeks yang ditulis tangan — menyisipkan scene menomori ulang sendiri.
+  **Diverifikasi lewat post uji sementara** (dibuat, dilatih, dihapus):
+  h1 tepat 1 dengan urutan h1→h2×3; `emphasise` membelah judul benar dan
+  **melempar error kalau substring-nya tidak ada** — bukan gagal diam;
+  `counter-reset`/`counter-increment` aktif dan `::before` selebar 14px
+  (dua digit mono, jadi counternya benar-benar merender); panel buka→fokus
+  ke Close, Escape→fokus balik ke trigger; scene tanpa sitasi benar-benar
+  dilewati panel tapi tetap dihitung nomornya; cross-link markdown utuh;
+  nol overflow horizontal pada container 1240px. **Nol chunk JS dirujuk**
+  (halaman island lama merujuk 216 KB raw hanya dari chunk langsungnya).
+  **Bug kecil ditemukan sendiri**: komentar `<!-- -->` di template `Scene.astro`
+  ikut terkirim ke browser 3× per halaman — dipindah ke frontmatter komponen,
+  output kini nol komentar HTML. Build 48 halaman/4018 kata, identik dengan
+  baseline; keempat post lama dikonfirmasi tetap memakai island (M10)
+  — 2026-08-09
 - [ ] T-76: `useStoryProgress.ts` + `StoryStage.tsx`, mode `per-scene` saja.
   Offset scene diukur saat mount + resize (di-cache), tidak pernah per event
   scroll, supaya handler nol pembacaan layout. `setState` hanya saat nilai
