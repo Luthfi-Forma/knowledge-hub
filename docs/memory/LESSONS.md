@@ -722,3 +722,61 @@ source. Verify with an object comparison against the actual source
 (character/substring counts, diff, or line-by-line match), not a
 read-through, whenever the new task's rule is "preserve X exactly" and
 the previous task's rule was "change X everywhere."
+
+## 2026-08-09 — The browser tool's dead-callback list is longer than 2026-07-21 recorded: `scroll` and `requestIdleCallback` are dead too, but `client:load`, `scrollY` and `getBoundingClientRect()` all work
+
+Tags: #browser-verification #scrollytelling #astro-islands
+
+The 2026-07-21 entry above named three dead callbacks (IntersectionObserver,
+rAF, ResizeObserver). Planning M10 around a scroll-driven story stage forced a
+direct re-measurement (T-71 spike, against a real `astro preview` build), and
+the picture is both worse and better than that entry implies.
+
+**Also dead** — not previously recorded:
+
+- **`scroll` events never fire.** A `window.addEventListener('scroll')` with a
+  passive listener received **0 events** across two `scrollTo()` calls. So
+  "replace IntersectionObserver with a scroll listener" does **not** buy
+  verifiability — a plan that assumed it would was wrong, and was corrected
+  before it shipped.
+- **`requestIdleCallback` exists in the runtime but never fires**, so
+  `client:idle` is exactly as unhydratable as `client:visible`.
+
+**Alive, and this is what makes scroll work testable at all:**
+
+- **`setTimeout` fires.** It is the *only* working async primitive found.
+- **`window.scrollY` is readable and advances correctly** after
+  `window.scrollTo()` (0 → 2500 → 4200).
+- **`getBoundingClientRect()` returns real values and stays internally
+  consistent under scroll** — `sec-finding1` computed an absolute offset of
+  3149 both at `scrollY: 0` and at `scrollY: 4200`.
+- **`client:load` hydrates.** Verified by flipping one directive, rebuilding,
+  and checking that `astro-island` lost its `ssr=""` attribute and the host
+  node gained a `__react*` fiber key. Under `client:visible` the same page kept
+  `ssr=""` and had no fiber.
+
+**Still 0 from every probe:** `window.innerHeight`,
+`document.documentElement.clientHeight`, `window.visualViewport.height`, and
+`screen.height`. (`document.body.clientHeight` returns the *document* height,
+not the viewport — an easy false positive.) This extends the 2026-07-30 entry
+about `innerWidth`: viewport *height* is not merely imprecise here, it is
+absent.
+
+**Generalized rules**, worth applying beyond this project:
+
+1. **Test the computation, not the event.** When an interaction is
+   `event → compute → render` and the event source is unavailable in the
+   verification environment, export the middle step as a pure function
+   (`compute(scrollY, offsets, viewportHeight) → state`) and call it directly
+   with real values harvested from the live DOM. The listener then becomes a
+   one-line trigger that carries no logic worth testing.
+2. **Inject environment measurements, never read them inside the unit.** Any
+   function that internally reads viewport height silently divides by zero
+   here while being perfectly correct in a real browser — the worst failure
+   shape, because it looks like a code bug.
+3. **A "no commit" spike still earns its cost when it kills an assumption.**
+   This one invalidated two decisions already written into a draft ADR
+   (`client:idle`, and "scroll events restore verifiability"). Both were
+   corrected before commit. Re-measure environment constraints when a plan
+   leans on them, instead of citing an older lesson that was written for a
+   narrower question.

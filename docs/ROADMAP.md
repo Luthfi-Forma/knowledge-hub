@@ -1,6 +1,6 @@
 # Roadmap — knowledge-hub
 
-- Updated: 2026-08-04 (M9 selesai total — T-70)
+- Updated: 2026-08-09 (M10 dibuka — T-71–T-81)
 
 <!-- The roadmap answers "what order and why". Tasks live in TASK.md, not here. -->
 
@@ -17,6 +17,7 @@
 | M7 | Atlas — lapisan editorial | 20 definisi topik ter-publish; ≥3 cross-link inline per post (dari nol hari ini); angka `impact` di stamp lembar untuk post yang punya | done** |
 | M8 | Perbaikan visual & suara editorial | Cover index tinggi konsisten (`aspect-ratio` menggantikan crop erratic); scrollytelling desktop 5/7 + rail di bawah island, mobile dock tidak lagi menutupi teks; collar mobile 305px→147px; nol em/en dash naratif di seluruh prosa situs | done |
 | M9 | 3 artikel naratif baru | 3 post `type: article` ter-publish dari materi pemilik situs (14 post total); 1 tag baru `economic-policy`; nol kalimat prosa milik user diedit | done |
+| M10 | Story framework & lapisan spasial | ADR-005; prosa 4 post scrollytelling kembali ke body MDX (`grep "body:" src/lib/scrollytelling` nol); satu stage persisten dengan progress kontinu menggantikan remount-per-scene; post Cikarang dapat scene spasial dari geometri 5 distrik tulis-tangan — nol library peta, nol dependensi baru (`git diff package.json` kosong); `duration: 0.4` di chrome scrollytelling nol; `:active` dan `:hover` chip yang hilang terpasang | in progress |
 
 \* Satu pengecualian tercatat: T-36 (baseline Lighthouse resmi) tetap
 terbuka di Backlog — diblokir tooling di luar kendali sesi ini (PSI web UI
@@ -58,8 +59,18 @@ fakta/cross-link berubah). Rencana penuh + pengukuran pendukung:
 **M9 — 3 artikel naratif baru selesai total** (T-70, dibuka+ditutup di
 sesi yang sama, 2026-08-04): materi diserahkan langsung dari vault
 pribadi pemilik situs, dipublish Bahasa Indonesia (deviasi dicatat
-`docs/RULES.md`), nol kalimat prosa milik user diedit. Tidak ada
-milestone aktif. Lihat "Phase detail" untuk riwayat lengkap.
+`docs/RULES.md`), nol kalimat prosa milik user diedit.
+
+**M10 — story framework & lapisan spasial: aktif** (dibuka 2026-08-09,
+T-71–T-81). Dipicu `Konsep Milestone 10.txt` dari pemilik situs; cakupan
+konsep dipersempit dari 5 sub-milestone jadi 2 (framework + spasial),
+Knowledge Graph ditunda ke gerbangnya sendiri, AI Layer ditolak, Immersive
+ditafsir ulang jadi focus mode per-story. Urutan kerjanya sengaja menaruh
+task yang **terverifikasi penuh** lebih dulu (T-72–T-75 semuanya HTML
+statis atau fungsi murni) sebelum yang digerakkan scroll — karena
+IntersectionObserver/`rAF` tidak menyala di browser tool sesi ini
+(`docs/memory/LESSONS.md`, 2026-07-21). Lihat "Phase detail" untuk
+riwayat lengkap.
 
 Rencana M6 lengkap (slicing S1–S5, koreksi terhadap handoff, verifikasi):
 `C:\Users\Luthfi\.claude\plans\persiapkan-untuk-pengerjaan-milestone-crystalline-avalanche.md`.
@@ -235,6 +246,65 @@ M8 tutup.
   Transportasi Indonesia"; Bahasa Indonesia, deviasi dicatat
   `docs/RULES.md`; nol kalimat prosa milik user diedit — hanya adaptasi
   struktural heading; 1 tag baru `economic-policy`).
+
+### M10 — Story framework & lapisan spasial
+
+Dibuka 2026-08-09 dari `Konsep Milestone 10.txt` yang diserahkan pemilik
+situs. Konsep aslinya berisi 5 sub-milestone (Story Framework, Spatial
+Layer, Knowledge Graph, Immersive Mode, AI Layer) — itu ukuran roadmap,
+bukan satu milestone. Cakupan dipersempit bersama user di sesi
+pembukaan; keputusan lengkap + audit desain pendukung:
+`C:\Users\Luthfi\.claude\plans\c-users-luthfi-desktop-konsep-milestone-purring-storm.md`.
+
+**Yang dipotong dari konsep, dengan alasan:**
+
+- **Knowledge Graph — ditunda, bukan ditolak.** Gerbangnya sudah tertulis
+  di "Digerbangi, bukan dibunuh" di bawah: ≥20 post **dan** ≥15 cross-link.
+  Cross-link sudah lewat; post masih 14. M10 tidak menambah post (konten
+  M10 memperdalam post yang ada), jadi gerbangnya tetap tertutup setelah
+  M10 selesai.
+- **AI Knowledge Layer — ditolak.** Butuh backend (non-goal tertulis di
+  `PROJECT_BRIEF.md`) atau ~25–30MB model di browser untuk 14 dokumen —
+  100× halaman terberat situs. Pagefind sudah mengindeks semua post.
+- **Immersive Mode — ditafsir ulang, bukan dihidupkan kembali.** Bukan
+  identitas visual kedua (itu persis yang ADR-004 tolak), tapi mode fokus
+  layar-penuh untuk SATU story: sembunyikan collar + rail, stage jadi
+  dominan. Nol `data-mode`, nol pohon DOM kedua, nol token di-remap, nol
+  komponen yang perlu dirancang dua kali — jadi tidak menyentuh ADR-004.
+- **Library peta — ditolak.** MapLibre ~200KB gzip + fetch tile ke host
+  pihak ketiga tiap kunjungan; endpoint tile remote secara fungsional
+  adalah backend. Lapisan spasial dibangun dari geometri disederhanakan
+  yang ditulis tangan sebagai array angka + proyeksi Web Mercator ~15
+  baris. `d3-scale`/`d3-shape` sudah ada di bundle lewat recharts.
+
+**Temuan yang memicu sebagian task**: mekanika scroll ternyata SUDAH
+tersentral penuh di `src/islands/Scrollytelling.tsx` (keempat modul
+mengimpornya, duplikasi scroll = nol) — jadi "framework" yang konsep minta
+sebagian sudah ada. Yang benar-benar rusak: model step diskret+remounting
+(`viz: Record<string, ComponentType>` = viz menerima nol prop, jadi peta
+yang pan/zoom antar-scene mustahil secara struktural), prosa hidup sebagai
+JSX di `.tsx` bukan di MDX, dan duplikasi nyata di modul viz (tabel a11y
+disalin tangan ~16×, `AnimatedNumber` 3 versi berperilaku beda).
+
+- [ ] ADR-005 — story framework: scene di frontmatter, prosa di MDX, satu
+  stage persisten, progress berbasis event scroll. Wajib menyatakan di
+  paragraf pertama bahwa ADR ini tidak menyentuh ADR-004.
+- [ ] Spike verifikasi: event `scroll` + `getBoundingClientRect()` +
+  `client:idle` di browser tool (T-71).
+- [ ] Perbaikan audit desain berdiri sendiri (T-72) — `scroll-margin-top`,
+  `:hover` TopicChip yang hilang, `duration: 0.4`→`0.2`, hover Plate yang
+  nyaris tak terlihat, backdrop drawer, `:active`, kurva easing kustom.
+- [ ] `view-transition-name` cover plate↔post — Tier-0, nol JS (T-73).
+- [ ] Primitif viz reusable: theme, AnimatedNumber, DataTable, Legend,
+  Chart (T-74).
+- [ ] Skema `story` + shell Astro statis (T-75).
+- [ ] `useStoryProgress` + `StoryStage` mode `per-scene` (T-76).
+- [ ] Mode `persistent` + proyeksi geo (T-77).
+- [ ] **Konten**: perdalam post Cikarang dengan scene spasial dari
+  `LAND_BY_DISTRICT_2023`/`DISTRICT_GROWTH` (T-78).
+- [ ] Migrasi 3 modul sisa (T-79).
+- [ ] Focus mode per-story (T-80, bisa dipotong).
+- [ ] Hapus shell lama + ukur bundle (T-81, bisa dipotong).
 
 ## Icebox
 

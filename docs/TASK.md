@@ -1,6 +1,6 @@
 # Tasks — knowledge-hub
 
-- Updated: 2026-08-04 (M8 selesai total — T-66–T-69)
+- Updated: 2026-08-09 (M10 dibuka — T-71–T-81)
 
 <!-- Rules:
      - No coding before the work exists as a task here (CLAUDE.md, Session protocol).
@@ -10,8 +10,166 @@
 
 ## Now
 
+**M10 — Story framework & lapisan spasial: aktif** (dibuka 2026-08-09
+dari `Konsep Milestone 10.txt`). Rencana penuh + audit desain/animasi
+pendukung:
+`C:\Users\Luthfi\.claude\plans\c-users-luthfi-desktop-konsep-milestone-purring-storm.md`.
+Cakupan konsep dipersempit bersama user: Knowledge Graph ditunda (gerbang
+ROADMAP ≥20 post belum tercapai — masih 14), AI Layer ditolak (butuh
+backend, non-goal PROJECT_BRIEF), Immersive ditafsir ulang jadi focus mode
+per-story (tidak menyentuh ADR-004), library peta ditolak (geometri
+tulis-tangan + proyeksi ~15 baris sebagai gantinya).
+
+Urutan sengaja: task **terverifikasi penuh** dulu (T-72–T-75 = HTML statis
+atau fungsi murni), baru yang digerakkan scroll — karena
+IntersectionObserver/`rAF`/ResizeObserver tidak menyala di browser tool
+sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
+
+- [ ] ADR-005: story framework — scene di frontmatter, prosa di MDX, satu
+  stage persisten menggantikan remount-per-scene, progress berbasis event
+  scroll menggantikan `IntersectionObserver`. Catat juga penolakan
+  eksplisit (nol library peta, nol AI layer, Immersive = focus mode bukan
+  identitas kedua) supaya sesi mendatang tidak mengulang perdebatan.
+  Paragraf pertama **wajib** menyatakan ADR ini tidak menyentuh ADR-004 —
+  ia memperkenalkan "mode" story (`per-scene`/`persistent`) dan "focus
+  mode", dan pembaca yang menyapu sekilas akan pattern-match ke dual-mode.
+  Target: nol dependensi baru (M10)
+- [x] T-71: spike verifikasi — **selesai, dan membatalkan dua asumsi**.
+  Diukur langsung terhadap `astro preview` sungguhan, bukan mengutip
+  LESSONS lama. **Mati**: event `scroll` (0 event terpicu di 2× `scrollTo`),
+  `requestIdleCallback` (ada di runtime, tidak pernah menyala — jadi
+  `client:idle` sama tidak terhidrasinya dengan `client:visible`),
+  `IntersectionObserver`, `rAF`, dan semua probe tinggi viewport
+  (`innerHeight`/`documentElement.clientHeight`/`visualViewport`/`screen`
+  semuanya 0). **Hidup**: `setTimeout` (satu-satunya primitif async yang
+  jalan), `window.scrollY` (maju benar 0→2500→4200),
+  `getBoundingClientRect()` (nilai asli, dan offset absolut konsisten —
+  `sec-finding1` = 3149 baik di scrollY 0 maupun 4200), dan
+  **`client:load` terhidrasi** (`astro-island` kehilangan `ssr=""`, host
+  dapat React fiber; di bawah `client:visible` halaman yang sama tetap
+  `ssr=""` tanpa fiber — diuji dengan membalik satu direktif, rebuild,
+  lalu **revert terkonfirmasi lewat `git status --short src/` kosong**).
+  **Dua asumsi yang batal**: (1) draf ADR-005 mengklaim pindah ke event
+  `scroll` membuat stage terverifikasi — salah, event-nya sama matinya;
+  (2) rekomendasi `client:idle` — salah, harus `client:load`. Keduanya
+  dikoreksi di ADR-005 sebelum commit. Konsekuensi desain: matematika
+  progress wajib fungsi murni terekspor dengan tinggi viewport di-inject
+  sebagai argumen, bukan dibaca di dalam. Nol commit kode; hasil tercatat
+  di ADR-005 § spike dan `docs/memory/LESSONS.md` (M10) — 2026-08-09
+- [x] T-72: perbaikan audit desain yang berdiri sendiri — **selesai
+  2026-08-09**. (1) **Anchor mendarat di balik collar**: nol
+  `scroll-margin-top`/`scroll-padding-top` di seluruh repo padahal collar
+  `position: sticky; top: 0` — tiap klik TOC menaruh heading di y=0,
+  tertutup penuh. Diperbaiki lewat `scroll-padding-top` di `html` (satu
+  aturan mencakup semua anchor termasuk deep-link Pagefind dan skip-link,
+  bukan per-heading), dengan `--collar-height` 148px `<640px` / 112px
+  `≥640px`. 148px **diukur langsung** dan cocok dengan 147px yang T-68
+  catat; 112px dihitung dari CSS (baris 1: 16+44+16+1, baris 2: 8+18+8+1).
+  **Diverifikasi secara perilaku**, bukan cuma dibaca: `location.hash`
+  lompat → heading mendarat di `top: 164px`, persis 16px bebas di atas
+  collar; sebelum perbaikan mendarat di 0px. (2) **`TopicChip` nol
+  `:hover`** — transisi 3 properti dideklarasikan sejak M6 tapi nol rule
+  memicunya; ditambahkan mengikuti `.neighbour-chip` yang sudah benar.
+  (3) **400ms di chrome scrollytelling** — `Scrollytelling.tsx` progress
+  bar + crossfade viz `0.4`→`0.2`, dock mobile `0.3`→`0.2`, dan `spring`
+  (satu-satunya di repo, settle ~500ms) → `0.2` `ease-in-out` sehingga
+  panel Sources bergerak sama persis dengan drawer `LegendRail`. Ketiganya
+  melewati plafon keras 300ms dan lolos audit berkali-kali karena
+  `grep "[0-9]\+ms"` tidak melihat detik-di-JS. (4) **Hover `.plate`
+  nyaris tak terlihat** (`#171512`→`#2C4630`, dua-duanya nyaris hitam):
+  diganti menaikkan opacity hatch `0.1`→`0.16` — memakai mesin yang sudah
+  ada, nol shadow/radius/properti baru, tetap di dalam kosakata Atlas.
+  (5) **Backdrop `LegendRail`** pop→fade 200ms menyamai slide rail-nya;
+  `display: block` meng-override UA `[hidden]` supaya bisa dianimasikan,
+  `visibility` yang mencabutnya dari hit-testing. (6) **Nol `:active` di
+  seluruh repo** — ditambahkan `scale(0.985)` untuk `.control` dan
+  `0.995` untuk `.plate`, **dibungkus `prefers-reduced-motion:
+  no-preference`** (jaring global cuma menolkan durasi, yang akan
+  menyisakan transform menjentak) mengikuti pola `Dossier.astro`.
+  (7) **Kurva easing** `--ease-out`/`--ease-in-out` — durasi tetap persis
+  tiga nilai, nol nilai keempat. Motion JS tidak bisa baca custom property
+  CSS, jadi dinyatakan ulang sebagai `EASE_OUT`/`EASE_IN_OUT`.
+  **Koreksi RULES.md**: dua kategori gerak (chrome UI tunduk plafon;
+  animasi penjelas di dalam viz tidak — memaksa konvergensi 3 detik jadi
+  300ms menghancurkan yang dijelaskannya, tapi tetap wajib sekali jalan),
+  plus titik buta cek millisecond → sekarang butuh **dua** grep.
+  Diverifikasi dari CSS terkompilasi (`document.styleSheets`, ground truth
+  per LESSONS 2026-07-30), bukan `getComputedStyle` pada hover simulasi:
+  kedua `:active` terkonfirmasi ter-guard reduced-motion, token easing
+  resolve (`cubic-bezier(0.23, 1, 0.32, 1)`), backdrop punya
+  `visibility`+`display: block`, rail pakai `--ease-in-out`. `npm run
+  build` hijau 48 halaman; nol console error nyata (8× 404 semuanya
+  `/_vercel/insights/script.js`, hanya ada di platform Vercel, pre-existing)
+  (M10) — 2026-08-09
+- [ ] T-73: `view-transition-name: plate-{slug}` di cover `Plate` dan cover
+  post — nama unik per-slug, jadi hanya pasangan yang cocok yang ada di
+  kedua dokumen dan cover melakukan morph ke posisinya di halaman post.
+  Tier-0 murni (ADR-003 #1), nol JS, nol byte bundle. Browser tanpa
+  dukungan diam-diam kembali ke perilaku sekarang; jaring reduced-motion
+  sudah menangani `::view-transition-*` (`global.css:416-420`) (M10)
+- [ ] T-74: primitif viz reusable di `src/components/story/viz/` —
+  `theme.ts` (`tooltipStyle` identik byte-per-byte di 4 modul + konstanta
+  warna yang di-alias ulang per file), `AnimatedNumber.tsx` (rekonsiliasi
+  **3 versi berperilaku beda**: cikarang tween dari nilai sebelumnya,
+  bontang mulai dari 0 dan dibulatkan, rpplh mulai dari 0 tanpa
+  pembulatan), `DataTable.tsx` (mengganti `<table className="sr-only">`
+  yang disalin tangan ~16× — permukaan a11y paling rapuh di situs),
+  `Legend.tsx` (3 varian inline), `Chart.tsx` (memasangkan chart dengan
+  tabel fallback wajib supaya chart tanpa tabel jadi mustahil, bukan
+  sekadar tidak dianjurkan). Aditif murni — belum ada yang mengimpor (M10)
+- [ ] T-75: skema `story` di `content.config.ts` + shell Astro statis
+  (`Story.astro`, `Scene.astro`, `StoryHero.astro`, `Citations.astro`,
+  `SourcesPanel.astro`). `SourcesPanel` dan `CitationBlock` jadi markup
+  statis — keduanya panel disclosure (Tier-0); `CitationBlock` bahkan sudah
+  berupa `<details>` yang dirender React tanpa alasan. Termasuk assertion
+  build-time yang menggagalkan build kalau id scene di frontmatter dan id
+  di `<Scene>` menyimpang (typo menghasilkan scene beranchor tanpa prosa
+  dan build tetap hijau). **Terverifikasi penuh — HTML statis, nol JS** (M10)
+- [ ] T-76: `useStoryProgress.ts` + `StoryStage.tsx`, mode `per-scene` saja.
+  Offset scene diukur saat mount + resize (di-cache), tidak pernah per event
+  scroll, supaya handler nol pembacaan layout. `setState` hanya saat nilai
+  ter-kuantisasi (1/200) berubah. `reduceMotion` jadi **prop, bukan hook** —
+  hari ini 20+ call site `useReducedMotion()` tersebar di 4 modul, tiap satu
+  peluang lupa; sebagai prop, reduced-motion bisa diuji untuk pertama
+  kalinya. **Matematika progress wajib fungsi murni terekspor**
+  (`computeStageState(scrollY, offsets, viewportHeight)`) dengan tinggi
+  viewport **di-inject sebagai argumen** — T-71 mengukur semua probe
+  viewport = 0 di sini, jadi apa pun yang membacanya sendiri akan membagi
+  nol di tool tapi benar di browser asli. `client:visible`→**`client:load`**
+  (bukan `client:idle` — T-71 membuktikan `requestIdleCallback` tidak
+  pernah menyala; island ini ADALAH halamannya jadi menunda hidrasi tidak
+  membeli apa pun) (M10)
+- [ ] T-77: mode `persistent` + `geo/project.ts` (Web Mercator ~15 baris).
+  Buktikan morph dengan 2 scene percobaan sebelum post asli ada (M10)
+- [ ] T-78: **konten M10 (aturan content-first)** — perdalam post Cikarang
+  dengan scene spasial dari `LAND_BY_DISTRICT_2023` + `DISTRICT_GROWTH`
+  (`cikarang:52-67`, keduanya Tabel 1 paper Rahman & Hernanda 2025):
+  5 poligon distrik tulis-tangan yang warna/nilainya melakukan morph
+  2016→2023 pada stage yang bertahan. Prosa pindah dari JSX ke body MDX.
+  `VizProblem` (dua lingkaran saling mendekat, `cikarang:155-197`) memang
+  sudah pengganti kasar peta — diganti geometri asli. Stage-nya **bebas
+  recharts**, `viewBox` eksplisit tanpa `ResponsiveContainer`, jadi
+  terverifikasi dengan cara yang keempat post lama tidak pernah bisa.
+  **Wajib diakhiri cek diff mekanis** (hitung kata, link, dash per scene)
+  terhadap sumber `.tsx`, bukan dibaca ulang — LESSONS 2026-08-04 (M10)
+- [ ] T-79: migrasi 3 modul sisa ke framework, `jabung` dulu (terkecil,
+  422 baris, satu-satunya tanpa `AnimatedNumber`). Push, lalu **user lihat
+  live di Vercel sebelum lanjut** (LESSONS 2026-07-18 "additive-first, then
+  full-replace once seen live"). Wajib men-diff angka ter-render per scene:
+  di bawah remounting counter bontang/rpplh mulai dari 0 tiap scene aktif,
+  di bawah stage persisten tidak — perubahan perilaku yang terlihat pada
+  konten tayang yang nol test maupun build error akan menangkapnya (M10)
+- [ ] T-80: focus mode per-story — satu tombol dalam satu post yang
+  menyembunyikan collar + rail, stage jadi dominan. Nol identitas kedua,
+  nol `data-mode`, nol pohon DOM kedua. **Bisa dipotong** kalau milestone
+  kepanjangan (M10)
+- [ ] T-81: hapus `src/islands/Scrollytelling.tsx` (dipertahankan utuh
+  sepanjang M10 sebagai permukaan kompatibilitas), ukur `dist/_astro/*.js`
+  sebelum/sesudah, catat di `docs/TESTING.md` di sebelah data berat
+  transfer yang sudah ada. **Bisa dipotong** (M10)
+
 **M9 — 3 artikel naratif baru: selesai** (T-70, lihat Done — dibuka+
-ditutup 2026-08-04). Tidak ada task aktif.
+ditutup 2026-08-04).
 
 **M8 — Perbaikan visual & suara editorial: selesai** (T-66–T-69, lihat
 Done — dibuka+ditutup 2026-08-04, dipicu `Masukan untuk Knowledge Hub.md`
