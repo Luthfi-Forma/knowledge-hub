@@ -90,7 +90,9 @@ const Heading = headingLevel;
     overflow: hidden;
     text-decoration: none;
     color: var(--color-ink);
-    transition: border-color 120ms ease;
+    transition:
+      border-color 120ms var(--ease-out),
+      transform 120ms var(--ease-out);
   }
   .plate:hover,
   .plate:focus-visible {
@@ -99,6 +101,14 @@ const Heading = headingLevel;
   .plate:focus-visible {
     outline: 2px solid var(--color-research);
     outline-offset: 2px;
+  }
+
+  /* M10/T-72: press feedback, matching the global `.control` treatment.
+     A plate is the site's largest click target and had no pressed state. */
+  @media (prefers-reduced-motion: no-preference) {
+    .plate:active {
+      transform: scale(0.995);
+    }
   }
 
   /* Low-opacity hatch overlay behind the content. A real element (not
@@ -112,6 +122,20 @@ const Heading = headingLevel;
     z-index: 0;
     opacity: 0.1;
     pointer-events: none;
+    transition: opacity 120ms var(--ease-out);
+  }
+  /*
+   * M10/T-72: the plate's only hover signal used to be border-color
+   * --color-ink (#171512) -> --color-research (#2C4630). Both are near-black
+   * on cream paper, so the delta was very nearly invisible on the site's
+   * primary content container. Raising the land-class hatch instead gives a
+   * hover the eye actually catches, using machinery the plate already has —
+   * no shadow, no radius, no new property, and the type's own hatch is what
+   * strengthens, so the feedback stays inside Atlas's vocabulary.
+   */
+  .plate:hover .plate-overlay,
+  .plate:focus-visible .plate-overlay {
+    opacity: 0.16;
   }
   .plate-body,
   .plate-cover {
@@ -128,8 +152,9 @@ const Heading = headingLevel;
     border: 1px solid var(--color-line-strong);
     background-color: var(--color-paper-raised);
     transition:
-      border-color 120ms ease,
-      background-color 120ms ease;
+      border-color 120ms var(--ease-out),
+      background-color 120ms var(--ease-out),
+      transform 120ms var(--ease-out);
   }
   .plate-compact:hover,
   .plate-compact:focus-visible {

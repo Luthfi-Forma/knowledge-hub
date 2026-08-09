@@ -40,9 +40,21 @@ const { topic, count, active = false, href = `/topics/${topic}` } = Astro.props;
     border: 1px solid var(--color-line-strong);
     background-color: var(--color-paper);
     transition:
-      border-color 120ms ease,
-      background-color 120ms ease,
-      color 120ms ease;
+      border-color 120ms var(--ease-out),
+      background-color 120ms var(--ease-out),
+      color 120ms var(--ease-out);
+  }
+  /*
+   * M10/T-72: this transition was declared in M6 but nothing ever triggered
+   * it — the chip had `:focus-visible` and `.is-active` and no `:hover` rule
+   * at all, so a mouse user got zero feedback on the site's primary topic
+   * navigation and the three-property transition above was dead code.
+   * Matches `.neighbour-chip` (topics/[topic].astro), which had the correct
+   * treatment all along.
+   */
+  .topic-chip:hover {
+    border-color: var(--color-research);
+    color: var(--color-research);
   }
   .topic-chip::after {
     content: '';

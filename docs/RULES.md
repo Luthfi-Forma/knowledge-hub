@@ -111,6 +111,46 @@ sama, bukan menemukan ulang.
   konsumennya sudah dibongkar total di M6, ADR-004, jadi 220ms tidak lagi
   punya pemakai, digantikan 200ms layout untuk kasus serupa/perubahan
   posisi.)
+- **Dua kategori gerak, bukan satu — diperbarui M10 (T-72).** Aturan durasi
+  di atas ditulis seolah berlaku untuk seluruh situs, dan itu tidak pernah
+  benar. Ada dua kategori dengan aturan berbeda, dan mencampurnya membuat
+  audit menghasilkan "pelanggaran" palsu sekaligus melewatkan yang asli:
+  1. **Chrome UI** — hover, fokus, press, drawer, crossfade antar-state.
+     **Tunduk penuh pada 120/200/300ms di atas.** Di sinilah plafon keras
+     berlaku.
+  2. **Animasi penjelas di dalam viz** — gerak yang tugasnya menerangkan
+     sebuah proses, bukan menandai perubahan state UI. Contoh: dua lingkaran
+     yang saling mendekat selama 3 detik di
+     `lib/scrollytelling/cikarang-industrial-settlement-pattern.tsx`, dan
+     `animationDuration` recharts 800–1200ms. **Tidak tunduk pada plafon
+     300ms** — memaksa konvergensi 3 detik jadi 300ms menghancurkan hal yang
+     sedang dijelaskannya. Yang tetap mengikat di kategori ini: **sekali
+     jalan, nol `repeat: Infinity`** (WCAG 2.2.2, pelanggaran nyata yang
+     ditemukan di T-35), dan wajib menghormati reduced motion.
+- **Cek millisecond punya titik buta: durasi yang ditulis dalam detik di
+  JS.** `grep -rn "[0-9]\+ms" src/` tidak pernah melihat
+  `transition={{ duration: 0.4 }}`. Karena itu klaim lama "tidak ada nilai
+  lain selain tiga ini" **salah sejak M4** — T-72 menemukan 400ms di dua
+  tempat (progress bar + crossfade viz) dan satu `spring` tanpa durasi yang
+  settle di sekitar 500ms, semuanya di chrome `Scrollytelling.tsx`, semuanya
+  melewati plafon keras dan semuanya lolos berkali-kali audit. Sudah
+  diperbaiki ke 200ms. **Cek yang benar butuh dua grep**, bukan satu:
+  `grep -rn "[0-9]\+ms" src/` untuk CSS, dan
+  `grep -rn "duration:\|type: 'spring'" src/` untuk motion JS.
+- **Dua kurva easing, bukan `ease` bawaan — ditambahkan M10 (T-72).**
+  `--ease-out: cubic-bezier(0.23, 1, 0.32, 1)` untuk apa pun yang masuk,
+  keluar, atau merespons pengguna (hover, fokus, press); `--ease-in-out:
+  cubic-bezier(0.77, 0, 0.175, 1)` untuk sesuatu yang berpindah melintasi
+  layar sambil tetap hadir (drawer `LegendRail`, panel Sources). **Ini bukan
+  nilai durasi keempat** — durasinya tetap persis tiga; yang berubah hanya
+  bentuk kurva yang dilalui ketiga durasi itu. `ease` bawaan CSS mengerem
+  sangat terlambat, sehingga hover 120ms menghabiskan sebagian besar
+  waktunya nyaris diam lalu tiba mendadak. Dua kurva, keduanya terpakai,
+  **bukan tangga penamaan dan bukan sistem token** — batas yang aturan di
+  atas minta dijaga tetap dijaga. Motion JS tidak bisa membaca custom
+  property CSS, jadi kedua kurva itu dinyatakan ulang sebagai array
+  `EASE_OUT`/`EASE_IN_OUT` di `src/islands/Scrollytelling.tsx` — nilainya
+  wajib tetap sinkron dengan stylesheet.
 - **Island (React/framework apa pun) tidak pernah di layout global** — ini
   aturan ADR-002/ADR-003, bukan aturan motion baru, tapi motion-nya sendiri
   jadi konsekuensi langsung: transisi mode dan seam dikerjakan Tier-1

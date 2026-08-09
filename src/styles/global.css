@@ -147,6 +147,64 @@
    */
   --color-chart-1: var(--color-research);
   --color-chart-2: var(--color-project);
+
+  /*
+   * Easing curves (M10/T-72). Atlas fixes three DURATIONS (120/200/300ms,
+   * docs/RULES.md "Motion rules") and that stays untouched — these add no
+   * fourth duration, they only change the shape of the curve those three
+   * durations travel along. CSS's bare `ease` keyword is a weak curve: it
+   * eases out very late, so a 120ms hover spends most of its time barely
+   * moving and then arrives abruptly, which reads as "a color changed"
+   * rather than "the interface responded".
+   *
+   * --ease-out is for anything entering, leaving, or responding to the user
+   * (hover, focus, press): it starts fast, so feedback appears at the moment
+   * the user is watching most closely. --ease-in-out is for something moving
+   * across the screen while staying present (the rail drawer): it
+   * accelerates and decelerates the way a physical panel does.
+   *
+   * Deliberately NOT a "motion token system" — RULES.md warns against
+   * building one. Two curves, both used, no scale, no naming ladder.
+   */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/*
+ * Anchor landing offset (M10/T-72). The collar is `position: sticky; top: 0`
+ * (Header.astro), so before this rule every in-page anchor — TOC links on
+ * post pages, the skip-link, a Pagefind result deep-link — scrolled its
+ * target to y=0 and parked it BEHIND the collar, completely hidden. Measured
+ * on a real build: collar 148px at <640px, heading fully covered.
+ *
+ * `scroll-padding-top` on the scroll container (html) rather than
+ * `scroll-margin-top` on each heading: one rule covers every anchor target on
+ * the site, including ones no component owns (Pagefind deep-links, the
+ * skip-link's #main), instead of needing a matching declaration wherever a
+ * new anchor is introduced.
+ *
+ * --collar-height is COUPLED to Header.astro's own padding/min-height — it is
+ * not read from the DOM, so the two must change together. Values: <640px =
+ * 10px+nav-line+10px rows -> 148px measured (matches T-68's own 147px
+ * measurement); >=640px = row 1 (16 + 44 min-height + 16 + 1px border = 77)
+ * + row 2 (8 + 18 + 8 + 1 = 35) = 112px. The +16px is Atlas's spacing scale,
+ * so a heading lands one scale step clear of the collar edge instead of
+ * flush against it.
+ *
+ * Base rule first, breakpoint override after — at tied specificity the
+ * cascade resolves by SOURCE ORDER, not by which rule sits inside a @media
+ * block (docs/memory/LESSONS.md, 2026-08-04).
+ */
+:root {
+  --collar-height: 148px;
+}
+@media (min-width: 640px) {
+  :root {
+    --collar-height: 112px;
+  }
+}
+html {
+  scroll-padding-top: calc(var(--collar-height) + 16px);
 }
 
 /*
@@ -230,13 +288,36 @@
   text-decoration: none;
   white-space: nowrap;
   transition:
-    background-color 120ms ease,
-    border-color 120ms ease,
-    color 120ms ease;
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out),
+    color 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
 }
 .control:focus-visible {
   outline: 2px solid var(--color-research);
   outline-offset: 2px;
+}
+
+/*
+ * Press feedback (M10/T-72). Before this the whole site had ZERO `:active`
+ * states (`grep -rn ":active" src/` returned nothing) — a control confirmed a
+ * click only after the resulting navigation painted, so a slow page felt
+ * like a dead button.
+ *
+ * 0.985, not the more common 0.97: this identity is a survey sheet, and a
+ * springy press would be the wrong register. The point is to acknowledge the
+ * press, not to perform.
+ *
+ * Gated on `no-preference` rather than left to the global reduced-motion net
+ * below: that net only zeroes transition DURATION, which would leave the
+ * transform snapping instantly to a scaled state — still motion, just
+ * abrupt. Same pattern already used for the timeline marker in
+ * about/Dossier.astro.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .control:active {
+    transform: scale(0.985);
+  }
 }
 
 .control-primary {

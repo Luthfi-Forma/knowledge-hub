@@ -1,6 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
+/*
+ * The same two curves as --ease-out / --ease-in-out in global.css (M10/T-72),
+ * restated as arrays because motion/react can't read a CSS custom property
+ * for its `ease` field. Values must stay in sync with the stylesheet — they
+ * are the site's only two easing curves, not a second system.
+ *
+ * ease-out for anything entering/leaving/responding; ease-in-out for
+ * something travelling across the screen while staying present.
+ */
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+const EASE_IN_OUT = [0.77, 0, 0.175, 1] as const;
+
 export interface ScrollytellingCitation {
   label: string;
   where: string;
@@ -121,7 +133,7 @@ function SourcesPanel({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.2 }}
+            transition={{ duration: reduceMotion ? 0 : 0.2, ease: EASE_OUT }}
             onClick={onClose}
             className="fixed inset-0 z-40 bg-ink/40"
           />
@@ -129,7 +141,17 @@ function SourcesPanel({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 280, damping: 32 }}
+            /*
+             * Was `{ type: 'spring', stiffness: 280, damping: 32 }` — the only
+             * spring in the codebase, and unbounded by definition: it settles
+             * somewhere near 500ms, past Atlas's hard 300ms ceiling, which is
+             * why RULES.md's millisecond grep never caught it (M10/T-72).
+             * A spring is the right tool for a draggable, interruptible
+             * surface; this drawer is neither. 200ms ease-in-out also makes it
+             * move exactly like the LegendRail drawer — the site's other
+             * off-canvas panel — instead of having its own feel.
+             */
+            transition={reduceMotion ? { duration: 0 } : { duration: 0.2, ease: EASE_IN_OUT }}
             className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-line bg-paper shadow-2xl"
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-4">
@@ -319,7 +341,11 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
                   <motion.div
                     className="h-full origin-left bg-research"
                     animate={{ scaleX: (activeIndex + 1) / sections.length }}
-                    transition={{ duration: reduceMotion ? 0 : 0.4 }}
+                    // 0.2 / ease-out, was 0.4 (M10/T-72). 400ms broke Atlas's
+                    // hard 300ms ceiling; it survived every audit because
+                    // RULES.md's check is `grep -rn "[0-9]\+ms" src/` and this
+                    // is written in SECONDS, in JS, so the grep never saw it.
+                    transition={{ duration: reduceMotion ? 0 : 0.2, ease: EASE_OUT }}
                   />
                 </div>
                 <AnimatePresence mode="wait">
@@ -328,7 +354,9 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
                     initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }}
-                    transition={{ duration: reduceMotion ? 0 : 0.4 }}
+                    // 0.2 / ease-out, was 0.4 — same 300ms-ceiling breach as
+                    // the progress bar above (M10/T-72).
+                    transition={{ duration: reduceMotion ? 0 : 0.2, ease: EASE_OUT }}
                     className="absolute inset-0"
                   >
                     {ActiveViz && <ActiveViz />}
@@ -370,7 +398,9 @@ export default function Scrollytelling({ eyebrow, title, dek, meta, sections, vi
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: reduceMotion ? 0 : 0.3 }}
+                // 0.2 to match the desktop viz swap above; 0.3 sat exactly on
+                // the ceiling rather than under it (M10/T-72).
+                transition={{ duration: reduceMotion ? 0 : 0.2, ease: EASE_OUT }}
                 className="h-full"
               >
                 {ActiveViz && <ActiveViz />}

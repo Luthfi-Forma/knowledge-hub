@@ -222,14 +222,38 @@ const resolvedTopicsHeading = topicsHeading ?? `Topics · ${topics.length}`;
       display: inline-flex;
     }
 
+    /*
+     * M10/T-72: the backdrop used to appear and vanish instantly (a plain
+     * `hidden` toggle, which is `display: none` and therefore cannot
+     * transition) while the rail beside it slid over 200ms — two different
+     * motion languages inside one interaction. It now fades on the same
+     * 200ms clock as the rail's slide.
+     *
+     * `display: block` deliberately overrides the UA stylesheet's
+     * `[hidden] { display: none }` so the element stays in the box tree long
+     * enough to animate; `visibility` (discrete, but transitionable) is what
+     * actually removes it from hit-testing once the fade finishes, so a
+     * closed backdrop never swallows clicks. `.legend-backdrop[hidden]`
+     * (0,2,0) out-specifies the UA's `[hidden]` (0,1,0).
+     *
+     * Scoped inside this breakpoint on purpose: at >=1024px the rule below
+     * doesn't apply, the UA's `display: none` wins again, and the backdrop
+     * is simply gone — which is correct, there is no drawer up there.
+     */
     .legend-backdrop {
       position: fixed;
       inset: 0;
       z-index: 30;
       background-color: rgb(23 21 18 / 40%);
+      opacity: 1;
+      transition:
+        opacity 200ms var(--ease-out),
+        visibility 200ms var(--ease-out);
     }
     .legend-backdrop[hidden] {
-      display: none;
+      display: block;
+      opacity: 0;
+      visibility: hidden;
     }
 
     .legend-rail {
@@ -238,7 +262,10 @@ const resolvedTopicsHeading = topicsHeading ?? `Topics · ${topics.length}`;
       z-index: 40;
       overflow-y: auto;
       transform: translateX(-100%);
-      transition: transform 200ms ease;
+      /* --ease-in-out, not --ease-out: this panel travels across the screen
+         while staying present, so it should accelerate and decelerate like a
+         physical drawer rather than arrive front-loaded (M10/T-72). */
+      transition: transform 200ms var(--ease-in-out);
     }
     .legend-rail.is-open {
       transform: translateX(0);
