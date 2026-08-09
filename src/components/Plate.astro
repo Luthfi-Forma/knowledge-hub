@@ -45,6 +45,14 @@ const isInteractive = presentation === 'scrollytelling';
 // the photo tile there — which always has a cover per schema — renders
 // text-only) — smallest anatomy, room for notation + title + stamp only.
 const showCover = size !== 'compact' && Boolean(cover);
+// Pair this thumbnail with the post page's own cover for a cross-document
+// view transition (M10/T-73) — but ONLY when that page actually renders a
+// cover to morph into. Scrollytelling posts don't: pages/posts/[slug].astro
+// renders the cover behind `!isScrollytelling`, so naming those thumbnails
+// would lift 4 elements out of the root snapshot on every index page to
+// animate against nothing. Verified against the built HTML, not assumed:
+// dist/posts/cikarang-.../index.html contains zero `view-transition-name`.
+const coverTransitionName = showCover && !isInteractive ? `plate-${post.id}` : undefined;
 const showSummary = size !== 'compact';
 const resolvedCoverWidth = coverWidth ?? (size === 'lead' ? 300 : 168);
 
@@ -76,7 +84,25 @@ const Heading = headingLevel;
   </div>
   {
     showCover && cover && (
-      <div class="plate-cover">
+      /*
+       * view-transition-name pairs this thumbnail with the same post's cover
+       * on its detail page (M10/T-73), so an index -> post navigation morphs
+       * the cover into place instead of crossfading the whole document.
+       * Pure Tier-0: `@view-transition { navigation: auto }` is already on in
+       * global.css, so this costs zero JS and zero bundle bytes.
+       *
+       * The name must be a valid custom-ident and unique per document. Post
+       * ids are kebab-case slugs, and every page renders a given post at most
+       * once (SheetIndex destructures `[lead, ...rest]`, so the lead plate is
+       * not repeated in the grid) — so `plate-{id}` is unique by construction.
+       * Verified against built HTML: zero duplicate names on any index page.
+       * Only the navigated-to post has a matching name in the new document;
+       * that is what makes exactly one cover morph rather than all of them.
+       *
+       * Unsupported browsers ignore it. Reduced motion is already covered by
+       * the ::view-transition-* entry in global.css's reduced-motion net.
+       */
+      <div class="plate-cover" style={coverTransitionName ? `view-transition-name: ${coverTransitionName}` : undefined}>
         <Image src={cover} alt="" widths={[200, 400]} sizes={`${resolvedCoverWidth}px`} />
       </div>
     )

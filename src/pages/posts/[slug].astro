@@ -88,17 +88,30 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
     <div class:list={['post-body', isScrollytelling && 'post-body-wide']}>
       <div class="post-main">
         {
+          /* The `view-transition-name` here is the other half of the pair set
+             on Plate.astro's thumbnail (M10/T-73) — same `plate-{id}` value,
+             so navigating from any index into this post morphs the cover
+             across documents. Only this post carries the name in this
+             document, so exactly one element matches. */
           !isScrollytelling && cover &&
             (type === 'photo' ? (
               <Image
                 src={cover}
                 alt={title}
                 class="mb-8 max-h-[75vh] w-full object-contain"
+                style={`view-transition-name: plate-${post.id}`}
                 widths={[600, 1200]}
                 sizes="800px"
               />
             ) : (
-              <Image src={cover} alt="" class="mb-8 aspect-video w-full object-cover" widths={[600, 1200]} sizes="800px" />
+              <Image
+                src={cover}
+                alt=""
+                class="mb-8 aspect-video w-full object-cover"
+                style={`view-transition-name: plate-${post.id}`}
+                widths={[600, 1200]}
+                sizes="800px"
+              />
             ))
         }
 

@@ -101,12 +101,23 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   build` hijau 48 halaman; nol console error nyata (8× 404 semuanya
   `/_vercel/insights/script.js`, hanya ada di platform Vercel, pre-existing)
   (M10) — 2026-08-09
-- [ ] T-73: `view-transition-name: plate-{slug}` di cover `Plate` dan cover
-  post — nama unik per-slug, jadi hanya pasangan yang cocok yang ada di
-  kedua dokumen dan cover melakukan morph ke posisinya di halaman post.
-  Tier-0 murni (ADR-003 #1), nol JS, nol byte bundle. Browser tanpa
-  dukungan diam-diam kembali ke perilaku sekarang; jaring reduced-motion
-  sudah menangani `::view-transition-*` (`global.css:416-420`) (M10)
+- [x] T-73: `view-transition-name: plate-{slug}` di cover `Plate` dan cover
+  post — **selesai 2026-08-09**. Tier-0 murni (ADR-003 #1): nol JS, nol
+  byte bundle, memanfaatkan `@view-transition { navigation: auto }` yang
+  sudah aktif sejak M5. **Temuan saat verifikasi**: post scrollytelling
+  punya cover di plate tapi TIDAK di halaman detailnya
+  (`[slug].astro` merender cover di balik `!isScrollytelling`), jadi
+  penamaan naif akan mengangkat 4 elemen keluar dari root snapshot di
+  tiap halaman indeks untuk beranimasi melawan ketiadaan. Diperbaiki
+  dengan `coverTransitionName` yang hanya diberikan kalau tujuannya
+  benar-benar punya cover — 10 nama turun jadi 6, nol yatim.
+  **Diverifikasi dari HTML hasil build, bukan browser** (view transition
+  digerakkan compositor dan pane browser sesi ini tidak meng-compose
+  frame, jadi morph visualnya memang tidak bisa dilihat di sini):
+  keenam pasangan cocok 1:1 antara indeks dan halaman post-nya, dan
+  sapuan seluruh 47 halaman menghasilkan **nol nama duplikat** (nama
+  duplikat akan membatalkan transisi diam-diam). **Perlu cek browser
+  asli** untuk menilai morph-nya sendiri (M10) — 2026-08-09
 - [ ] T-74: primitif viz reusable di `src/components/story/viz/` —
   `theme.ts` (`tooltipStyle` identik byte-per-byte di 4 modul + konstanta
   warna yang di-alias ulang per file), `AnimatedNumber.tsx` (rekonsiliasi
