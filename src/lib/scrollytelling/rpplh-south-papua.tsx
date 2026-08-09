@@ -2,6 +2,8 @@ import { useEffect, useState, type ComponentType } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, PieChart, Pie } from 'recharts';
 import Scrollytelling, { type ScrollytellingSection } from '../../islands/Scrollytelling';
+import AnimatedNumber from '../../components/story/viz/AnimatedNumber';
+import { tooltipStyle } from '../../components/story/viz/theme';
 
 /*
  * Bespoke data + viz for src/content/posts/rpplh-south-papua.mdx.
@@ -56,47 +58,18 @@ const VILLAGE_STATUS = [
   { name: 'Advanced', value: 1 },
 ];
 
-function AnimatedNumber({ value, decimals = 0 }: { value: number; decimals?: number }) {
-  const reduceMotion = useReducedMotion() ?? false;
-  const [display, setDisplay] = useState(0);
-  useEffect(() => {
-    if (reduceMotion) {
-      setDisplay(value);
-      return;
-    }
-    const startTime = performance.now();
-    const dur = 900;
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - startTime) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(value * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, reduceMotion]);
-  return (
-    <span className="tabular-nums">
-      {display.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
-    </span>
-  );
-}
-
-const tooltipStyle = {
-  background: 'var(--color-paper)',
-  border: '1px solid var(--color-line)',
-  borderRadius: 2,
-  color: 'var(--color-ink)',
-};
+/* Local AnimatedNumber and tooltipStyle removed in M10/T-74 — both now come
+   from src/components/story/viz/. The local counter seeded its state with 0,
+   which put a literal "0.0" into this page's server-rendered HTML where the
+   1.2-million-hectare figure belongs (verified in the built output before the
+   fix); the shared component seeds with the real figure. */
 
 function VizIntro() {
   const reduceMotion = useReducedMotion() ?? false;
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-6">
       <div className="text-4xl font-semibold" style={{ color: ACCENT }}>
-        <AnimatedNumber value={1.2} decimals={1} /> million ha
+        <AnimatedNumber value={1.2} decimals={1} reduceMotion={reduceMotion} /> million ha
       </div>
       <div className="mt-2 text-xs tracking-[0.25em] text-ink-muted uppercase">planned Food Estate area</div>
       <div className="mt-8 grid grid-cols-3 gap-2">

@@ -13,6 +13,8 @@ import {
   CartesianGrid,
 } from 'recharts';
 import Scrollytelling, { type ScrollytellingSection } from '../../islands/Scrollytelling';
+import AnimatedNumber from '../../components/story/viz/AnimatedNumber';
+import { tooltipStyle } from '../../components/story/viz/theme';
 
 /*
  * Bespoke data + viz for one post (src/content/posts/cikarang-industrial-
@@ -72,35 +74,12 @@ const PHASES = [
   { phase: '2019 – 2023', industry: 428.39, residential: 299.77 },
 ];
 
-function AnimatedNumber({ value, decimals = 0, suffix = '' }: { value: number; decimals?: number; suffix?: string }) {
-  const reduceMotion = useReducedMotion() ?? false;
-  const [display, setDisplay] = useState(value);
-  useEffect(() => {
-    if (reduceMotion) {
-      setDisplay(value);
-      return;
-    }
-    const start = display;
-    const startTime = performance.now();
-    const dur = 800;
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - startTime) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(start + (value - start) * eased);
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, reduceMotion]);
-  return (
-    <span className="tabular-nums">
-      {display.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
-      {suffix}
-    </span>
-  );
-}
+/* Local AnimatedNumber removed in M10/T-74 — now src/components/story/viz/.
+   This copy was the only one of the three that seeded state with `value`, so
+   it was also the only one whose figures were correct in server-rendered
+   HTML; the shared component keeps that behaviour and drops this copy's
+   `toLocaleString(undefined, ...)`, which formatted numbers in whatever
+   locale the reader's browser happened to use. */
 
 function Legend() {
   return (
@@ -117,12 +96,8 @@ function Legend() {
   );
 }
 
-const tooltipStyle = {
-  background: 'var(--color-paper)',
-  border: '1px solid var(--color-line)',
-  borderRadius: 2,
-  color: 'var(--color-ink)',
-};
+/* tooltipStyle now imported from src/components/story/viz/theme (M10/T-74) —
+   it was byte-identical in all four scrollytelling modules. */
 
 function VizIntro() {
   const reduceMotion = useReducedMotion() ?? false;
@@ -242,13 +217,13 @@ function VizFinding1() {
       <div className="mt-3 grid grid-cols-2 gap-4 border-t border-line pt-3 text-sm">
         <div>
           <div className="text-2xl font-semibold" style={{ color: IND }}>
-            +<AnimatedNumber value={687.45} decimals={2} /> ha
+            +<AnimatedNumber value={687.45} decimals={2} reduceMotion={reduceMotion} /> ha
           </div>
           <div className="text-xs text-ink-muted">industrial land added</div>
         </div>
         <div>
           <div className="text-2xl font-semibold" style={{ color: RES }}>
-            +<AnimatedNumber value={622.9} decimals={2} /> ha
+            +<AnimatedNumber value={622.9} decimals={2} reduceMotion={reduceMotion} /> ha
           </div>
           <div className="text-xs text-ink-muted">residential land added</div>
         </div>

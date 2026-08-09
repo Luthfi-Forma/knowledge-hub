@@ -780,3 +780,47 @@ absent.
    corrected before commit. Re-measure environment constraints when a plan
    leans on them, instead of citing an older lesson that was written for a
    narrower question.
+
+## 2026-08-09 — An animated counter seeded with 0 publishes a false figure in the server-rendered HTML
+
+Tags: #react #astro-islands #ssr #content-accuracy
+
+Three copies of an `AnimatedNumber` component existed across the
+scrollytelling modules. Two initialised with `useState(0)` and tweened up to
+the real figure on mount. That reads fine in a hydrated browser, and it is
+wrong everywhere else.
+
+Astro server-renders an island to static HTML at build time, so the initial
+state is what ships. Measured in the built output:
+
+- `dist/posts/bontang-poverty-mapping/index.html` contained `0` where an
+  extreme-poor population count belongs (real figure: 238,464).
+- `dist/posts/rpplh-south-papua/index.html` contained `0.0` where a
+  1.2-million-hectare area belongs.
+
+Anyone reading before hydration completes sees zero presented as a research
+finding: JS disabled, a slow or failed hydration, a crawler, reader mode — and
+in this project specifically, T-71 measured `client:visible` never hydrating
+at all in the verification environment, which is exactly where the numbers
+were being checked.
+
+The third copy (cikarang) used `useState(value)` and was the only one whose
+figures were correct in static HTML. Its apparent flaw — the tween's start
+already equalled its end, so it never animated — was the same line that kept
+it honest. It is worth noting that the "broken-looking" variant was the
+correct one; a quick reconciliation that picked the two matching copies as the
+majority would have standardised on the bug.
+
+Fix: seed state with `value`, and tween only when `value` actually changes
+(which is what a persistent, non-remounting stage needs anyway). The count-up
+from zero is gone; it was only ever visible to hydrated clients and it came
+bundled with a false number for everyone else.
+
+**Generalized rule**: in any SSR/SSG framework, a component's *initial state
+is published content*. Before choosing an initial value for animation
+purposes, ask what that value asserts when rendered as static HTML and never
+updated. Placeholder zeros, empty strings, and "loading" states are fine for
+scaffolding, but when the component's job is to display a real figure, seed it
+with the real figure and animate away from it — not toward it. Verify by
+grepping the built output, not the browser, because the browser hides the bug
+the moment hydration succeeds.

@@ -2,6 +2,7 @@ import { type ComponentType } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, PieChart, Pie } from 'recharts';
 import Scrollytelling, { type ScrollytellingSection } from '../../islands/Scrollytelling';
+import { tooltipStyle } from '../../components/story/viz/theme';
 
 /*
  * Bespoke data + viz for src/content/posts/jabung-lampung-coastal-development.mdx.
@@ -42,12 +43,8 @@ const SCENARIOS = [
   { name: 'Pessimistic', kawasan: 50, infrastruktur: 50 },
 ];
 
-const tooltipStyle = {
-  background: 'var(--color-paper)',
-  border: '1px solid var(--color-line)',
-  borderRadius: 2,
-  color: 'var(--color-ink)',
-};
+/* tooltipStyle now imported from src/components/story/viz/theme (M10/T-74) —
+   it was byte-identical in all four scrollytelling modules. */
 
 function VizIntro() {
   const reduceMotion = useReducedMotion() ?? false;

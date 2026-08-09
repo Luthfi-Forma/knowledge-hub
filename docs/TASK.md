@@ -118,16 +118,38 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   sapuan seluruh 47 halaman menghasilkan **nol nama duplikat** (nama
   duplikat akan membatalkan transisi diam-diam). **Perlu cek browser
   asli** untuk menilai morph-nya sendiri (M10) — 2026-08-09
-- [ ] T-74: primitif viz reusable di `src/components/story/viz/` —
-  `theme.ts` (`tooltipStyle` identik byte-per-byte di 4 modul + konstanta
-  warna yang di-alias ulang per file), `AnimatedNumber.tsx` (rekonsiliasi
-  **3 versi berperilaku beda**: cikarang tween dari nilai sebelumnya,
-  bontang mulai dari 0 dan dibulatkan, rpplh mulai dari 0 tanpa
-  pembulatan), `DataTable.tsx` (mengganti `<table className="sr-only">`
-  yang disalin tangan ~16× — permukaan a11y paling rapuh di situs),
-  `Legend.tsx` (3 varian inline), `Chart.tsx` (memasangkan chart dengan
-  tabel fallback wajib supaya chart tanpa tabel jadi mustahil, bukan
-  sekadar tidak dianjurkan). Aditif murni — belum ada yang mengimpor (M10)
+- [x] T-74: primitif viz reusable di `src/components/story/viz/` —
+  **selesai 2026-08-09**, dan menemukan **bug konten yang sudah tayang**.
+  5 primitif dibuat: `theme.ts`, `AnimatedNumber.tsx`, `DataTable.tsx`,
+  `Legend.tsx`, `Chart.tsx` (yang membuat `table` jadi **prop wajib** —
+  chart tanpa padanan pembaca layar tidak lolos typecheck, menggantikan
+  konvensi salin-tempel di 16 titik).
+  **Bug yang ditemukan**: `AnimatedNumber` versi `bontang` dan `rpplh`
+  memakai `useState(0)`, dan karena Astro meng-SSR island jadi HTML statis,
+  **angka nol itu ikut terbit**. Terukur di build:
+  `dist/posts/bontang-poverty-mapping/index.html` memuat `0` di posisi
+  jumlah penduduk miskin ekstrem (asli 238.464), `rpplh` memuat `0.0` di
+  posisi 1,2 juta ha. Siapa pun yang membaca sebelum hidrasi selesai —
+  JS mati, hidrasi gagal, crawler, reader mode, dan **khususnya
+  lingkungan verifikasi proyek ini yang T-71 buktikan tidak pernah
+  menghidrasi `client:visible`** — membaca nol sebagai temuan riset.
+  Versi `cikarang` (`useState(value)`) satu-satunya yang benar; "cacat"-nya
+  (tidak pernah beranimasi) justru baris yang menjaganya jujur. Rekonsiliasi
+  memilih semantik cikarang: seed dengan `value`, tween hanya saat `value`
+  berubah — yang justru dibutuhkan stage persisten ADR-005 #3. Hitung-naik
+  dari nol dibuang; ia hanya terlihat oleh klien terhidrasi dan datang
+  sepaket dengan angka palsu untuk semua orang lain.
+  **Diverifikasi**: `238,464` dan `1.2` kini ada di HTML statis (sebelumnya
+  `0`/`0.0`); Pagefind 4016→4018 kata, kenaikan yang justru mengonfirmasi
+  angka asli masuk indeks. Duplikasi dihapus: `AnimatedNumber` lokal 3→0,
+  `tooltipStyle` lokal 4→0. Karena TypeScript tidak terpasang di proyek ini
+  dan `astro build` hanya memproses modul yang terjangkau, primitif
+  diverifikasi lewat halaman uji sementara yang memasukkannya ke build graph
+  (`src/pages/t74-check.astro` + `_t74check.tsx`) — markup `DataTable`
+  diperiksa di HTML nyata (`caption`, `scope="col"`, `scope="row"`,
+  pemisah ribuan), lalu **kedua file dihapus** dan build kembali 48 halaman.
+  Lesson dicatat di `docs/memory/LESSONS.md`. Nol console error nyata (M10)
+  — 2026-08-09
 - [ ] T-75: skema `story` di `content.config.ts` + shell Astro statis
   (`Story.astro`, `Scene.astro`, `StoryHero.astro`, `Citations.astro`,
   `SourcesPanel.astro`). `SourcesPanel` dan `CitationBlock` jadi markup
