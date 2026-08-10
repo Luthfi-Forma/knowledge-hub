@@ -1,17 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 
-/*
- * The same two curves as --ease-out / --ease-in-out in global.css (M10/T-72),
- * restated as arrays because motion/react can't read a CSS custom property
- * for its `ease` field. Values must stay in sync with the stylesheet — they
- * are the site's only two easing curves, not a second system.
- *
- * ease-out for anything entering/leaving/responding; ease-in-out for
- * something travelling across the screen while staying present.
- */
-const EASE_OUT = [0.23, 1, 0.32, 1] as const;
-const EASE_IN_OUT = [0.77, 0, 0.175, 1] as const;
+// Moved to src/components/story/motion.ts in T-76, when the new stage became
+// a second consumer — kept here as a re-export path rather than a second copy.
+import { EASE_IN_OUT, EASE_OUT } from '../components/story/motion';
 
 export interface ScrollytellingCitation {
   label: string;

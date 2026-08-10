@@ -134,8 +134,13 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
 
         {
           /* New static shell (M10/T-75). The MDX body supplies the scenes;
-             Story supplies the hero, layout, and Sources panel. The visual
-             stage slot stays empty until T-76. */
+             Story supplies the hero, layout, and Sources panel.
+
+             The visual stage goes in Story's `stage` slot as a per-post wired
+             island, added alongside each post as it migrates (T-78 onwards) —
+             `client:*` needs a statically-analysable component reference, so
+             it is a branch here rather than a lookup, same as the four old
+             islands below. */
           usesStoryShell && story && (
             <Story story={story}>
               <Content />

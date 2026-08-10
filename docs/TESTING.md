@@ -1,6 +1,6 @@
 # Testing — knowledge-hub
 
-- Updated: 2026-07-17
+- Updated: 2026-08-09 (M10/T-76 — first automated test)
 - Baseline: `C:\Users\Luthfi\Documents\Claude Code\Claude Engineering OS\standards\testing.md` (this doc records the
   project-specific plan, not the general rules)
 
@@ -10,15 +10,35 @@
 npm run build
 ```
 
-There is no separate test command — `astro build` doubles as the
-correctness check for this project (see "What we test" below).
+`astro build` is still the main correctness check for this project (see
+"What we test" below) — almost everything here is static rendering, which
+the build validates by producing it.
+
+```
+npm test
+```
+
+Added in M10/T-76, and deliberately narrow. Node's built-in test runner with
+type stripping, **zero new dependencies**, covering one thing: the scroll
+maths in `computeStageState` (`src/components/story/types.ts`). It earns a
+test because it is the only non-trivial pure computation in the codebase, and
+because it is the one piece a build cannot check *and* the browser cannot
+exercise — scroll events never fire in this session's browser tool
+(`docs/memory/LESSONS.md`, 2026-08-09), so the reader's position can never be
+driven there by scrolling. Making the maths a pure exported function was
+ADR-005 #5's answer to exactly that; this is the other half of it.
+
+Not a general testing strategy. Do not add tests for static rendering — the
+build already covers it, and the manual browser pass covers what the build
+cannot see.
 
 ## What we test, per layer
 
 | Layer | Tool | What is covered | Target |
 |---|---|---|---|
 | schema validation | zod (`src/content.config.ts`), runs on every build | Every post's frontmatter — build fails loudly on an invalid field, bad date, wrong `type` enum, non-kebab-case tag, etc. | 100% of content |
-| type check | `astro build` (TypeScript under the hood) | Compile-time errors across `.astro`/`.ts` files | 100% of source |
+| type check | `astro build` (TypeScript under the hood) | Compile-time errors across `.astro`/`.ts` files — but **only for modules the build graph actually reaches**. Vite compiles nothing else, and TypeScript is not installed standalone, so a file no page imports is never checked (DEBT #4) | Every module reachable from a page — **not** 100% of source |
+| unit test | `npm test` (Node's runner, type stripping) | `computeStageState` — scene boundaries, quantisation, clamping, direction, degenerate inputs | The one pure computation that a build cannot check and a browser cannot exercise here |
 | manual browser verification | Claude Code's Browser pane, done at the end of every task this project has shipped | Rendered output, heading order, focus states, contrast, responsive breakpoints (375/768/1024/1440), console errors, and — after deploy — the live production URL | Every page touched in a session |
 
 ## Test data
@@ -207,10 +227,19 @@ optimistic one.)
 
 ## Known gaps
 
-- No automated unit/integration/e2e test suite. Coverage today comes from
-  build-time schema/type validation plus manual browser verification each
-  session — acceptable for a solo-maintained static content site at this
-  stage, but a real gap if the project grows client-side interactivity
+- **Partially closed (M10/T-76.)** There is now one automated test file,
+  `tests/story-progress.test.mjs`, covering `computeStageState` — see "How to
+  run". Everything else still relies on build-time schema/type validation plus
+  manual browser verification each session. That remains acceptable for a
+  solo-maintained static content site, and the story framework is exactly the
+  "client-side interactivity" this gap warned about: the first piece of it to
+  carry real logic got the project's first test
+- **`astro build` does not typecheck unreferenced modules.** Vite only compiles
+  what the build graph reaches, and TypeScript is not installed here, so a file
+  no page imports is never checked at all. Currently affects the M10 framework
+  modules built ahead of their first consumer (DEBT #4). Closes either at T-78
+  or by adding `@astrojs/check` + `typescript` and putting `astro check` in the
+  build script
   beyond the current zero-JS-by-default islands (ADR-001).
 - No automated accessibility or Lighthouse check wired into CI — both are
   checked manually per session (see docs/PROJECT_BRIEF.md's Lighthouse ≥ 90

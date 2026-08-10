@@ -88,8 +88,15 @@ const { story } = Astro.props;
     counter-reset: story-scene;
   }
 
+  /*
+   * Deliberately NOT `display: none` below 1024px. The stage island renders
+   * two things: a sticky desktop panel and a fixed mobile dock. A hidden
+   * parent would take the dock with it — `display: none` removes fixed
+   * descendants from rendering too — so visibility is the island's own
+   * decision, per breakpoint, and this cell just holds a place in the grid.
+   */
   .story-stage {
-    display: none;
+    min-width: 0;
   }
 
   /*
@@ -102,9 +109,6 @@ const { story } = Astro.props;
     .story-grid {
       grid-template-columns: 5fr 7fr;
       gap: 48px;
-    }
-    .story-stage {
-      display: block;
     }
   }
 </style>

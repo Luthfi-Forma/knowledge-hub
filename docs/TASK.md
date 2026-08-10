@@ -187,20 +187,41 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   output kini nol komentar HTML. Build 48 halaman/4018 kata, identik dengan
   baseline; keempat post lama dikonfirmasi tetap memakai island (M10)
   — 2026-08-09
-- [ ] T-76: `useStoryProgress.ts` + `StoryStage.tsx`, mode `per-scene` saja.
-  Offset scene diukur saat mount + resize (di-cache), tidak pernah per event
-  scroll, supaya handler nol pembacaan layout. `setState` hanya saat nilai
-  ter-kuantisasi (1/200) berubah. `reduceMotion` jadi **prop, bukan hook** —
-  hari ini 20+ call site `useReducedMotion()` tersebar di 4 modul, tiap satu
-  peluang lupa; sebagai prop, reduced-motion bisa diuji untuk pertama
-  kalinya. **Matematika progress wajib fungsi murni terekspor**
-  (`computeStageState(scrollY, offsets, viewportHeight)`) dengan tinggi
-  viewport **di-inject sebagai argumen** — T-71 mengukur semua probe
-  viewport = 0 di sini, jadi apa pun yang membacanya sendiri akan membagi
-  nol di tool tapi benar di browser asli. `client:visible`→**`client:load`**
-  (bukan `client:idle` — T-71 membuktikan `requestIdleCallback` tidak
-  pernah menyala; island ini ADALAH halamannya jadi menunda hidrasi tidak
-  membeli apa pun) (M10)
+- [x] T-76: `useStoryProgress.ts` + `StoryStage.tsx` — **selesai 2026-08-09**.
+  Dibangun: `story/types.ts` (`StageState`, `StageVisual`, dan
+  **`computeStageState` sebagai fungsi murni terekspor**), `useStoryProgress.ts`,
+  `story/motion.ts` (kurva easing diekstrak dari `Scrollytelling.tsx` begitu
+  ada konsumen kedua — bukan disalin), dan `islands/StoryStage.tsx`.
+  **Yang hilang dari shell lama, sengaja**: `IntersectionObserver` kedua
+  (`useWithinViewport`) dihapus total — dock mobile kini digating
+  `withinStory` yang dihitung dari offset yang sudah di-cache, jadi bekerja
+  di lingkungan yang observer-nya tidak pernah menyala.
+  **Perubahan desain saat verifikasi**: progress bar semula `motion.div`
+  ber-`animate`; diganti binding langsung ke `storyProgress` tanpa animasi.
+  Bar lama melangkah per-scene sehingga easing-lah yang membuatnya terbaca
+  sebagai gerak; sekarang nilainya sudah kontinu dan sudah mengikuti scroll,
+  jadi menganimasikannya hanya menambah jeda antara gerakan pembaca dan
+  bar — indikator progres yang tertinggal dari yang diukurnya itu salah,
+  bukan halus. Sekaligus melepas ketergantungan rAF terakhir di chrome stage,
+  yang membuatnya **bisa diamati** di verifikasi (rAF mati di sini, T-71).
+  **Verifikasi berlapis**: (a) **6 suite tes Node** (`npm test`, runner bawaan
+  + type stripping, **nol dependensi baru**) menguji `computeStageState` di
+  tiap batas scene, kuantisasi 1/200, clamp, arah dua arah, dan input
+  degenerate — offset kosong, viewport 0, scene tinggi 0 semuanya finite,
+  nol NaN. Ini **tes otomatis pertama proyek**, ditulis persis untuk satu
+  hal yang `astro build` tidak bisa cek dan browser tidak bisa jalankan.
+  (b) Pipeline penuh lewat probe sementara: `client:load` **terhidrasi**,
+  `initial={{sceneIndex:1, sceneProgress:0.5}}` menghasilkan `sceneId:
+  problem`, `storyProgress: 0.5` — dicocokkan manual terhadap offset DOM
+  nyata (span 1512, readingLine 1366 → 0.5 tepat); `fig. 02` benar; caption
+  vizCitation muncul hanya untuk scene yang punya; progress bar
+  `matrix(0.5,0,0,1,0,0)`. Probe dihapus setelahnya. **Tidak terverifikasi
+  di sini**: pelacakan kontinu saat scroll sungguhan — event scroll tidak
+  pernah menyala di lingkungan ini, jadi butuh browser asli.
+  **Catatan pengukuran**: `document.body.innerText` tidak reliable di tool
+  ini (mengembalikan kosong untuk teks yang jelas ada); pakai `textContent`.
+  **Utang dicatat** (DEBT #4): `StoryStage` dkk. di luar build graph sehingga
+  tidak diketik sampai T-78 (M10) — 2026-08-09
 - [ ] T-77: mode `persistent` + `geo/project.ts` (Web Mercator ~15 baris).
   Buktikan morph dengan 2 scene percobaan sebelum post asli ada (M10)
 - [ ] T-78: **konten M10 (aturan content-first)** — perdalam post Cikarang
