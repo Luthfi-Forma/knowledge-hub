@@ -255,7 +255,22 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   ring dan membulatkan 2 desimal, dan penolakan vertex tak sepadan.
   Probe dihapus; build 48 halaman/4018 kata, `npm test` 14/14 (M10)
   — 2026-08-09
-- [ ] T-78: **konten M10 (aturan content-first)** — perdalam post Cikarang
+- [ ] T-78: **TERBLOKIR menunggu pemilik situs (2026-08-09)** — butuh Tabel 1
+  paper Rahman & Hernanda (2025). Verifikasi aritmetika sebelum menulis
+  konten menemukan **angka yang bertentangan di post yang sudah tayang**
+  (DEBT #5): Finding 01 menyatakan "rose from 4,477.99 to 5,570.68 hectares,
+  an addition of 687.45 hectares" — selisih endpoint-nya **+1.092,69**.
+  Residensial sama: "622.9 hectares ... from 6,236.05 to 7,328.73" =
+  **+1.092,68**. Panel itu merender kedua versi berdampingan (bar chart dari
+  `TOTAL_LAND` + counter `+687,45 ha`). Absolut 2023 per distrik juga meleset
+  404,25 / 469,39 ha dari total. **Yang dibutuhkan dari paper**: (1) total
+  industri & residensial 2016 dan 2023, (2) apakah 5 distrik itu seluruh
+  wilayah studi atau sebagian, (3) nilai 2016 per distrik kalau ada.
+  Scene spasial tidak dibangun sampai ini jelas — mendeduksi baseline 2016
+  dari data yang belum rekonsiliasi berarti menanam kesalahan yang belum
+  dipahami ke dalam sebuah peta. Migrasi prosa Cikarang ke MDX juga ditahan
+  supaya kalimat yang bermasalah tidak diedit dua kali (M10)
+- [ ] T-78 (rencana asli, dilanjutkan setelah data jelas): perdalam post Cikarang
   dengan scene spasial dari `LAND_BY_DISTRICT_2023` + `DISTRICT_GROWTH`
   (`cikarang:52-67`, keduanya Tabel 1 paper Rahman & Hernanda 2025):
   5 poligon distrik tulis-tangan yang warna/nilainya melakukan morph
