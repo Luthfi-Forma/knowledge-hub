@@ -33,6 +33,22 @@ export interface StoryStageProps {
   initial?: { sceneIndex: number; sceneProgress: number };
 }
 
+/*
+ * Constraint for anything rendered as a `persistent` stage, measured in T-77:
+ *
+ * The stage is rendered TWICE — once in the desktop panel, once in the mobile
+ * dock — and CSS decides which is visible. That is inherited from the old
+ * shell, not new. But a persistent visual must therefore derive everything it
+ * draws from its props: two instances exist, and the dock one additionally
+ * mounts and unmounts as `withinStory` flips, so any state held inside the
+ * component would diverge between them and reset on the dock's side.
+ *
+ * Verified: the desktop instance's mount counter stays at 1 across scene
+ * changes, and a DOM node tagged with a custom property keeps that property
+ * throughout — so within a breakpoint the stage genuinely persists and its
+ * shapes morph rather than being swapped. The dock instance is the one that
+ * remounts, and only on entering or leaving the story, never per scene.
+ */
 function renderVisual(visual: StageVisual, state: StageState) {
   if (visual.kind === 'persistent') {
     const Stage = visual.stage;

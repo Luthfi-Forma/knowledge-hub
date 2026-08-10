@@ -222,8 +222,39 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   ini (mengembalikan kosong untuk teks yang jelas ada); pakai `textContent`.
   **Utang dicatat** (DEBT #4): `StoryStage` dkk. di luar build graph sehingga
   tidak diketik sampai T-78 (M10) — 2026-08-09
-- [ ] T-77: mode `persistent` + `geo/project.ts` (Web Mercator ~15 baris).
-  Buktikan morph dengan 2 scene percobaan sebelum post asli ada (M10)
+- [x] T-77: mode `persistent` + `geo/project.ts` — **selesai 2026-08-09**.
+  **Keputusan desain**: morph dilakukan dengan meng-interpolasi **data
+  koordinat** lalu membangun ulang path, bukan menganimasikan atribut `d`.
+  Menganimasikan string `d` menuntut struktur perintah yang identik dan
+  rapuh; karena geometrinya memang angka, lerp per-vertex itu eksak, nol
+  library, dan bisa diuji. `lerpRing` **melempar error** kalau jumlah
+  vertex tidak cocok — outline setengah-morph terlihat masuk akal di layar,
+  jadi itu harus gagal keras, bukan diam-diam terpotong.
+  **Diverifikasi — persistensi**: node `<path>` yang sama persis bertahan
+  melintasi pergantian scene (`start`→`finish`). Buktinya bukan sekadar
+  selektor cocok: saya tempelkan properti JS kustom ke node itu dan properti
+  itu ikut selamat — remount akan membuat elemen baru tanpanya. Penghitung
+  mount di scope modul tetap **1** di instance desktop pada tiap sampel.
+  **Diverifikasi — morph**: `d` bergerak `96→288` (progress 0, geometri
+  2016) → `96→368` (0.625) → `96→416` (progress 1, geometri 2023), cocok
+  tepat dengan proyeksi endpoint yang dihitung tangan
+  (`(107.13−107.0)/0.25×800 = 416`).
+  **Temuan yang didokumentasikan**: stage dirender **dua kali** — panel
+  desktop dan dock mobile — dan dock-nya mount/unmount mengikuti
+  `withinStory`. Diwarisi dari shell lama, bukan baru, tapi berarti visual
+  `persistent` **wajib menurunkan semua yang digambarnya dari prop**; state
+  yang disimpan di dalam komponen akan berbeda antar dua instance dan
+  ter-reset di sisi dock. Dicatat sebagai batasan di `StoryStage.tsx` untuk
+  T-78. (Angka `mounts: 3` yang sempat muncul adalah instance dock, bukan
+  remount — dipastikan dengan membaca tiap instance terpisah alih-alih
+  membiarkan yang belakangan menimpa yang duluan.)
+  **8 suite tes baru** untuk proyeksi (total 14): sudut viewBox, utara-atas
+  timur-kanan, bujur linear sementara lintang tidak (kalau lintang jadi
+  linear, proyeksinya diam-diam turun jadi skala biasa), koordinat di luar
+  bounds tidak di-clamp, bounds degenerate nol bukan NaN, `toPath` menutup
+  ring dan membulatkan 2 desimal, dan penolakan vertex tak sepadan.
+  Probe dihapus; build 48 halaman/4018 kata, `npm test` 14/14 (M10)
+  — 2026-08-09
 - [ ] T-78: **konten M10 (aturan content-first)** — perdalam post Cikarang
   dengan scene spasial dari `LAND_BY_DISTRICT_2023` + `DISTRICT_GROWTH`
   (`cikarang:52-67`, keduanya Tabel 1 paper Rahman & Hernanda 2025):
