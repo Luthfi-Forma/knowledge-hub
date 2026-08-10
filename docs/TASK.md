@@ -281,13 +281,45 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   terverifikasi dengan cara yang keempat post lama tidak pernah bisa.
   **Wajib diakhiri cek diff mekanis** (hitung kata, link, dash per scene)
   terhadap sumber `.tsx`, bukan dibaca ulang — LESSONS 2026-08-04 (M10)
-- [ ] T-79: migrasi 3 modul sisa ke framework, `jabung` dulu (terkecil,
-  422 baris, satu-satunya tanpa `AnimatedNumber`). Push, lalu **user lihat
-  live di Vercel sebelum lanjut** (LESSONS 2026-07-18 "additive-first, then
-  full-replace once seen live"). Wajib men-diff angka ter-render per scene:
-  di bawah remounting counter bontang/rpplh mulai dari 0 tiap scene aktif,
-  di bawah stage persisten tidak — perubahan perilaku yang terlihat pada
-  konten tayang yang nol test maupun build error akan menangkapnya (M10)
+- [~] T-79: **Jabung selesai 2026-08-09; `cikarang`, `bontang`, `rpplh`
+  masih di shell lama.** Post pertama yang pindah ke framework ADR-005.
+  Prosa 7 scene pindah dari JSX ke body MDX; visual pindah ke
+  `src/lib/story/jabung-lampung-coastal-development.tsx`; modul lama
+  dihapus.
+  **Kesalahan saya yang tertangkap sendiri**: draf pertama frontmatter
+  mengarang hero (eyebrow/title/dek) alih-alih memakai milik post. Ketahuan
+  saat membandingkan dengan `export default` modul lama sebelum build —
+  judul aslinya "One coastline, **two centers**, sorted by the numbers.",
+  bukan yang saya tulis. Ini persis kegagalan yang task ini ada untuk
+  mencegah, dan alasan prosa **diekstrak mekanis**, bukan diketik ulang.
+  **Diff prosa ter-render, sebelum vs sesudah** (bukan dibaca ulang):
+  ketujuh scene **identik dalam jumlah kata, jumlah karakter, dan tautan**.
+  4 scene byte-identical. 3 scene (`intro`, `method`, `finding3`) berbeda
+  **hanya pada glif apostrof** — lurus `'` → keriting `’`, jumlah karakter
+  sama persis sehingga itu tukar-glif 1:1 oleh `smartypants` Astro.
+  Perubahan tipografi nyata tapi **menormalkan**: `problem` dan
+  `conclusion` sudah keriting sebelumnya karena ditulis di string literal,
+  jadi situs selama ini campur. Sekarang seragam.
+  **Koreksi klaim saya sendiri**: saya sempat menyebut ada spasi nyasar
+  sebelum titik setelah tautan ("study ."). Itu salah — HTML-nya
+  `study</a>.` tanpa spasi, dan JSX lama juga tidak menghasilkan spasi.
+  Spasi itu artefak tag-stripping di skrip ekstraksi saya.
+  **Diverifikasi**: 7 scene, h1 + aksen hero benar, panel Sources §01–§07
+  dengan ketujuh sitasi teks dan kelima sitasi viz cocok sumbernya, fokus
+  ke Close saat buka dan balik ke trigger saat Escape, `client:load`
+  terhidrasi, `fig.` dan caption "Drawn from" berganti per scene.
+  **Batasan lingkungan, bukan regresi**: viz per-scene tetap beku di
+  `opacity: 0` karena animasi masuk motion butuh rAF. Diuji kontrol pada
+  `rpplh` yang **belum** dimigrasi — tanda tangan identik
+  (`matrix(1,0,0,1,0,8)`), jadi perilaku ini sudah ada sebelum migrasi dan
+  hanya tidak bisa diamati di sini. Mode `persistent` tidak punya masalah
+  ini (T-77 membuktikannya) karena tanpa AnimatePresence.
+  **Efek samping**: DEBT #4 hampir tertutup — semua modul framework kini
+  punya importer nyata dan diketik `astro build`, kecuali `geo/project.ts`.
+  Build 48 halaman, Pagefind 4018→4033 kata (prosa kini konten MDX asli),
+  `npm test` 14/14, nol console error nyata (M10) — 2026-08-09
+- [ ] T-79b: migrasi 3 modul sisa (`cikarang`, `bontang`, `rpplh`). Catatan:
+  `cikarang` terblokir bersama T-78 sampai angkanya jelas (DEBT #5) (M10)
 - [ ] T-80: focus mode per-story — satu tombol dalam satu post yang
   menyembunyikan collar + rail, stage jadi dominan. Nol identitas kedua,
   nol `data-mode`, nol pohon DOM kedua. **Bisa dipotong** kalau milestone

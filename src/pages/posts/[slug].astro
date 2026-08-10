@@ -23,10 +23,10 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Story from '../../components/story/Story.astro';
+import JabungStage from '../../lib/story/jabung-lampung-coastal-development';
 import { getPublishedPosts, getProjectTitle, getRelatedPosts, TYPE_LABEL } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
 import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
-import JabungLampungCoastalDevelopmentScrollytelling from '../../lib/scrollytelling/jabung-lampung-coastal-development';
 import RpplhSouthPapuaScrollytelling from '../../lib/scrollytelling/rpplh-south-papua';
 
 // ADR-002: each scrollytelling post is a bespoke wired-up React island (data
@@ -144,13 +144,22 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
           usesStoryShell && story && (
             <Story story={story}>
               <Content />
+              {post.id === 'jabung-lampung-coastal-development' && (
+                <JabungStage
+                  slot="stage"
+                  client:load
+                  sceneIds={story.scenes.map((s) => s.id)}
+                  vizCitations={Object.fromEntries(
+                    story.scenes.filter((s) => s.vizCitation).map((s) => [s.id, s.vizCitation!]),
+                  )}
+                />
+              )}
             </Story>
           )
         }
 
         {!usesStoryShell && isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && <CikarangIndustrialSettlementScrollytelling client:visible />}
         {!usesStoryShell && isScrollytelling && post.id === 'bontang-poverty-mapping' && <BontangPovertyMappingScrollytelling client:visible />}
-        {!usesStoryShell && isScrollytelling && post.id === 'jabung-lampung-coastal-development' && <JabungLampungCoastalDevelopmentScrollytelling client:visible />}
         {!usesStoryShell && isScrollytelling && post.id === 'rpplh-south-papua' && <RpplhSouthPapuaScrollytelling client:visible />}
       </div>
 
