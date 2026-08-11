@@ -25,7 +25,7 @@ atau fungsi murni), baru yang digerakkan scroll — karena
 IntersectionObserver/`rAF`/ResizeObserver tidak menyala di browser tool
 sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
 
-- [ ] ADR-005: story framework — scene di frontmatter, prosa di MDX, satu
+- [x] ADR-005 (ditulis 2026-08-09, dikoreksi dua kali di sesi yang sama setelah T-71 dan T-75 membatalkan asumsinya): story framework — scene di frontmatter, prosa di MDX, satu
   stage persisten menggantikan remount-per-scene, progress berbasis event
   scroll menggantikan `IntersectionObserver`. Catat juga penolakan
   eksplisit (nol library peta, nol AI layer, Immersive = focus mode bukan
@@ -270,7 +270,7 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   dari data yang belum rekonsiliasi berarti menanam kesalahan yang belum
   dipahami ke dalam sebuah peta. Migrasi prosa Cikarang ke MDX juga ditahan
   supaya kalimat yang bermasalah tidak diedit dua kali (M10)
-- [ ] T-78 (rencana asli, dilanjutkan setelah data jelas): perdalam post Cikarang
+  **Rencana yang menunggu data** (bukan task terpisah): perdalam post Cikarang
   dengan scene spasial dari `LAND_BY_DISTRICT_2023` + `DISTRICT_GROWTH`
   (`cikarang:52-67`, keduanya Tabel 1 paper Rahman & Hernanda 2025):
   5 poligon distrik tulis-tangan yang warna/nilainya melakukan morph
@@ -281,8 +281,7 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   terverifikasi dengan cara yang keempat post lama tidak pernah bisa.
   **Wajib diakhiri cek diff mekanis** (hitung kata, link, dash per scene)
   terhadap sumber `.tsx`, bukan dibaca ulang — LESSONS 2026-08-04 (M10)
-- [~] T-79: **Jabung selesai 2026-08-09; `cikarang`, `bontang`, `rpplh`
-  masih di shell lama.** Post pertama yang pindah ke framework ADR-005.
+- [x] T-79 (Jabung): **selesai 2026-08-09** — post pertama yang pindah ke framework ADR-005.
   Prosa 7 scene pindah dari JSX ke body MDX; visual pindah ke
   `src/lib/story/jabung-lampung-coastal-development.tsx`; modul lama
   dihapus.

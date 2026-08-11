@@ -723,7 +723,7 @@ source. Verify with an object comparison against the actual source
 read-through, whenever the new task's rule is "preserve X exactly" and
 the previous task's rule was "change X everywhere."
 
-## 2026-08-09 — The browser tool's dead-callback list is longer than 2026-07-21 recorded: `scroll` and `requestIdleCallback` are dead too, but `client:load`, `scrollY` and `getBoundingClientRect()` all work
+## 2026-08-09 — The browser tool's dead-callback list is longer than 2026-07-21 recorded: `scroll` and `requestIdleCallback` are dead too, but `client:load`, `scrollY` and `getBoundingClientRect()` all work  [harvest-candidate — extends the harvested 2026-07-21 entry]
 
 Tags: #browser-verification #scrollytelling #astro-islands
 
@@ -781,7 +781,7 @@ absent.
    leans on them, instead of citing an older lesson that was written for a
    narrower question.
 
-## 2026-08-09 — An animated counter seeded with 0 publishes a false figure in the server-rendered HTML
+## 2026-08-09 — An animated counter seeded with 0 publishes a false figure in the server-rendered HTML [harvest-candidate]
 
 Tags: #react #astro-islands #ssr #content-accuracy
 
@@ -825,7 +825,7 @@ with the real figure and animate away from it — not toward it. Verify by
 grepping the built output, not the browser, because the browser hides the bug
 the moment hydration succeeds.
 
-## 2026-08-09 — Props passed to Astro's `<Content />` never reach the MDX body, so frontmatter and MDX prose cannot be interleaved
+## 2026-08-09 — Props passed to Astro's `<Content />` never reach the MDX body, so frontmatter and MDX prose cannot be interleaved [harvest-candidate]
 
 Tags: #astro #mdx #content-collections #architecture
 
@@ -865,7 +865,7 @@ renders per scene/item, an explanatory note ships N times. Put notes in the
 occurrences in built output and getting 7 for a page with one heading — six of
 them were the word `<h1>` inside a comment about heading order.
 
-## 2026-08-09 — CSS transitions never advance in this browser tool either, so `getComputedStyle` reports the pre-transition value forever
+## 2026-08-09 — CSS transitions never advance in this browser tool either, so `getComputedStyle` reports the pre-transition value forever [harvest-candidate]
 
 Tags: #browser-verification #css #verification-method
 

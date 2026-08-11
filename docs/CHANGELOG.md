@@ -14,6 +14,74 @@ the project starts tagging releases.
 
 ### Added
 
+- **Story framework** (M10, T-71–T-80, [ADR-005](decisions/ADR-005-story-framework.md)),
+  rebuilding how a scrollytelling post is put together. A post's prose now
+  lives in its MDX body as real markdown rather than as JSX inside a
+  TypeScript module, so it is editable content, indexed by Pagefind as
+  content, and readable with JavaScript disabled. Structure (hero, source,
+  per-scene citations) moved to zod-validated frontmatter. The visual stage
+  is now the only hydrated part of the page and receives the reader's
+  position — scene, progress through it, progress through the story,
+  direction — instead of the previous all-or-nothing swap, which makes a
+  visual that persists and morphs across scenes possible at all.
+- **Focus mode** for a single story (T-80): one control hides the site
+  chrome so the stage takes the whole viewport. Not a second theme —
+  nothing is recoloured and no component gains a second design. Escape
+  exits, and the reading position is preserved in both directions.
+- **Cover morph between pages** (T-73): navigating from any index into a
+  post animates that post's cover into its new position, using the CSS
+  View Transitions the site already opted into. Zero JavaScript. Browsers
+  without support keep the existing crossfade.
+- **First automated tests** (T-76, T-77): `npm test`, 14 suites over the
+  scroll maths and the map projection, using Node's built-in runner with no
+  new dependencies. Deliberately narrow — these are the two pure
+  computations a build cannot check.
+- **Spatial layer groundwork** (T-77): a Web Mercator projection and
+  geometry interpolation written from scratch, so hand-authored map shapes
+  can morph between two states. No map library, no tile requests, no new
+  dependency.
+
+### Fixed
+
+- **Two published research figures read `0`.** The counters in the Bontang
+  and South Papua posts initialised at zero, and because Astro renders
+  islands to static HTML, that zero shipped: anyone reading before the page
+  hydrated — JavaScript disabled, a slow or failed load, a crawler — saw
+  zero where an extreme-poverty count (238,464) and a 1.2-million-hectare
+  area belong. Both now render the real figure with no JavaScript at all
+  (T-74).
+- **In-page links landed behind the sticky header.** Every table-of-contents
+  jump scrolled its heading to the very top of the window, where the collar
+  covered it. Headings now land clear of it (T-72).
+- **Topic chips had no hover state** at all, despite being the site's main
+  way of moving between topics (T-72).
+- **Nothing on the site responded to being pressed** — no control had an
+  active state. Buttons, plates, and controls now acknowledge a press
+  (T-72).
+- Scrollytelling chrome animated for 400ms and one panel for roughly 500ms,
+  past the site's own 300ms ceiling. Both had escaped every audit because
+  the check greps for millisecond values and these were written in seconds
+  in JavaScript (T-72).
+- A post's cover hover was near-invisible: it changed one near-black border
+  to another. The plate's land-class hatch now strengthens instead (T-72).
+- Scrollytelling posts shipped with no `<h1>`, starting their heading order
+  at level 2 (T-75).
+- The sources panel could not be closed with Escape and did not return
+  focus to the control that opened it (T-75).
+
+### Changed
+
+- Easing curves. Every transition on the site used CSS's default `ease`,
+  which brakes so late that a 120ms hover spends most of its time barely
+  moving and then arrives abruptly. Two curves replace it. Durations are
+  unchanged — still exactly three values (T-72).
+- Prose in the three migrated posts renders with typographic quotes
+  throughout. Previously the same page mixed straight and curly apostrophes
+  depending on whether a sentence lived in a JSX expression or a string
+  literal. No wording changed: every scene was compared as rendered output
+  before and after, and word counts, character counts, and links are
+  identical (T-79).
+
 - **Editorial layer** (M7, T-63–T-65), completing Atlas's knowledge-graph
   scaffolding from M6: all 20 `/topics/[topic]` pages now show a real
   one-sentence definition instead of the graceful-empty state; every post
