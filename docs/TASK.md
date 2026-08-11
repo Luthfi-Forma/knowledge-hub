@@ -318,8 +318,37 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   punya importer nyata dan diketik `astro build`, kecuali `geo/project.ts`.
   Build 48 halaman, Pagefind 4018→4033 kata (prosa kini konten MDX asli),
   `npm test` 14/14, nol console error nyata (M10) — 2026-08-09
-- [ ] T-79b: migrasi 3 modul sisa (`cikarang`, `bontang`, `rpplh`). Catatan:
-  `cikarang` terblokir bersama T-78 sampai angkanya jelas (DEBT #5) (M10)
+- [x] T-79b: **`bontang` dan `rpplh` selesai 2026-08-09**; `cikarang` tetap
+  terblokir bersama T-78 (DEBT #5). Tiga dari empat post kini di framework
+  baru; `src/islands/Scrollytelling.tsx` hanya dipakai Cikarang.
+  **Data diperiksa lebih dulu** — kebiasaan baru sejak T-78. Keduanya
+  bersih: Bontang 238.464 total, rasio 8,96 ≈ "nine times", terkecil kedua,
+  rollout 1/3/6, dan ketiga rincian Tanjung Laut Indah masing-masing tepat
+  590 KK (50,5%/69,2%/60,0%); RPPLH 74,63% dan 67,88% **eksak**, ruang
+  budaya 471.026,19 ha di 7 kategori, 125 desa, 5+135=140 km. Satu selisih
+  jinak dicatat di modulnya supaya tidak diselidiki ulang: dua tabel jasa
+  lingkungan berjumlah ...,43 vs ...,44 ha — pembulatan sumber, 0,01 ha.
+  **Diff prosa ter-render**: nol perubahan jumlah kata, jumlah karakter,
+  dan tautan di 14 scene. Bontang 5/7 byte-identical, RPPLH 6/7. Yang
+  berbeda **hanya glif**: `rpplh/conclusion` diperiksa karakter-per-karakter
+  → **tepat 4 karakter**, 2 apostrof dan 2 tanda kutip ganda, lurus →
+  keriting (`"Response"` → `“Response”`). `smartypants` Astro, sama seperti
+  Jabung.
+  **Kesalahan saya yang tertangkap sendiri**: membungkus `VizFinding2` RPPLH
+  dengan `<Chart>` **menghilangkan** baris "Total 471.026 ha across 7
+  categories" yang tampil di versi lama — pembungkusnya tidak punya tempat
+  untuk footer. Dikembalikan ke layout sendiri; membuang angka terbit demi
+  memuat abstraksi itu salah arah. Juga menghapus satu export menyesatkan
+  yang saya tambahkan.
+  **Diverifikasi**: keduanya 7 scene, h1 + aksen benar, panel Sources
+  §01–§07 (Bontang 7 sitasi + 5 viz; RPPLH 7 + 4 — cocok sumbernya), fokus
+  dua arah + Escape, `client:load`, angka SSR benar (238.464 dan 1.2).
+  **Bundle diukur transitif**, bukan ditebak: 700 KB → 683 KB raw per
+  halaman. Yang benar-benar bergerak adalah chunk per-post, 49 KB → 10 KB
+  (prosa keluar dari JS), sebagian diimbangi chunk framework ~23 KB yang
+  kini dipakai bersama ketiga post. Dicatat di `docs/TESTING.md`.
+  Build 48 halaman, `npm test` 14/14, nol console error nyata (M10)
+  — 2026-08-09
 - [ ] T-80: focus mode per-story — satu tombol dalam satu post yang
   menyembunyikan collar + rail, stage jadi dominan. Nol identitas kedua,
   nol `data-mode`, nol pohon DOM kedua. **Bisa dipotong** kalau milestone

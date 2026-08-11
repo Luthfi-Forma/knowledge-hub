@@ -1,6 +1,6 @@
 # Testing — knowledge-hub
 
-- Updated: 2026-08-09 (M10/T-76 — first automated test)
+- Updated: 2026-08-09 (M10/T-79 — migration bundle measurements)
 - Baseline: `C:\Users\Luthfi\Documents\Claude Code\Claude Engineering OS\standards\testing.md` (this doc records the
   project-specific plan, not the general rules)
 
@@ -244,3 +244,32 @@ optimistic one.)
 - No automated accessibility or Lighthouse check wired into CI — both are
   checked manually per session (see docs/PROJECT_BRIEF.md's Lighthouse ≥ 90
   success criterion) but nothing fails a build if they regress.
+
+## Story-framework migration, measured (T-79, 2026-08-09)
+
+Transitive JS graph per post, raw bytes, via the same chunk-import tracing
+used for T-36/T-44 (follow every `./chunk.js` specifier from the page's
+directly-referenced chunks and total what is emitted):
+
+| Post | Shell | Chunks | Raw JS |
+|---|---|---|---|
+| `jabung-lampung-coastal-development` | new | 6 | 681 KB |
+| `bontang-poverty-mapping` | new | 7 | 683 KB |
+| `rpplh-south-papua` | new | 6 | 683 KB |
+| `cikarang-industrial-settlement-pattern` | old | 5 | 700 KB |
+
+**−17 KB per page, which is smaller than it sounds and worth reading
+carefully.** ADR-005 predicted the bundle would not move much, and it hasn't:
+462 KB of the total is recharts and 176 KB is Astro's client runtime, both
+shared by every scrollytelling page regardless of shell.
+
+Where the change actually landed is the per-post chunk: **49 KB (cikarang,
+old) against 10 KB (rpplh, new)**. That ~39 KB is the prose leaving
+JavaScript for the MDX body — the thing the migration was for. It is partly
+offset by a new ~23 KB shared chunk carrying `StoryStage`,
+`useStoryProgress`, and the viz primitives, but that chunk is shared: three
+migrated posts pull the same copy, and a fourth would add nothing.
+
+The number to watch after T-81 deletes the old shell is whether the old
+`Scrollytelling.tsx` chunk disappears from the graph entirely rather than
+lingering as dead weight.

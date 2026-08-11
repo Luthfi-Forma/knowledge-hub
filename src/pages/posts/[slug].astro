@@ -24,10 +24,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Story from '../../components/story/Story.astro';
 import JabungStage from '../../lib/story/jabung-lampung-coastal-development';
+import BontangStage from '../../lib/story/bontang-poverty-mapping';
+import RpplhStage from '../../lib/story/rpplh-south-papua';
 import { getPublishedPosts, getProjectTitle, getRelatedPosts, TYPE_LABEL } from '../../lib/posts';
 import CikarangIndustrialSettlementScrollytelling from '../../lib/scrollytelling/cikarang-industrial-settlement-pattern';
-import BontangPovertyMappingScrollytelling from '../../lib/scrollytelling/bontang-poverty-mapping';
-import RpplhSouthPapuaScrollytelling from '../../lib/scrollytelling/rpplh-south-papua';
 
 // ADR-002: each scrollytelling post is a bespoke wired-up React island (data
 // + viz + shell). Astro's `client:*` hydration needs a statically-analyzable
@@ -154,13 +154,31 @@ const breadcrumbRight = coordinates ? `${coordinates} · ${formattedDateShort}` 
                   )}
                 />
               )}
+              {post.id === 'bontang-poverty-mapping' && (
+                <BontangStage
+                  slot="stage"
+                  client:load
+                  sceneIds={story.scenes.map((s) => s.id)}
+                  vizCitations={Object.fromEntries(
+                    story.scenes.filter((s) => s.vizCitation).map((s) => [s.id, s.vizCitation!]),
+                  )}
+                />
+              )}
+              {post.id === 'rpplh-south-papua' && (
+                <RpplhStage
+                  slot="stage"
+                  client:load
+                  sceneIds={story.scenes.map((s) => s.id)}
+                  vizCitations={Object.fromEntries(
+                    story.scenes.filter((s) => s.vizCitation).map((s) => [s.id, s.vizCitation!]),
+                  )}
+                />
+              )}
             </Story>
           )
         }
 
         {!usesStoryShell && isScrollytelling && post.id === 'cikarang-industrial-settlement-pattern' && <CikarangIndustrialSettlementScrollytelling client:visible />}
-        {!usesStoryShell && isScrollytelling && post.id === 'bontang-poverty-mapping' && <BontangPovertyMappingScrollytelling client:visible />}
-        {!usesStoryShell && isScrollytelling && post.id === 'rpplh-south-papua' && <RpplhSouthPapuaScrollytelling client:visible />}
       </div>
 
       <aside class="post-rail">
