@@ -13,6 +13,7 @@
 //   </Story>
 import StoryHero from './StoryHero.astro';
 import SourcesPanel from './SourcesPanel.astro';
+import FocusToggle from './FocusToggle.astro';
 
 interface Citation {
   label: string;
@@ -35,7 +36,10 @@ interface Props {
 const { story } = Astro.props;
 ---
 
-<div class="story">
+{/* data-story-focus is the whole of focus mode's state (M10/T-80). It lives
+    here rather than on <html> so the attribute stays attached to the thing it
+    describes; ancestors react to it with `:has()` in global.css. */}
+<div class="story" data-story-focus="off">
   <StoryHero
     eyebrow={story.eyebrow}
     title={story.title}
@@ -44,6 +48,7 @@ const { story } = Astro.props;
     meta={story.meta}
   >
     <SourcesPanel slot="sources-trigger" source={story.source} scenes={story.scenes} />
+    <FocusToggle slot="sources-trigger" />
   </StoryHero>
 
   <div class="story-body">

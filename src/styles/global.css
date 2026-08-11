@@ -502,6 +502,75 @@ html:root {
 }
 
 /*
+ * Focus mode for a single story (M10/T-80, ADR-005). One block, deliberately
+ * — every rule the feature owns is here, so it can be read or removed in one
+ * place. See src/components/story/FocusToggle.astro for the reasoning.
+ *
+ * Not a second identity: nothing is recoloured and no component gains a second
+ * design. The state attribute sits on the story container, and ancestors react
+ * through `:has()` — so there is no `data-mode` on <html>, which is the
+ * mechanism ADR-004 retired.
+ *
+ * `:has()` unsupported means the toggle changes nothing visible. The page
+ * stays exactly as it is today, which is an acceptable floor for a view
+ * preference.
+ */
+html:has(.story[data-story-focus='on']) .collar {
+  /*
+   * Static, NOT hidden or collapsed. The collar is the first element in the
+   * document and sticks to the top; collapsing its ~148px removes that height
+   * from the flow, shifting everything below it upward and moving the reader's
+   * place on the page. Dropping only the stickiness leaves the flow completely
+   * untouched — the collar scrolls away like any other element and the sticky
+   * stage gets the whole viewport. No layout shift, nothing to measure, no
+   * scroll compensation.
+   */
+  position: static;
+}
+
+/*
+ * `.post-body-wide` is in this selector to win a specificity contest, not for
+ * scoping: posts/[slug].astro sets the rail's grid layout from
+ * `.post-body-wide[data-astro-cid] .post-rail[data-astro-cid]`, which Astro's
+ * scope attributes push to (0,4,0). Without the extra class this rule sat at
+ * (0,3,1) and lost — measured, the rail stayed `display: grid` with focus on.
+ * Adding it brings this to (0,4,1). Every story post carries the class, so
+ * nothing is narrowed in practice.
+ */
+html:has(.story[data-story-focus='on']) .post-body-wide .post-rail {
+  /* The "what to read next" block — the thing focus mode is for stepping away
+     from. It sits below the story, so hiding it shifts nothing above it. */
+  display: none;
+}
+
+html:has(.story[data-story-focus='on']) .post-detail {
+  max-width: none;
+}
+.post-detail {
+  transition: max-width 200ms var(--ease-in-out);
+}
+
+/* With no pinned collar there is nothing to reserve room for, so the sticky
+   panel reclaims the 80px offset and 96px of height it gives up in normal
+   reading (see StoryStage.tsx). */
+html:has(.story[data-story-focus='on']) .story-stage-panel {
+  top: 0;
+  height: 100vh;
+}
+
+.story[data-story-focus='on'] .story-focus-exit {
+  opacity: 1;
+  visibility: visible;
+}
+.story[data-story-focus='on'] .story-focus-toggle {
+  /* The enter control is meaningless while focused, and leaving two competing
+     exits on screen is worse than one. Hidden with visibility rather than
+     display so it keeps its place in the meta row's layout. */
+  opacity: 0;
+  visibility: hidden;
+}
+
+/*
  * Cross-document View Transitions (M5/T-42) — a same-origin navigation
  * (e.g. Home -> a post page) crossfades instead of hard-cutting. Pure CSS,
  * zero JavaScript: the browser intercepts the old and new page's rendered

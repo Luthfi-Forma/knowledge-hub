@@ -121,7 +121,11 @@ export default function StoryStage({ sceneIds, visual, vizCitations, initial }: 
     <>
       {/* Desktop: sticky panel beside the prose column. */}
       <div className="hidden lg:block">
-        <div className="sticky top-20 flex h-[calc(100vh-6rem)] flex-col justify-center gap-3">
+        {/* story-stage-panel is a real class, not decoration: focus mode
+            (T-80) needs a stable hook to give this panel the full viewport
+            once the collar stops being sticky, and targeting Tailwind's
+            generated `.sticky` from global CSS would be fragile. */}
+        <div className="story-stage-panel sticky top-20 flex h-[calc(100vh-6rem)] flex-col justify-center gap-3">
           <div className="border-line bg-paper-raised relative h-[68vh] w-full overflow-hidden border">
             <div className="bg-line absolute inset-x-0 top-0 z-10 h-[2px]">
               {/*

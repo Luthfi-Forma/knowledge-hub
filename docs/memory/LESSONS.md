@@ -864,3 +864,40 @@ renders per scene/item, an explanatory note ships N times. Put notes in the
 `---` frontmatter block, where they are stripped. Found by counting `<h1`
 occurrences in built output and getting 7 for a page with one heading — six of
 them were the word `<h1>` inside a comment about heading order.
+
+## 2026-08-09 — CSS transitions never advance in this browser tool either, so `getComputedStyle` reports the pre-transition value forever
+
+Tags: #browser-verification #css #verification-method
+
+Focus mode (T-80) toggled correctly — the attribute flipped, the right rules
+matched — yet the control it was supposed to reveal still computed
+`opacity: 0; visibility: hidden` 300ms later. The first suspicion was a
+specificity loss to an Astro-scoped rule. It was not: `element.matches()`
+confirmed the selector matched, and the winning rule was the more specific one.
+
+Setting `element.style.transition = 'none'` and re-reading returned
+`opacity: 1; visibility: visible` immediately. **The rule had been winning all
+along; the transition simply never ran.** CSS transitions are compositor-driven,
+and this environment does not composite frames — the same root cause behind
+`requestAnimationFrame` never firing and screenshots timing out with "the page
+is not compositing frames".
+
+This extends the dead-callback list (2026-07-21, 2026-08-09) to declarative CSS
+animation. Anything with a `transition` on it reads at its **starting** value
+via `getComputedStyle`, indefinitely.
+
+**Generalized rules:**
+
+1. **Never verify a transitioned property with `getComputedStyle` here.** It
+   reports the start of an animation that will never finish, which looks
+   exactly like a rule that failed to apply — and invites "fixing" a cascade
+   that was never broken.
+2. **To test the cascade, remove the transition first.** `el.style.transition
+   = 'none'`, read, restore. That isolates *which rule wins* from *whether the
+   animation runs*, which are separate questions that this environment
+   conflates.
+3. **Better still, read the matched rule.** `element.matches(selector)` plus
+   the rule text from `document.styleSheets` answers the cascade question
+   without touching computed values at all — the technique already recorded on
+   2026-07-30 for a different reason, and the reason it worked for T-72's
+   hover/easing audit.

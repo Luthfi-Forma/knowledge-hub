@@ -349,10 +349,41 @@ sesi ini (`docs/memory/LESSONS.md`, 2026-07-21).
   kini dipakai bersama ketiga post. Dicatat di `docs/TESTING.md`.
   Build 48 halaman, `npm test` 14/14, nol console error nyata (M10)
   — 2026-08-09
-- [ ] T-80: focus mode per-story — satu tombol dalam satu post yang
-  menyembunyikan collar + rail, stage jadi dominan. Nol identitas kedua,
-  nol `data-mode`, nol pohon DOM kedua. **Bisa dipotong** kalau milestone
-  kepanjangan (M10)
+- [x] T-80: focus mode per-story — **selesai 2026-08-09**. Nol identitas
+  kedua: nol warna diubah, nol komponen dapat desain kedua, nol `data-mode`
+  di `<html>`, nol pohon DOM kedua. State-nya satu atribut
+  `data-story-focus` di container story, dan leluhurnya bereaksi lewat
+  `:has()` — jadi atributnya tetap menempel pada hal yang dijelaskannya.
+  Tidak disimpan: ini tampilan satu halaman per-kunjungan, sengaja
+  dilupakan saat navigasi (beda dari preferensi tersimpan ADR-003).
+  **Keputusan desain yang menghindari jebakan**: collar dibuat
+  `position: static`, **bukan** disembunyikan atau dikecilkan. Collar adalah
+  elemen pertama dokumen; mengecilkan ~148px-nya menghapus tinggi itu dari
+  flow, menggeser semua di bawahnya ke atas, dan **memindahkan posisi baca**.
+  Melepas stickiness-nya saja membuat flow utuh — collar tinggal ter-scroll
+  seperti elemen biasa dan stage dapat seluruh viewport. Nol pergeseran,
+  nol kompensasi scroll, nol pengukuran di JS.
+  **Tiga bug ditemukan saat verifikasi, semuanya diperbaiki**: (1) rail
+  tidak tersembunyi — kalah spesifisitas dari aturan ter-scope
+  `[slug].astro` yang atribut scope Astro-nya mendorong ke (0,4,0);
+  ditambah `.post-body-wide` jadi (0,4,1). (2) Escape melompatkan pembaca
+  ke atas — `focus()` menggulirkan tombol enter di hero ke viewport
+  (terukur: scrollY 1500 → 131); diperbaiki `focus({ preventScroll: true })`.
+  (3) Tombol exit terbaca `hidden` padahal aturannya menang — **ternyata
+  bukan bug**, lihat di bawah.
+  **Temuan lingkungan baru**: **transisi CSS tidak pernah maju di tool ini**,
+  jadi `getComputedStyle` melaporkan nilai awal selamanya. Terbukti dengan
+  `transition: none` → nilainya langsung benar. Ini memperluas daftar
+  callback mati (rAF/IO/ResizeObserver/scroll/ric) ke animasi CSS
+  deklaratif, dan menjelaskan kenapa audit T-72 benar karena memverifikasi
+  lewat stylesheet, bukan computed value. Dicatat di LESSONS.
+  **Diverifikasi** (transisi dimatikan supaya yang diuji adalah cascade,
+  bukan animasinya): collar `sticky`→`static`, shell 1240px→tanpa batas,
+  rail `grid`→`none`, panel stage top 80px→0 dan 624px→720px, exit
+  `hidden`→`visible`, toggle sebaliknya, `aria-pressed` benar, fokus pindah
+  ke exit lalu balik ke toggle, dan **scrollY tetap 1500 di masuk maupun
+  keluar**. Build 48 halaman, `npm test` 14/14, nol console error nyata (M10)
+  — 2026-08-09
 - [ ] T-81: hapus `src/islands/Scrollytelling.tsx` (dipertahankan utuh
   sepanjang M10 sebagai permukaan kompatibilitas), ukur `dist/_astro/*.js`
   sebelum/sesudah, catat di `docs/TESTING.md` di sebelah data berat

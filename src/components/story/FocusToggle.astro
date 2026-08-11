@@ -1,0 +1,105 @@
+---
+// Focus mode for a single story (M10/T-80, ADR-005).
+//
+// What this is NOT: a second visual identity. Nothing is recoloured, no
+// component gains a second design, there is no `data-mode` on <html> and no
+// second DOM tree. ADR-004 killed dual-mode because maintaining two
+// identities meant designing every component twice; hiding chrome on one page
+// costs none of that. Reading Mode and Immersive Mode from the original M10
+// concept were re-scoped to exactly this for that reason.
+//
+// What it does, and why each part is the way it is:
+//
+//   1. The collar stops being sticky (`position: static`) rather than being
+//      collapsed or hidden. Collapsing a sticky header that sits at the top of
+//      the document removes ~148px of flow, which shifts everything below it
+//      up and moves the reader's place on the page. Making it static leaves
+//      the flow untouched — the collar simply scrolls away like any other
+//      element, and the sticky stage gets the whole viewport. Zero layout
+//      shift, zero scroll compensation, no JS measuring anything.
+//   2. The rail below the story is hidden — it is the "what to read next"
+//      block, which is precisely what focus mode is for stepping away from.
+//      It sits below everything, so hiding it shifts nothing above it.
+//   3. The shell's 1240px cap is lifted so the stage can use the full width.
+//
+// State lives on the story container, not on <html>, and ancestors react via
+// `:has()`. That keeps the attribute local to the thing it describes. In a
+// browser without `:has()` the toggle simply does nothing visible — the page
+// stays exactly as it is now, which is a fine floor.
+//
+// Not persisted. ADR-003's dual-mode was a stored reader preference; this is
+// a per-visit view of one page, deliberately forgotten on navigation.
+---
+
+<button
+  type="button"
+  id="story-focus-toggle"
+  class="control control-secondary story-focus-toggle"
+  aria-pressed="false"
+>
+  Focus
+</button>
+
+{/* Reachable exit once the hero has scrolled away. Rendered always, revealed
+    by CSS only while focused — a control that only exists in one state is a
+    control that can strand a keyboard user in the other. */}
+<button type="button" id="story-focus-exit" class="control control-secondary story-focus-exit">
+  Exit focus <span aria-hidden="true">esc</span>
+</button>
+
+<script>
+  const toggle = document.getElementById('story-focus-toggle');
+  const exit = document.getElementById('story-focus-exit');
+  const story = document.querySelector<HTMLElement>('[data-story-focus]');
+
+  function setFocus(on: boolean) {
+    if (!story) return;
+    story.dataset.storyFocus = on ? 'on' : 'off';
+    toggle?.setAttribute('aria-pressed', String(on));
+    // Move focus to the control that is now the meaningful one, so a keyboard
+    // user is never left with focus on a button that has just been hidden.
+    //
+    // preventScroll is not optional here. The enter control lives in the hero
+    // at the top of the story, so a plain focus() scrolls it into view — and
+    // leaving focus mode from halfway down the story yanked the reader back to
+    // the top (measured: scrollY 1500 -> 131). Toggling a view is not a
+    // request to go somewhere else.
+    (on ? exit : toggle)?.focus({ preventScroll: true });
+  }
+
+  toggle?.addEventListener('click', () => setFocus(story?.dataset.storyFocus !== 'on'));
+  exit?.addEventListener('click', () => setFocus(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && story?.dataset.storyFocus === 'on') setFocus(false);
+  });
+</script>
+
+<style>
+  .story-focus-toggle {
+    /* Sits in the hero's 12px mono meta row next to Sources, so it holds the
+       same tighter height that row uses rather than the standalone 44px. */
+    min-height: 36px;
+    padding: 0 14px;
+  }
+
+  .story-focus-exit {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 60;
+    min-height: 36px;
+    padding: 0 14px;
+    gap: 8px;
+    background-color: var(--color-paper);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 200ms var(--ease-out),
+      visibility 200ms var(--ease-out);
+  }
+  .story-focus-exit span {
+    border: 1px solid var(--color-line);
+    padding: 0 4px;
+    font-size: 10.5px;
+  }
+</style>
